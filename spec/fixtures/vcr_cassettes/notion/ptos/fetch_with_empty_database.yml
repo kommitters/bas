@@ -1,0 +1,57 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.notion.com/v1/databases/86772de276d24ed986713640919edf96/query
+    body:
+      encoding: UTF-8
+      string: "{}"
+    headers:
+      Authorization:
+      - Bearer secret_4x5x2CH9WKwhnptlUIJfI211CGyTTcgkjjcbr3AAO1q
+      Content-Type:
+      - application/json
+      Notion-Version:
+      - '2022-06-28'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 23 Jan 2024 04:04:55 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Express
+      X-Notion-Request-Id:
+      - aa11fc6e-26b1-4ca6-b31f-3c5df7ab2151
+      Etag:
+      - W/"a6-wCzAFmdUEK0V/xqsUg9X34k89yo"
+      Vary:
+      - Accept-Encoding
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=F1IhiQcWuuzOFVSejIj1T85BkV7z9.u79UJ02r19OG0-1705982695-1-ATzvxVqxl9EYY1IJorJVYBp13mX5NRmu/mHYUVtEWnr+VXlSL1ych0seD0UcXLGBuCTFYhgRiA26MpIDOLAhSv4=;
+        path=/; expires=Tue, 23-Jan-24 04:34:55 GMT; domain=.notion.com; HttpOnly;
+        Secure; SameSite=None
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 849d27bfd90ff786-BOG
+    body:
+      encoding: ASCII-8BIT
+      string: '{"object":"list","results":[],"next_cursor":null,"has_more":false,"type":"page_or_database","page_or_database":{},"request_id":"aa11fc6e-26b1-4ca6-b31f-3c5df7ab2151"}'
+  recorded_at: Tue, 23 Jan 2024 04:04:54 GMT
+recorded_with: VCR 6.2.0

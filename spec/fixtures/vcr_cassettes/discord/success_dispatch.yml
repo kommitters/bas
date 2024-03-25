@@ -1,0 +1,74 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://discord.com/api/webhooks/1196541734138691615/lFFCvFdMVEvfKWtFID2TSBjNjjBvEwqRbG2czOz3X_HfHfIgmXh6SDlFRXaXLOignsOj
+    body:
+      encoding: UTF-8
+      string: '{"username":"Test Birthday Bot","avatar_url":"","content":"John Doe,
+        Wishing you a very happy birthday! Enjoy your special day! :birthday: :gift:"}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Date:
+      - Wed, 17 Jan 2024 19:21:19 GMT
+      Content-Type:
+      - text/html; charset=utf-8
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - __cfruid=61cb2bc4ffef3eb7a521eb9c9f50efb6c5047148-1705519279; path=/; domain=.discord.com;
+        HttpOnly; Secure; SameSite=None
+      - __dcfduid=97d7b0a4b56d11eeafb20a5f3f9b9ba6; Expires=Mon, 15-Jan-2029 19:21:19
+        GMT; Max-Age=157680000; Secure; HttpOnly; Path=/; SameSite=Lax
+      - __sdcfduid=97d7b0a4b56d11eeafb20a5f3f9b9ba622d1228c13eb8acf6358df84e202ae8dcb81b5ee7d02ab5b0ca1a4a5d6fd580c;
+        Expires=Mon, 15-Jan-2029 19:21:19 GMT; Max-Age=157680000; Secure; HttpOnly;
+        Path=/; SameSite=Lax
+      - _cfuvid=lefM3ID.6iEk48NeFoIafYAvQDMGOH_8NSC9Icr6q2g-1705519279871-0-604800000;
+        path=/; domain=.discord.com; HttpOnly; Secure; SameSite=None
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      X-Ratelimit-Bucket:
+      - 3d2712a9e4fe17cc9d3fed4a8e672e5f
+      X-Ratelimit-Limit:
+      - '5'
+      X-Ratelimit-Remaining:
+      - '4'
+      X-Ratelimit-Reset:
+      - '1705519281'
+      X-Ratelimit-Reset-After:
+      - '1'
+      Via:
+      - 1.1 google
+      Alt-Svc:
+      - h3=":443"; ma=86400
+      Cf-Cache-Status:
+      - DYNAMIC
+      Report-To:
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=FPJUOsX0NFMbs5hMOtv59OJiEAGoTRZP95YCpEOhdHXNpYgr9c3VlwDI2g8VuTcDuc4NpaydwsVUlkUbKOJHvbH693ZJLxm1f79s9W1HUm9snTQAewBClkE5vDMy"}],"group":"cf-nel","max_age":604800}'
+      Nel:
+      - '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+      X-Content-Type-Options:
+      - nosniff
+      Content-Security-Policy:
+      - frame-ancestors 'none'; default-src 'none'
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 8470f5ea8d4a4c20-MIA
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Wed, 17 Jan 2024 19:21:19 GMT
+recorded_with: VCR 6.2.0

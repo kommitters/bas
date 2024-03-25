@@ -1,0 +1,58 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.notion.com/v1/databases/5aebbdc871864f4fbab5596a41a81a01/query
+    body:
+      encoding: UTF-8
+      string: '{"filter":{"or":[{"property":"BD_this_year","date":{"equals":"2024-03-05"}}]}}'
+    headers:
+      Authorization:
+      - Bearer secret_ZELfDH6cf4Glc9NLPLxvsvdl9iZVD4qBCyMDXqch51C
+      Content-Type:
+      - application/json
+      Notion-Version:
+      - '2022-06-28'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Date:
+      - Mon, 26 Feb 2024 20:49:35 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '139'
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Express
+      X-Notion-Request-Id:
+      - fd80c417-4f9a-4a90-aa05-7cc37aa6fcfc
+      Etag:
+      - W/"8b-vkY9GbCGjy7fvm0NsJhQ/vig/5o"
+      Vary:
+      - Accept-Encoding
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=LCL0ule4eBJnd9_VJBg7cre9zf01j.dGLogpr_28824-1708980575-1.0-Abn1zIC+eEVqTaGaq/lHAKQTqSvs53TnCGz4FpVCOJ9Vca2GB7Jsvr0NLUYTXggoX/F7tDaQ1jvSkEQxG1rx/FU=;
+        path=/; expires=Mon, 26-Feb-24 21:19:35 GMT; domain=.notion.com; HttpOnly;
+        Secure; SameSite=None
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 85bb0e318de916aa-BOG
+    body:
+      encoding: UTF-8
+      string: '{"object":"error","status":401,"code":"unauthorized","message":"API
+        token is invalid.","request_id":"fd80c417-4f9a-4a90-aa05-7cc37aa6fcfc"}'
+  recorded_at: Mon, 26 Feb 2024 20:49:35 GMT
+recorded_with: VCR 6.2.0
