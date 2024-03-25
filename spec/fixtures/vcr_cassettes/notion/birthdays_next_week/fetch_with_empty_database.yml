@@ -1,0 +1,57 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.notion.com/v1/databases/8187370982134ed099f9d14385aa81c9/query
+    body:
+      encoding: UTF-8
+      string: '{"filter":{"or":[{"property":"BD_this_year","date":{"equals":"2024-03-05"}}]}}'
+    headers:
+      Authorization:
+      - Bearer secret_K5UCqm27GvAscTlaGJmS2se4fyM1K7is3OIZMw03NaC
+      Content-Type:
+      - application/json
+      Notion-Version:
+      - '2022-06-28'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 26 Feb 2024 20:49:34 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Express
+      X-Notion-Request-Id:
+      - 3fe5fadd-d6eb-4cef-98fa-912ffbea7fd8
+      Etag:
+      - W/"a6-6OhUICSP9aXx88KWI6PJHcy1Nnc"
+      Vary:
+      - Accept-Encoding
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=rCE2uhrCCE_Lt5jgnXZ9vdZhW_hb9xbSdlXLOPTXMqM-1708980574-1.0-AXDs1UzEW3U3UupDj4a7ETM5oTmrYyHLAknLQ9WbmP87+SQARAzn7ui9IFF/8x3hrxCqlNb/DoCeNjERE35Nr+g=;
+        path=/; expires=Mon, 26-Feb-24 21:19:34 GMT; domain=.notion.com; HttpOnly;
+        Secure; SameSite=None
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 85bb0e2e685cf792-BOG
+    body:
+      encoding: ASCII-8BIT
+      string: '{"object":"list","results":[],"next_cursor":null,"has_more":false,"type":"page_or_database","page_or_database":{},"request_id":"3fe5fadd-d6eb-4cef-98fa-912ffbea7fd8"}'
+  recorded_at: Mon, 26 Feb 2024 20:49:34 GMT
+recorded_with: VCR 6.2.0

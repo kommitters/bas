@@ -1,0 +1,76 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://discord.com/api/webhooks/1196541734138691615/lFFCvFdMVEvfKWtFID2TSBjNjjBvEwqRbG2czOz3X_JfHfIgmXh6SDlFRXaXLOignsIP
+    body:
+      encoding: UTF-8
+      string: '{"username":"Test Birthday Bot","avatar_url":"","content":"John Doe,
+        Wishing you a very happy birthday! Enjoy your special day! :birthday: :gift:"}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Date:
+      - Thu, 18 Jan 2024 01:15:29 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '51'
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - __cfruid=eb377df66f5657a4782fb8c14431d187beb69d44-1705540529; path=/; domain=.discord.com;
+        HttpOnly; Secure; SameSite=None
+      - __dcfduid=11b8f87ab59f11eeaab70267d10d6995; Expires=Tue, 16-Jan-2029 01:15:29
+        GMT; Max-Age=157680000; Secure; HttpOnly; Path=/; SameSite=Lax
+      - __sdcfduid=11b8f87ab59f11eeaab70267d10d699593e467e102cbc97f5381c4732fed8ae7039487e1d319816ec03fd348e49e6cf7;
+        Expires=Tue, 16-Jan-2029 01:15:29 GMT; Max-Age=157680000; Secure; HttpOnly;
+        Path=/; SameSite=Lax
+      - _cfuvid=Npna0Krca1qlFBfxXs.hVoFdNiJqzezW.qVQs_VooXM-1705540529693-0-604800000;
+        path=/; domain=.discord.com; HttpOnly; Secure; SameSite=None
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      X-Ratelimit-Bucket:
+      - 3d2712a9e4fe17cc9d3fed4a8e672e5f
+      X-Ratelimit-Limit:
+      - '5'
+      X-Ratelimit-Remaining:
+      - '4'
+      X-Ratelimit-Reset:
+      - '1705540531'
+      X-Ratelimit-Reset-After:
+      - '1'
+      Via:
+      - 1.1 google
+      Alt-Svc:
+      - h3=":443"; ma=86400
+      Cf-Cache-Status:
+      - DYNAMIC
+      Report-To:
+      - '{"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v3?s=U2lLuCU4fShJhgkDXiRuGVg%2FswyPTOfAlreU92rdWOOhrE6etYpqYZlb%2B1U%2B5s2dWt20D%2BnO3QC0GHi1nXgVbKBt1sOesyqoPmorETLWGH0GcAmJXEDsGLhE8azk"}],"group":"cf-nel","max_age":604800}'
+      Nel:
+      - '{"success_fraction":0,"report_to":"cf-nel","max_age":604800}'
+      X-Content-Type-Options:
+      - nosniff
+      Content-Security-Policy:
+      - frame-ancestors 'none'; default-src 'none'
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 8472fcb63b55b3eb-MIA
+    body:
+      encoding: UTF-8
+      string: '{"message": "Invalid Webhook Token", "code": 50027}'
+  recorded_at: Thu, 18 Jan 2024 01:15:29 GMT
+recorded_with: VCR 6.2.0

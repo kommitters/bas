@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.notion.com/v1/databases/8187370982134ed099f9d14385aa81c9/query
+    body:
+      encoding: UTF-8
+      string: '{"filter":{"or":[{"and":[{"property":"Desde?","date":{"on_or_before":"2024-03-05"}},{"property":"Hasta?","date":{"on_or_after":"2024-03-05"}}]},{"and":[{"property":"Desde?","date":{"on_or_after":"2024-03-05T00:00:00"}},{"property":"Hasta?","date":{"on_or_before":"2024-03-05T23:59:59"}}]}]}}'
+    headers:
+      Authorization:
+      - Bearer secret_K5UCqm27GvAscTlaGJmS2se4fyM1K7is3OIZMw03NaC
+      Content-Type:
+      - application/json
+      Notion-Version:
+      - '2022-06-28'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 26 Feb 2024 21:41:00 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Express
+      X-Notion-Request-Id:
+      - 911dd87c-5d71-4a4f-a482-7f8ce7d953d8
+      Etag:
+      - W/"ce3-1W9WFoHNRzlBCfCzzoa9X/l+jQY"
+      Vary:
+      - Accept-Encoding
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=znNHWRGn_x2jhKk46QT38LLFNjwPuBAVDB20k1ynPr4-1708983660-1.0-AfBhHa17cvcCD9CBAsAIqLvqBoJSLvZG8K1+5lvZi4x8DIVfDIFmXzt76t/CNFjDyX4qN29eMtVOJ3MhaSk/fS0=;
+        path=/; expires=Mon, 26-Feb-24 22:11:00 GMT; domain=.notion.com; HttpOnly;
+        Secure; SameSite=None
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 85bb598679bff7b8-BOG
+    body:
+      encoding: ASCII-8BIT
+      string: '{"object":"list","results":[{"object":"page","id":"f37f592a-fd4b-4b7a-8d02-1ab6284d87f2","created_time":"2024-02-26T21:39:00.000Z","last_edited_time":"2024-02-26T21:39:00.000Z","created_by":{"object":"user","id":"7b6a0839-d5ad-4636-9509-8411cc70688d"},"last_edited_by":{"object":"user","id":"7b6a0839-d5ad-4636-9509-8411cc70688d"},"cover":null,"icon":null,"parent":{"type":"database_id","database_id":"81873709-8213-4ed0-99f9-d14385aa81c9"},"archived":false,"properties":{"Person":{"id":"I_oW","type":"rich_text","rich_text":[{"type":"text","text":{"content":"Luis","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Luis","href":null}]},"Desde?":{"id":"TU%7DA","type":"date","date":{"start":"2024-03-05T14:00:00.000-05:00","end":null,"time_zone":null}},"Hasta?":{"id":"XNm_","type":"date","date":{"start":"2024-03-05T18:00:00.000-05:00","end":null,"time_zone":null}},"Date":{"id":"title","type":"title","title":[]}},"url":"https://www.notion.so/f37f592afd4b4b7a8d021ab6284d87f2","public_url":null},{"object":"page","id":"44ad84ec-caac-494c-9415-0afe88749f48","created_time":"2024-02-26T21:39:00.000Z","last_edited_time":"2024-02-26T21:39:00.000Z","created_by":{"object":"user","id":"7b6a0839-d5ad-4636-9509-8411cc70688d"},"last_edited_by":{"object":"user","id":"7b6a0839-d5ad-4636-9509-8411cc70688d"},"cover":null,"icon":null,"parent":{"type":"database_id","database_id":"81873709-8213-4ed0-99f9-d14385aa81c9"},"archived":false,"properties":{"Person":{"id":"I_oW","type":"rich_text","rich_text":[{"type":"text","text":{"content":"Lorenzo","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Lorenzo","href":null}]},"Desde?":{"id":"TU%7DA","type":"date","date":{"start":"2024-03-05","end":null,"time_zone":null}},"Hasta?":{"id":"XNm_","type":"date","date":{"start":"2024-03-05","end":null,"time_zone":null}},"Date":{"id":"title","type":"title","title":[]}},"url":"https://www.notion.so/44ad84eccaac494c94150afe88749f48","public_url":null},{"object":"page","id":"4b8a9481-2c47-466d-bc98-2b65b74c648f","created_time":"2024-02-26T21:38:00.000Z","last_edited_time":"2024-02-26T21:39:00.000Z","created_by":{"object":"user","id":"7b6a0839-d5ad-4636-9509-8411cc70688d"},"last_edited_by":{"object":"user","id":"7b6a0839-d5ad-4636-9509-8411cc70688d"},"cover":null,"icon":null,"parent":{"type":"database_id","database_id":"81873709-8213-4ed0-99f9-d14385aa81c9"},"archived":false,"properties":{"Person":{"id":"I_oW","type":"rich_text","rich_text":[{"type":"text","text":{"content":"Felipe
+        Guzman","link":null},"annotations":{"bold":false,"italic":false,"strikethrough":false,"underline":false,"code":false,"color":"default"},"plain_text":"Felipe
+        Guzman","href":null}]},"Desde?":{"id":"TU%7DA","type":"date","date":{"start":"2024-03-04","end":null,"time_zone":null}},"Hasta?":{"id":"XNm_","type":"date","date":{"start":"2024-03-05","end":null,"time_zone":null}},"Date":{"id":"title","type":"title","title":[]}},"url":"https://www.notion.so/4b8a94812c47466dbc982b65b74c648f","public_url":null}],"next_cursor":null,"has_more":false,"type":"page_or_database","page_or_database":{},"request_id":"911dd87c-5d71-4a4f-a482-7f8ce7d953d8"}'
+  recorded_at: Mon, 26 Feb 2024 21:41:00 GMT
+recorded_with: VCR 6.2.0

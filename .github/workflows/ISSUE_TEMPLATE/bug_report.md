@@ -20,6 +20,7 @@ A clear and concise description of what the bug is.
 ### Environment
 
 * Operating system:
+* Ruby version:
 
 ### Current behavior
 

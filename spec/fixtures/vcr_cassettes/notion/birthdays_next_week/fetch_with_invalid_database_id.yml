@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.notion.com/v1/databases/c17e556d16c84272beb4ee73ab709631/query
+    body:
+      encoding: UTF-8
+      string: '{"filter":{"or":[{"property":"BD_this_year","date":{"equals":"2024-03-05"}}]}}'
+    headers:
+      Authorization:
+      - Bearer secret_K5UCqm27GvAscTlaGJmS2se4fyM1K7is3OIZMw03NaC
+      Content-Type:
+      - application/json
+      Notion-Version:
+      - '2022-06-28'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 26 Feb 2024 20:49:34 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Express
+      X-Notion-Request-Id:
+      - 3808e3dc-ed85-435c-a729-4c42427456d2
+      Etag:
+      - W/"10d-XHoJteKDoHFel2xJbmjVlQz7Wh4"
+      Vary:
+      - Accept-Encoding
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=pbTF.VJjLBwD6Dd8OPt9fppQCcDlawhTXeBIwtLHqmE-1708980574-1.0-ATc6fAh5tALOXSPk817OaC/yIoz+gqHrQ8FFmLkrUvB2poH7ILY3UKlSNwCn0JoA5+r6KFcWjOUHejE9+OTiljY=;
+        path=/; expires=Mon, 26-Feb-24 21:19:34 GMT; domain=.notion.com; HttpOnly;
+        Secure; SameSite=None
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 85bb0e2ffae23ec8-BOG
+    body:
+      encoding: ASCII-8BIT
+      string: '{"object":"error","status":404,"code":"object_not_found","message":"Could
+        not find database with ID: c17e556d-16c8-4272-beb4-ee73ab709631. Make sure
+        the relevant pages and databases are shared with your integration.","request_id":"3808e3dc-ed85-435c-a729-4c42427456d2"}'
+  recorded_at: Mon, 26 Feb 2024 20:49:34 GMT
+recorded_with: VCR 6.2.0

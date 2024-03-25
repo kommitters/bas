@@ -1,0 +1,66 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
+    body:
+      encoding: UTF-8
+      string: '{"username":"Test Bot","text":"Some payload, to be sent, including
+        icons :grinning:"}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 14 Feb 2024 13:07:45 GMT
+      Server:
+      - Apache
+      Vary:
+      - Accept-Encoding
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Referrer-Policy:
+      - no-referrer
+      X-Slack-Unique-Id:
+      - Zcy7IfnDX9WfjxU8pv3SsQAAADk
+      X-Slack-Backend:
+      - r
+      Access-Control-Allow-Origin:
+      - "*"
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Type:
+      - text/html
+      Content-Length:
+      - '2'
+      Via:
+      - 1.1 slack-prod.tinyspeck.com, envoy-www-iad-xmqiloul, envoy-edge-iad-rtvvkhfq
+      X-Envoy-Attempt-Count:
+      - '1'
+      X-Envoy-Upstream-Service-Time:
+      - '48'
+      X-Backend:
+      - main_normal main_canary_with_overflow main_control_with_overflow
+      X-Server:
+      - slack-www-hhvm-main-iad-kkyf
+      X-Slack-Shared-Secret-Outcome:
+      - no-match
+      X-Edge-Backend:
+      - envoy-www
+      X-Slack-Edge-Shared-Secret-Outcome:
+      - no-match
+    body:
+      encoding: UTF-8
+      string: ok
+  recorded_at: Wed, 14 Feb 2024 13:07:45 GMT
+recorded_with: VCR 6.2.0

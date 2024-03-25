@@ -1,0 +1,58 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.notion.com/v1/databases/52e4040938e945ceb2e6895ce5a0d51e/query
+    body:
+      encoding: UTF-8
+      string: '{"filter":{"and":[{"property":"Status","status":{"equals":"In Progress"}},{"property":"OK","formula":{"string":{"contains":"✅"}}}]}}'
+    headers:
+      Authorization:
+      - Bearer secret_K5UCqm27GvAscTlaGJmS2se4fyM1K7is3OIZMw03NaC
+      Content-Type:
+      - application/json
+      Notion-Version:
+      - '2022-06-28'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 26 Feb 2024 17:55:16 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Express
+      X-Notion-Request-Id:
+      - adffe291-9da1-4b03-ad8a-48e5d129937d
+      Etag:
+      - W/"c18-Z8O+vmOzqIkVnwD2Zg5OA79p7Ks"
+      Vary:
+      - Accept-Encoding
+      Cf-Cache-Status:
+      - DYNAMIC
+      Set-Cookie:
+      - __cf_bm=thKMOdo8gpeTHdZRlY4U9hCDNwG1rj2.jLJelfBkWWI-1708970116-1.0-AaBJABB/a4MXxAB7Ft4l2XbmruNSoYBHqLSNKX2EQeUaTSN9ryn+xSN82vuxaDP1fxTpyLBBT5RVfoFtm+xJggQ=;
+        path=/; expires=Mon, 26-Feb-24 18:25:16 GMT; domain=.notion.com; HttpOnly;
+        Secure; SameSite=None
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 85ba0ed85ecef7b4-BOG
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJvYmplY3QiOiJsaXN0IiwicmVzdWx0cyI6W3sib2JqZWN0IjoicGFnZSIsImlkIjoiOTIxMjllZjMtNDc3NC00NTE4LTg1ZDQtMzA1OTljNjk1OGQ2IiwiY3JlYXRlZF90aW1lIjoiMjAyNC0wMi0yNlQxNzo0NzowMC4wMDBaIiwibGFzdF9lZGl0ZWRfdGltZSI6IjIwMjQtMDItMjZUMTc6NTM6MDAuMDAwWiIsImNyZWF0ZWRfYnkiOnsib2JqZWN0IjoidXNlciIsImlkIjoiN2I2YTA4MzktZDVhZC00NjM2LTk1MDktODQxMWNjNzA2ODhkIn0sImxhc3RfZWRpdGVkX2J5Ijp7Im9iamVjdCI6InVzZXIiLCJpZCI6IjdiNmEwODM5LWQ1YWQtNDYzNi05NTA5LTg0MTFjYzcwNjg4ZCJ9LCJjb3ZlciI6bnVsbCwiaWNvbiI6bnVsbCwicGFyZW50Ijp7InR5cGUiOiJkYXRhYmFzZV9pZCIsImRhdGFiYXNlX2lkIjoiNTJlNDA0MDktMzhlOS00NWNlLWIyZTYtODk1Y2U1YTBkNTFlIn0sImFyY2hpdmVkIjpmYWxzZSwicHJvcGVydGllcyI6eyJPSyI6eyJpZCI6IlhXWUUiLCJ0eXBlIjoiZm9ybXVsYSIsImZvcm11bGEiOnsidHlwZSI6InN0cmluZyIsInN0cmluZyI6IuKchSJ9fSwiUmVzcG9uc2libGUgZG9tYWluIjp7ImlkIjoiJTVCSFclN0IiLCJ0eXBlIjoic2VsZWN0Iiwic2VsZWN0Ijp7ImlkIjoiPlxccDsiLCJuYW1lIjoia29tbWl0Lm1hcmtldGluZyIsImNvbG9yIjoiYnJvd24ifX0sIlN0YXR1cyI6eyJpZCI6Il8lM0R3byIsInR5cGUiOiJzdGF0dXMiLCJzdGF0dXMiOnsiaWQiOiJhOGFhMWU2Ni00MjMyLTQ1MmQtODUxOC01MmY1OTNjNDI2ZjciLCJuYW1lIjoiSW4gUHJvZ3Jlc3MiLCJjb2xvciI6ImJsdWUifX0sIkNyZWF0ZWQgYXQiOnsiaWQiOiJ0aXRsZSIsInR5cGUiOiJ0aXRsZSIsInRpdGxlIjpbXX19LCJ1cmwiOiJodHRwczovL3d3dy5ub3Rpb24uc28vOTIxMjllZjM0Nzc0NDUxODg1ZDQzMDU5OWM2OTU4ZDYiLCJwdWJsaWNfdXJsIjpudWxsfSx7Im9iamVjdCI6InBhZ2UiLCJpZCI6ImI4YWM3YWUxLTJiYjItNGMyYS1hZjZhLTg3NWNhYTZiYWIyNCIsImNyZWF0ZWRfdGltZSI6IjIwMjQtMDItMjZUMTc6NDc6MDAuMDAwWiIsImxhc3RfZWRpdGVkX3RpbWUiOiIyMDI0LTAyLTI2VDE3OjUzOjAwLjAwMFoiLCJjcmVhdGVkX2J5Ijp7Im9iamVjdCI6InVzZXIiLCJpZCI6IjdiNmEwODM5LWQ1YWQtNDYzNi05NTA5LTg0MTFjYzcwNjg4ZCJ9LCJsYXN0X2VkaXRlZF9ieSI6eyJvYmplY3QiOiJ1c2VyIiwiaWQiOiI3YjZhMDgzOS1kNWFkLTQ2MzYtOTUwOS04NDExY2M3MDY4OGQifSwiY292ZXIiOm51bGwsImljb24iOm51bGwsInBhcmVudCI6eyJ0eXBlIjoiZGF0YWJhc2VfaWQiLCJkYXRhYmFzZV9pZCI6IjUyZTQwNDA5LTM4ZTktNDVjZS1iMmU2LTg5NWNlNWEwZDUxZSJ9LCJhcmNoaXZlZCI6ZmFsc2UsInByb3BlcnRpZXMiOnsiT0siOnsiaWQiOiJYV1lFIiwidHlwZSI6ImZvcm11bGEiLCJmb3JtdWxhIjp7InR5cGUiOiJzdHJpbmciLCJzdHJpbmciOiLinIUifX0sIlJlc3BvbnNpYmxlIGRvbWFpbiI6eyJpZCI6IiU1QkhXJTdCIiwidHlwZSI6InNlbGVjdCIsInNlbGVjdCI6eyJpZCI6Iml7RnMiLCJuYW1lIjoia29tbWl0Lm9wcyIsImNvbG9yIjoicGluayJ9fSwiU3RhdHVzIjp7ImlkIjoiXyUzRHdvIiwidHlwZSI6InN0YXR1cyIsInN0YXR1cyI6eyJpZCI6ImE4YWExZTY2LTQyMzItNDUyZC04NTE4LTUyZjU5M2M0MjZmNyIsIm5hbWUiOiJJbiBQcm9ncmVzcyIsImNvbG9yIjoiYmx1ZSJ9fSwiQ3JlYXRlZCBhdCI6eyJpZCI6InRpdGxlIiwidHlwZSI6InRpdGxlIiwidGl0bGUiOltdfX0sInVybCI6Imh0dHBzOi8vd3d3Lm5vdGlvbi5zby9iOGFjN2FlMTJiYjI0YzJhYWY2YTg3NWNhYTZiYWIyNCIsInB1YmxpY191cmwiOm51bGx9LHsib2JqZWN0IjoicGFnZSIsImlkIjoiYjRmNGMxYWUtMmJkYS00NTYzLTgzNDEtMmZmMGY2NzBjMDc4IiwiY3JlYXRlZF90aW1lIjoiMjAyNC0wMi0yNlQxNzo0MzowMC4wMDBaIiwibGFzdF9lZGl0ZWRfdGltZSI6IjIwMjQtMDItMjZUMTc6NTM6MDAuMDAwWiIsImNyZWF0ZWRfYnkiOnsib2JqZWN0IjoidXNlciIsImlkIjoiN2I2YTA4MzktZDVhZC00NjM2LTk1MDktODQxMWNjNzA2ODhkIn0sImxhc3RfZWRpdGVkX2J5Ijp7Im9iamVjdCI6InVzZXIiLCJpZCI6IjdiNmEwODM5LWQ1YWQtNDYzNi05NTA5LTg0MTFjYzcwNjg4ZCJ9LCJjb3ZlciI6bnVsbCwiaWNvbiI6bnVsbCwicGFyZW50Ijp7InR5cGUiOiJkYXRhYmFzZV9pZCIsImRhdGFiYXNlX2lkIjoiNTJlNDA0MDktMzhlOS00NWNlLWIyZTYtODk1Y2U1YTBkNTFlIn0sImFyY2hpdmVkIjpmYWxzZSwicHJvcGVydGllcyI6eyJPSyI6eyJpZCI6IlhXWUUiLCJ0eXBlIjoiZm9ybXVsYSIsImZvcm11bGEiOnsidHlwZSI6InN0cmluZyIsInN0cmluZyI6IuKchSJ9fSwiUmVzcG9uc2libGUgZG9tYWluIjp7ImlkIjoiJTVCSFclN0IiLCJ0eXBlIjoic2VsZWN0Iiwic2VsZWN0Ijp7ImlkIjoiaXtGcyIsIm5hbWUiOiJrb21taXQub3BzIiwiY29sb3IiOiJwaW5rIn19LCJTdGF0dXMiOnsiaWQiOiJfJTNEd28iLCJ0eXBlIjoic3RhdHVzIiwic3RhdHVzIjp7ImlkIjoiYThhYTFlNjYtNDIzMi00NTJkLTg1MTgtNTJmNTkzYzQyNmY3IiwibmFtZSI6IkluIFByb2dyZXNzIiwiY29sb3IiOiJibHVlIn19LCJDcmVhdGVkIGF0Ijp7ImlkIjoidGl0bGUiLCJ0eXBlIjoidGl0bGUiLCJ0aXRsZSI6W3sidHlwZSI6InRleHQiLCJ0ZXh0Ijp7ImNvbnRlbnQiOiJ0b2RheSIsImxpbmsiOm51bGx9LCJhbm5vdGF0aW9ucyI6eyJib2xkIjpmYWxzZSwiaXRhbGljIjpmYWxzZSwic3RyaWtldGhyb3VnaCI6ZmFsc2UsInVuZGVybGluZSI6ZmFsc2UsImNvZGUiOmZhbHNlLCJjb2xvciI6ImRlZmF1bHQifSwicGxhaW5fdGV4dCI6InRvZGF5IiwiaHJlZiI6bnVsbH1dfX0sInVybCI6Imh0dHBzOi8vd3d3Lm5vdGlvbi5zby90b2RheS1iNGY0YzFhZTJiZGE0NTYzODM0MTJmZjBmNjcwYzA3OCIsInB1YmxpY191cmwiOm51bGx9XSwibmV4dF9jdXJzb3IiOm51bGwsImhhc19tb3JlIjpmYWxzZSwidHlwZSI6InBhZ2Vfb3JfZGF0YWJhc2UiLCJwYWdlX29yX2RhdGFiYXNlIjp7fSwicmVxdWVzdF9pZCI6ImFkZmZlMjkxLTlkYTEtNGIwMy1hZDhhLTQ4ZTVkMTI5OTM3ZCJ9
+  recorded_at: Mon, 26 Feb 2024 17:55:16 GMT
+recorded_with: VCR 6.2.0
