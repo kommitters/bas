@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe Bns do
+RSpec.describe Bas do
   it "has a version number" do
-    expect(Bns::VERSION).not_to be nil
+    expect(Bas::VERSION).not_to be nil
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Bns
+module Bas
   # Gem version
-  VERSION = "0.3.0"
+  VERSION = "0.1.0"
 end

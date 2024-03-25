@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "bns"
+require "bas"
 require "vcr"
 require "simplecov"
 require "simplecov-lcov"

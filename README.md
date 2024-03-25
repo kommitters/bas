@@ -1,72 +1,77 @@
-# BNS - Business Notification System
+# BAS - Business Automation System
 
-Many organizations and individuals rely on automatic notifications across various contexts in their daily operations. With BNS, we aim to provide an open-source platform that empowers users to create customized notification systems tailored to their unique requirements. BNS consists of a series of abstract components designed to facilitate the creation of diverse use cases, regardless of context.
+Many organizations and individuals rely on automation across various contexts in their daily operations. With BAS, we aim to provide an open-source platform that empowers users to create customized automation systems tailored to their unique requirements. BAS consists of a series of abstract components designed to facilitate the creation of diverse use cases, regardless of context.
 
 The underlying idea is to develop generic components that can serve a wide range of needs, this approach ensures that all members of the community can leverage the platform's evolving suite of components and use cases to their advantage.
 
-![Gem Version](https://img.shields.io/gem/v/bns?style=for-the-badge)
-![Gem Total Downloads](https://img.shields.io/gem/dt/bns?style=for-the-badge)
-![Build Badge](https://img.shields.io/github/actions/workflow/status/kommitters/bns/ci.yml?branch=project-opensource-config&style=for-the-badge)
-[![Coverage Status](https://img.shields.io/coveralls/github/kommitters/bns?style=for-the-badge)](https://coveralls.io/github/kommitters/bns?branch=main)
-![GitHub License](https://img.shields.io/github/license/kommitters/bns?style=for-the-badge)
-[![OpenSSF Scorecard](https://img.shields.io/ossf-scorecard/github.com/kommitters/bns?label=openssf%20scorecard&style=for-the-badge)](https://api.securityscorecards.dev/projects/github.com/kommitters/bns)
+![Gem Version](https://img.shields.io/gem/v/bas?style=for-the-badge)
+![Gem Total Downloads](https://img.shields.io/gem/dt/bas?style=for-the-badge)
+![Build Badge](https://img.shields.io/github/actions/workflow/status/kommitters/bas/ci.yml?branch=project-opensource-config&style=for-the-badge)
+[![Coverage Status](https://img.shields.io/coveralls/github/kommitters/bas?style=for-the-badge)](https://coveralls.io/github/kommitters/bas?branch=main)
+![GitHub License](https://img.shields.io/github/license/kommitters/bas?style=for-the-badge)
+[![OpenSSF Scorecard](https://img.shields.io/ossf-scorecard/github.com/kommitters/bas?label=openssf%20scorecard&style=for-the-badge)](https://api.securityscorecards.dev/projects/github.com/kommitters/bas)
 [![OpenSSF Best Practices](https://img.shields.io/cii/summary/8383?label=openssf%20best%20practices&style=for-the-badge)](https://bestpractices.coreinfrastructure.org/projects/8383)
 
 ## Installation
 
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add bns
+    $ bundle add bas
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install bns
+    $ gem install bas
 
 ## Requirements
 
-* Ruby 3.2.2 or higher
+* Ruby 2.6.0 or higher
 
 ## Building my own use case
 
 The gem provides with basic interfaces, types, and methods to shape your own use cases in an easy way.
 
-There are 2 currently implemented use cases:
+There are 7 currently implemented use cases:
 * Birthday notifications - from Notion to Discord
+* Next Week Birthday notifications - from Notion to Discord
 * PTO notifications - from Notion to Discord
+* Next Week PTO notifications - from Notion to Discord
+* PTO notifications - from Postgres to Slack
+* WIP limit exceeded - from Notion to Discord
+* Support email notification - from IMAP to Discord
 
-For this example we'll analize the birthday notification use case, bringing data from a notion database, and dispatching the 
+For this example we'll analyze the birthday notification use case, bringing data from a notion database, and dispatching the
 notifications to a Discord channel.
 
-A *Use Case* object, consists on 4 main componenets, having it's own responsability:
+A *Use Case* object, consists on 4 main components, having it's own responsibility:
 
 ### 1. Fetcher - Obtaining the data
 
 Specifically, a fetcher is an object in charged of bringing data from a data source. The gem already provides the base interface
 for building your own fetcher for your specific data source, or rely on already built classes if they match your purpose.
 
-The base interface for a fetcher can be found under the `bns/fetcher/base.rb` class. Since this is a implementation of the `Fetcher::Base` 
+The base interface for a fetcher can be found under the `bas/fetcher/base.rb` class. Since this is a implementation of the `Fetcher::Base`
 for bringing data from a Notion database, it was created on a new namespace for that data source, it can be found under
-`/bns/fetcher/notion/birthday.rb`. It implements specific logic for fetching the data and validating the response.
+`/bas/fetcher/notion/use_case/birthday_today.rb`. It implements specific logic for fetching the data and validating the response.
 
 ### 2. Mapper - Shaping it
 
-The **Mapper** responsability, is to shape the data using custom types from the app domain, bringing it into a
+The **Mapper** responsibility, is to shape the data using custom types from the app domain, bringing it into a
 common structure understandable for other components, specifically the **Formatter**.
 
-Because of the use case, the Mapper implementation for it, relyes on specific types for representing a Birthday it self. It can be found
-under `/bns/mapper/notion/birthday.rb`
+Because of the use case, the Mapper implementation for it, relies on specific types for representing a Birthday it self. It can be found
+under `/bas/mapper/notion/birthday_today.rb`
 
 ### 3. Formatter - Preparing the message
 
 The **Formatter**, is in charge of preparing the message to be sent in our notification, and give it the right format with the right data.
-The template or 'format' to be used should be included in the use case configurations, which we'll review in a further step. It's 
-implementation can be found under `/bns/formatter/discord/birthday.rb`.
+The template or 'format' to be used should be included in the use case configurations, which we'll review in a further step. It's
+implementation can be found under `/bas/formatter/birthday.rb`.
 
 ### 4. Dispatcher - Sending your notification
 
 Finally, the **Dispatcher** basically, sends or dispatches the formatted message into a destination, since the use case was implemented for
-Discord, it implements specific logic to communicate with a Discord channel using a webhook. The webhook configuration and name for the 'Sender' 
-in the channel should be provided with the initial use case configurations. It can be found under `/bns/dispatcher/discord/implementation.rb`
+Discord, it implements specific logic to communicate with a Discord channel using a webhook. The webhook configuration and name for the 'Sender'
+in the channel should be provided with the initial use case configurations. It can be found under `/bas/dispatcher/discord/implementation.rb`
 
 ## Examples
 
@@ -84,7 +89,7 @@ We'll need some configurations for this specific use case:
 
 With the following formula for the **BD_this_year** column: `dateAdd(prop("BD"), year(now()) - year(prop("BD")), "years")`
 
-* A Notion secret, which can be obtained, by creating an integration here: `https://developers.notion.com/`, browsing on the **View my integations** option, and selecting the **New Integration** or **Create new integration** buttons.
+* A Notion secret, which can be obtained, by creating an integration here: `https://developers.notion.com/`, browsing on the **View my integrations** option, and selecting the **New Integration** or **Create new integration** buttons.
 
 * A webhook key, which can be generated directly on discord on the desired channel, following this instructions: `https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks`
 
@@ -217,7 +222,7 @@ On your serverless configuration, create your lambda function, on your serverles
 ```ruby
 # frozen_string_literal: true
 
-require 'bns'
+require 'bas'
 
 # Initialize the environment variables
 NOTION_BASE_URL = 'https://api.notion.com'
@@ -347,10 +352,10 @@ The gem is licensed under an MIT license. See [LICENSE][license] for details.
 
 </sub>
 
-[license]: https://github.com/kommitters/bns/blob/main/LICENSE
-[coc]: https://github.com/kommitters/bns/blob/main/CODE_OF_CONDUCT.md
-[changelog]: https://github.com/kommitters/bns/blob/main/CHANGELOG.md
-[contributing]: https://github.com/kommitters/bns/blob/main/CONTRIBUTING.md
+[license]: https://github.com/kommitters/bas/blob/main/LICENSE
+[coc]: https://github.com/kommitters/bas/blob/main/CODE_OF_CONDUCT.md
+[changelog]: https://github.com/kommitters/bas/blob/main/CHANGELOG.md
+[contributing]: https://github.com/kommitters/bas/blob/main/CONTRIBUTING.md
 [kommit-website]: https://kommit.co
 [kommit-github]: https://github.com/kommitters
 [kommit-x]: https://twitter.com/kommitco
