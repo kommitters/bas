@@ -6,7 +6,7 @@ The underlying idea is to develop generic components that can serve a wide range
 
 ![Gem Version](https://img.shields.io/gem/v/bas?style=for-the-badge)
 ![Gem Total Downloads](https://img.shields.io/gem/dt/bas?style=for-the-badge)
-![Build Badge](https://img.shields.io/github/actions/workflow/status/kommitters/bas/ci.yml?branch=project-opensource-config&style=for-the-badge)
+![Build Badge](https://img.shields.io/github/actions/workflow/status/kommitters/bas/ci.yml?style=for-the-badge)
 [![Coverage Status](https://img.shields.io/coveralls/github/kommitters/bas?style=for-the-badge)](https://coveralls.io/github/kommitters/bas?branch=main)
 ![GitHub License](https://img.shields.io/github/license/kommitters/bas?style=for-the-badge)
 [![OpenSSF Scorecard](https://img.shields.io/ossf-scorecard/github.com/kommitters/bas?label=openssf%20scorecard&style=for-the-badge)](https://api.securityscorecards.dev/projects/github.com/kommitters/bas)
