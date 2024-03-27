@@ -10,7 +10,7 @@ The underlying idea is to develop generic components that can serve a wide range
 [![Coverage Status](https://img.shields.io/coveralls/github/kommitters/bas?style=for-the-badge)](https://coveralls.io/github/kommitters/bas?branch=main)
 ![GitHub License](https://img.shields.io/github/license/kommitters/bas?style=for-the-badge)
 [![OpenSSF Scorecard](https://img.shields.io/ossf-scorecard/github.com/kommitters/bas?label=openssf%20scorecard&style=for-the-badge)](https://api.securityscorecards.dev/projects/github.com/kommitters/bas)
-[![OpenSSF Best Practices](https://img.shields.io/cii/summary/8383?label=openssf%20best%20practices&style=for-the-badge)](https://bestpractices.coreinfrastructure.org/projects/8383)
+[![OpenSSF Best Practices](https://img.shields.io/cii/summary/8713?label=openssf%20best%20practices&style=for-the-badge)](https://bestpractices.coreinfrastructure.org/projects/8713)
 
 ## Installation
 
