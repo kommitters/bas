@@ -2,11 +2,16 @@
 
 RSpec.describe Formatter::Pto do
   before do
+    day_from_interval = { from: "2024-01-11T19:00:00-05:00", to: "2024-01-11T23:00:00-05:00" }
+    day_to_interval = { from: "2024-01-17T12:00:00-05:00", to: "2024-01-17T16:00:00-05:00" }
+
     @data = [
-      Domain::Pto.new("Range PTO", "2024-01-11", "2024-01-13"),
-      Domain::Pto.new("Time PTO", "2024-03-13T08:00:00.000-05:00", "2024-03-13T12:00:00.000-05:00"),
-      Domain::Pto.new("Time PTO", "2024-03-13T18:00:00.000", "2024-03-13T19:00:00.000"),
-      Domain::Pto.new("Day PTO", "2024-01-11", "2024-01-11")
+      Domain::Pto.new("Range PTO", { from: "2024-01-11" }, { from: "2024-01-13" }),
+      Domain::Pto.new("Time PTO", { from: "2024-03-13T08:00:00.000-05:00" }, { from: "2024-03-13T12:00:00.000-05:00" }),
+      Domain::Pto.new("Time PTO", { from: "2024-03-13T18:00:00.000" }, { from: "2024-03-13T19:00:00.000" }),
+      Domain::Pto.new("Day PTO", { from: "2024-01-11" }, { from: "2024-01-11" }),
+      Domain::Pto.new("Day PTO", day_from_interval, { from: "2024-01-17" }),
+      Domain::Pto.new("Day PTO", { from: "2024-01-11" }, day_to_interval)
     ]
   end
 
@@ -32,7 +37,9 @@ RSpec.describe Formatter::Pto do
       expectation = ":beach: Range PTO is on PTO from 2024-01-11 to 2024-01-13\n" \
                     ":beach: Time PTO is on PTO the day 2024-03-13 from 08:00 am to 12:00 pm\n" \
                     ":beach: Time PTO is on PTO the day 2024-03-13 from 01:00 pm to 02:00 pm\n" \
-                    ":beach: Day PTO is on PTO the day 2024-01-11 all day\n"
+                    ":beach: Day PTO is on PTO the day 2024-01-11 all day\n" \
+                    ":beach: Day PTO is on PTO from 2024-01-11 (07:00 pm - 11:00 pm) to 2024-01-17\n" \
+                    ":beach: Day PTO is on PTO from 2024-01-11 to 2024-01-17 (12:00 pm - 04:00 pm)\n"
 
       expect(formatted_message).to be_an_instance_of(String)
       expect(formatted_message).to eq(expectation)

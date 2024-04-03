@@ -42,19 +42,11 @@ module Mapper
         response.map do |value|
           pto_fields = value["properties"].slice(*PTO_PARAMS)
 
-          pto_fields.each do |field, pto_value|
-            pto_fields[field] = extract_pto_value(field, pto_value)
-          end
-
-          pto_fields
-        end
-      end
-
-      def extract_pto_value(field, value)
-        case field
-        when "Person" then extract_person_field_value(value)
-        when "Desde?" then extract_date_field_value(value)
-        when "Hasta?" then extract_date_field_value(value)
+          {
+            "Person" => extract_person_field_value(pto_fields["Person"]),
+            "Desde?" => extract_date_field_value(pto_fields["Desde?"]),
+            "Hasta?" => extract_date_field_value(pto_fields["Hasta?"])
+          }
         end
       end
 
@@ -62,8 +54,19 @@ module Mapper
         data["people"][0]["name"]
       end
 
-      def extract_date_field_value(data)
+      def extract_date_field_value(date)
+        {
+          from: extract_start_date(date),
+          to: extract_end_date(date)
+        }
+      end
+
+      def extract_start_date(data)
         data["date"]["start"]
+      end
+
+      def extract_end_date(data)
+        data["date"]["end"]
       end
     end
   end
