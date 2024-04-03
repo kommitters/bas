@@ -38,7 +38,7 @@ RSpec.describe Fetcher::Github::RepoIssues do
       allow(Octokit::Client).to receive(:new).and_return(octokit)
     end
 
-    it "fetch emails from the Github repo when there are not 'issues'" do
+    it "fetch issues from the Github repo when there are no 'issues'" do
       allow(octokit).to receive(:public_send).and_return(empty_response)
 
       fetched_data = @fetcher.fetch
@@ -48,7 +48,7 @@ RSpec.describe Fetcher::Github::RepoIssues do
       expect(fetched_data.results.length).to eq(0)
     end
 
-    it "fetch emails from the Github repo when there are 'issues'" do
+    it "fetch issues from the Github repo when there are 'issues'" do
       allow(octokit).to receive(:public_send).and_return(response)
 
       fetched_data = @fetcher.fetch
