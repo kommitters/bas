@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-require 'octokit'
-require 'openssl'
-require 'jwt'
+require "octokit"
+require "openssl"
+require "jwt"
 
 require_relative "../base"
 require_relative "./types/response"
-# require_relative "./helper"
 
 module Fetcher
   module Github

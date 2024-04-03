@@ -8,6 +8,7 @@ require_relative "../fetcher/notion/use_case/pto_next_week"
 require_relative "../fetcher/notion/use_case/work_items_limit"
 require_relative "../fetcher/postgres/use_case/pto_today"
 require_relative "../fetcher/imap/use_case/support_emails"
+require_relative "../fetcher/github/use_case/repo_issues"
 
 # mapper
 require_relative "../mapper/notion/birthday_today"
@@ -15,6 +16,7 @@ require_relative "../mapper/notion/pto_today"
 require_relative "../mapper/notion/work_items_limit"
 require_relative "../mapper/postgres/pto_today"
 require_relative "../mapper/imap/support_emails"
+require_relative "../mapper/github/issues"
 
 # formatter
 require_relative "../formatter/birthday"

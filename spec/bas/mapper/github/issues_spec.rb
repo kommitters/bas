@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Mapper::Github::Issues do
-  let(:assignees) { [{ :login => "username" }] }
-  let(:issues) {
+  let(:assignees) { [{ login: "username" }] }
+  let(:issues) do
     [{
       url: "repo_url",
       title: "title",
@@ -10,7 +10,7 @@ RSpec.describe Mapper::Github::Issues do
       assignees: assignees,
       description: "description"
     }]
-  }
+  end
 
   before do
     @imap_response = Fetcher::Github::Types::Response.new(issues)

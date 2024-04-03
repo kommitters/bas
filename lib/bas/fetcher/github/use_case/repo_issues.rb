@@ -9,7 +9,6 @@ module Fetcher
     # for fetching issues from a Github repository.
     #
     class RepoIssues < Github::Base
-
       def fetch
         execute("list_issues", config[:repo])
       end
