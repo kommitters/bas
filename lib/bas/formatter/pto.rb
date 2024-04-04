@@ -38,6 +38,8 @@ module Formatter
     def format(ptos_list)
       raise Formatter::Exceptions::InvalidData unless ptos_list.all? { |pto| pto.is_a?(Domain::Pto) }
 
+      ptos_list.each { |pto| pto.format_timezone(@timezone) }
+
       ptos_list.reduce("") do |payload, pto|
         built_template = build_template(Domain::Pto::ATTRIBUTES, pto)
         payload + format_message_by_case(built_template.gsub("\n", ""), pto)
@@ -47,42 +49,37 @@ module Formatter
     private
 
     def format_message_by_case(built_template, pto)
-      date_start = format_timezone(pto.start_date).strftime("%F")
-      date_end = format_timezone(pto.end_date).strftime("%F")
-
-      if date_start == date_end
+      if pto.same_day?
         interval = same_day_interval(pto)
-        day_message = today?(date_start) ? "today" : "the day #{date_start}"
+        day_message = today?(pto.start_date_from) ? "today" : "the day #{pto.start_date_from.strftime("%F")}"
 
         "#{built_template} #{day_message} #{interval}\n"
       else
-        "#{built_template} from #{date_start} to #{date_end}\n"
+        start_date_interval = day_interval(pto.start_date_from, pto.start_date_to)
+        end_date_interval = day_interval(pto.end_date_from, pto.end_date_to)
+
+        "#{built_template} from #{start_date_interval} to #{end_date_interval}\n"
       end
     end
 
+    def day_interval(start_date, end_date)
+      return start_date.strftime("%F") if end_date.nil?
+
+      time_start = start_date.strftime("%I:%M %P")
+      time_end = end_date.strftime("%I:%M %P")
+
+      "#{start_date.strftime("%F")} (#{time_start} - #{time_end})"
+    end
+
     def same_day_interval(pto)
-      time_start = format_timezone(pto.start_date).strftime("%I:%M %P")
-      time_end = format_timezone(pto.end_date).strftime("%I:%M %P")
+      time_start = pto.start_date_from.strftime("%I:%M %P")
+      time_end = pto.end_date_from.strftime("%I:%M %P")
 
       time_start == time_end ? "all day" : "from #{time_start} to #{time_end}"
     end
 
-    def format_timezone(date)
-      date_time = build_date(date)
-
-      Time.at(date_time, in: @timezone)
-    end
-
     def today?(date)
-      time_now = Time.now.strftime("%F")
-
-      date == format_timezone(time_now).strftime("%F")
-    end
-
-    def build_date(date)
-      date_time = date.include?("T") ? date : "#{date}T00:00:00.000#{@timezone}"
-
-      DateTime.parse(date_time).to_time
+      date == Time.now(in: @timezone).strftime("%F")
     end
   end
 end

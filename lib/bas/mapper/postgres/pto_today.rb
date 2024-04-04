@@ -27,8 +27,8 @@ module Mapper
 
         ptos.map do |pto|
           name = pto["name"]
-          start_date = pto["start_date"]
-          end_date = pto["end_date"]
+          start_date = { from: pto["start_date"], to: nil }
+          end_date = { from: pto["end_date"], to: nil }
 
           Domain::Pto.new(name, start_date, end_date)
         end
