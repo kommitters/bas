@@ -1,0 +1,57 @@
+# frozen_string_literal: true
+
+require_relative "../../domain/issue"
+require_relative "../base"
+
+module Mapper
+  module Github
+    ##
+    # This class implementats the methods of the Mapper::Base module, specifically designed for
+    # preparing or shaping Github issues data coming from a Fetcher::Base implementation.
+    class Issues
+      include Base
+
+      # Implements the logic for shaping the results from a fetcher response.
+      #
+      # <br>
+      # <b>Params:</b>
+      # * <tt>Fetcher::Github::Types::Response</tt> github_response: Array of github issues data.
+      #
+      # <br>
+      # <b>return</b> <tt>List<Domain::Issue></tt> mapped github issues to be used by a
+      # Formatter::Base implementation.
+      #
+      def map(github_response)
+        return [] if github_response.results.empty?
+
+        normalized_github_data = normalize_response(github_response.results)
+
+        normalized_github_data.map do |issue|
+          Domain::Issue.new(
+            issue["title"], issue["state"], issue["assignees"], issue["body"], issue["url"]
+          )
+        end
+      end
+
+      private
+
+      def normalize_response(results)
+        return [] if results.nil?
+
+        results.map do |value|
+          {
+            "title" => value[:title],
+            "state" => value[:state],
+            "assignees" => extract_assignees(value[:assignees]),
+            "body" => value[:body],
+            "url" => value[:url]
+          }
+        end
+      end
+
+      def extract_assignees(assignees)
+        assignees.map { |assignee| assignee[:login] }
+      end
+    end
+  end
+end
