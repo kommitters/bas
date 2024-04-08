@@ -5,8 +5,8 @@ RSpec.describe Mapper::Notion::PtoToday do
     @mapper = described_class.new
     fetcher_config = {
       base_url: "https://api.notion.com",
-      database_id: "b68d11061aad43bd89f8f525ede2b598",
-      secret: "secret_ZELfDH6cf4Glc9NLPLxvsvdl9iZVD4qBCyMDXqch51C",
+      database_id: "8187370982134ed099f9d14385aa81c9",
+      secret: "secret_K5UCqm27GvAscTlaGJmS2se4fyM1K7is3OIZMw03NaC",
       filter: {
         "filter": {
           "and": [

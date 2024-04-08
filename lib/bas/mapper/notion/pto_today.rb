@@ -12,7 +12,7 @@ module Mapper
     class PtoToday
       include Base
 
-      PTO_PARAMS = ["Person", "Desde?", "Hasta?"].freeze
+      PTO_PARAMS = ["Description", "Desde?", "Hasta?"].freeze
 
       # Implements the logic for shaping the results from a fetcher response.
       #
@@ -30,7 +30,7 @@ module Mapper
         normalized_notion_data = normalize_response(notion_response.results)
 
         normalized_notion_data.map do |pto|
-          Domain::Pto.new(pto["Person"], pto["Desde?"], pto["Hasta?"])
+          Domain::Pto.new(pto["Description"], pto["Desde?"], pto["Hasta?"])
         end
       end
 
@@ -43,15 +43,17 @@ module Mapper
           pto_fields = value["properties"].slice(*PTO_PARAMS)
 
           {
-            "Person" => extract_person_field_value(pto_fields["Person"]),
+            "Description" => extract_description_field_value(pto_fields["Description"]),
             "Desde?" => extract_date_field_value(pto_fields["Desde?"]),
             "Hasta?" => extract_date_field_value(pto_fields["Hasta?"])
           }
         end
       end
 
-      def extract_person_field_value(data)
-        data["people"][0]["name"]
+      def extract_description_field_value(data)
+        names = data["title"].map { |name| name["plain_text"] }
+
+        names.join(" ")
       end
 
       def extract_date_field_value(date)
