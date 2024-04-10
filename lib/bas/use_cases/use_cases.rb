@@ -279,7 +279,7 @@ module UseCases
   #     https://api.slack.com/messaging/webhooks#create_a_webhook
   #
   def self.notify_pto_from_postgres_to_slack(options)
-    read = Read::Postgres::PtoToday.new(options[:Read_options])
+    read = Read::Postgres::PtoToday.new(options[:read_options])
     mapper = Mapper::Postgres::PtoToday.new
     formatter = Formatter::Pto.new(options[:format_options])
     dispatcher = Dispatcher::Slack::Implementation.new(options[:dispatch_options])
