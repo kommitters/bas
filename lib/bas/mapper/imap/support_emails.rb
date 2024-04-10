@@ -7,15 +7,15 @@ module Mapper
   module Imap
     ##
     # This class implementats the methods of the Mapper::Base module, specifically designed for
-    # preparing or shaping support emails data coming from a Fetcher::Base implementation.
+    # preparing or shaping support emails data coming from a Read::Base implementation.
     class SupportEmails
       include Base
 
-      # Implements the logic for shaping the results from a fetcher response.
+      # Implements the logic for shaping the results from a reader response.
       #
       # <br>
       # <b>Params:</b>
-      # * <tt>Fetcher::Imap::Types::Response</tt> imap_response: Array of imap emails data.
+      # * <tt>Read::Imap::Types::Response</tt> imap_response: Array of imap emails data.
       #
       # <br>
       # <b>return</b> <tt>List<Domain::Email></tt> support_emails_list, mapped support emails to be used by a

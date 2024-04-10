@@ -7,17 +7,17 @@ module Mapper
   module Notion
     ##
     # This class implementats the methods of the Mapper::Base module, specifically designed for preparing or
-    # shaping birthdays data coming from a Fetcher::Base implementation.
+    # shaping birthdays data coming from a Read::Base implementation.
     class BirthdayToday
       include Base
 
       BIRTHDAY_PARAMS = ["Complete Name", "BD_this_year"].freeze
 
-      # Implements the logic for shaping the results from a fetcher response.
+      # Implements the logic for shaping the results from a reader response.
       #
       # <br>
       # <b>Params:</b>
-      # * <tt>Fetcher::Notion::Types::Response</tt> notion_response: Notion response object.
+      # * <tt>Read::Notion::Types::Response</tt> notion_response: Notion response object.
       #
       # <br>
       # <b>return</b> <tt>List<Domain::Birthday></tt> birthdays_list, mapped birthdays to be used by a

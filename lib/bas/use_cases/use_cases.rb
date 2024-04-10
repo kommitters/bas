@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-# fetcher
-require_relative "../fetcher/notion/use_case/birthday_today"
-require_relative "../fetcher/notion/use_case/birthday_next_week"
-require_relative "../fetcher/notion/use_case/pto_today"
-require_relative "../fetcher/notion/use_case/pto_next_week"
-require_relative "../fetcher/notion/use_case/work_items_limit"
-require_relative "../fetcher/postgres/use_case/pto_today"
-require_relative "../fetcher/imap/use_case/support_emails"
-require_relative "../fetcher/github/use_case/repo_issues"
+# read
+require_relative "../read/notion/use_case/birthday_today"
+require_relative "../read/notion/use_case/birthday_next_week"
+require_relative "../read/notion/use_case/pto_today"
+require_relative "../read/notion/use_case/pto_next_week"
+require_relative "../read/notion/use_case/work_items_limit"
+require_relative "../read/postgres/use_case/pto_today"
+require_relative "../read/imap/use_case/support_emails"
+require_relative "../read/github/use_case/repo_issues"
 
 # mapper
 require_relative "../mapper/notion/birthday_today"
@@ -41,7 +41,7 @@ module UseCases
   # <b>Example</b>
   #
   #   options = {
-  #     fetch_options: {
+  #     read_options: {
   #       database_id: NOTION_DATABASE_ID,
   #       secret: NOTION_API_INTEGRATION_SECRET,
   #     },
@@ -75,11 +75,11 @@ module UseCases
   #     https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
   #
   def self.notify_birthday_from_notion_to_discord(options)
-    fetcher = Fetcher::Notion::BirthdayToday.new(options[:fetch_options])
+    read = Read::Notion::BirthdayToday.new(options[:read_options])
     mapper = Mapper::Notion::BirthdayToday.new
     formatter = Formatter::Birthday.new(options[:format_options])
     dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(fetcher, mapper, formatter, dispatcher)
+    use_case_config = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -89,7 +89,7 @@ module UseCases
   # <b>Example</b>
   #
   #   options = {
-  #     fetch_options: {
+  #     read_options: {
   #       database_id: NOTION_DATABASE_ID,
   #       secret: NOTION_API_INTEGRATION_SECRET,
   #     },
@@ -127,11 +127,11 @@ module UseCases
   #     https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
   #
   def self.notify_next_week_birthday_from_notion_to_discord(options)
-    fetcher = Fetcher::Notion::BirthdayNextWeek.new(options[:fetch_options])
+    read = Read::Notion::BirthdayNextWeek.new(options[:read_options])
     mapper = Mapper::Notion::BirthdayToday.new
     formatter = Formatter::Birthday.new(options[:format_options])
     dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_cofig = UseCases::Types::Config.new(fetcher, mapper, formatter, dispatcher)
+    use_case_cofig = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_cofig)
   end
@@ -142,7 +142,7 @@ module UseCases
   # <b>Example</b>
   #
   #   options = {
-  #     fetch_options: {
+  #     read_options: {
   #       database_id: NOTION_DATABASE_ID,
   #       secret: NOTION_API_INTEGRATION_SECRET,
   #     },
@@ -174,11 +174,11 @@ module UseCases
   #     https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
   #
   def self.notify_pto_from_notion_to_discord(options)
-    fetcher = Fetcher::Notion::PtoToday.new(options[:fetch_options])
+    read = Read::Notion::PtoToday.new(options[:read_options])
     mapper = Mapper::Notion::PtoToday.new
     formatter = Formatter::Pto.new(options[:format_options])
     dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(fetcher, mapper, formatter, dispatcher)
+    use_case_config = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -189,7 +189,7 @@ module UseCases
   # <b>Example</b>
   #
   #   options = {
-  #     fetch_options: {
+  #     read_options: {
   #       database_id: NOTION_DATABASE_ID,
   #       secret: NOTION_API_INTEGRATION_SECRET,
   #     },
@@ -225,11 +225,11 @@ module UseCases
   #     https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
   #
   def self.notify_next_week_pto_from_notion_to_discord(options)
-    fetcher = Fetcher::Notion::PtoNextWeek.new(options[:fetch_options])
+    read = Read::Notion::PtoNextWeek.new(options[:read_options])
     mapper = Mapper::Notion::PtoToday.new
     formatter = Formatter::Pto.new(options[:format_options])
     dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(fetcher, mapper, formatter, dispatcher)
+    use_case_config = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -240,7 +240,7 @@ module UseCases
   # <b>Example</b>
   #
   # options = {
-  #   fetch_options: {
+  #   read_options: {
   #     connection: {
   #       host: "localhost",
   #       port: 5432,
@@ -279,11 +279,11 @@ module UseCases
   #     https://api.slack.com/messaging/webhooks#create_a_webhook
   #
   def self.notify_pto_from_postgres_to_slack(options)
-    fetcher = Fetcher::Postgres::PtoToday.new(options[:fetch_options])
+    read = Read::Postgres::PtoToday.new(options[:Read_options])
     mapper = Mapper::Postgres::PtoToday.new
     formatter = Formatter::Pto.new(options[:format_options])
     dispatcher = Dispatcher::Slack::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(fetcher, mapper, formatter, dispatcher)
+    use_case_config = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -294,7 +294,7 @@ module UseCases
   # <b>Example</b>
   #
   #   options = {
-  #     fetch_options: {
+  #     read_options: {
   #       database_id: NOTION_DATABASE_ID,
   #       secret: NOTION_API_INTEGRATION_SECRET
   #     },
@@ -326,11 +326,11 @@ module UseCases
   #     https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
   #
   def self.notify_wip_limit_from_notion_to_discord(options)
-    fetcher = Fetcher::Notion::WorkItemsLimit.new(options[:fetch_options])
+    read = Read::Notion::WorkItemsLimit.new(options[:read_options])
     mapper = Mapper::Notion::WorkItemsLimit.new
     formatter = Formatter::WorkItemsLimit.new(options[:format_options])
     dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(fetcher, mapper, formatter, dispatcher)
+    use_case_config = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -341,7 +341,7 @@ module UseCases
   # <b>Example</b>
   #
   #   options = {
-  #     fetch_options: {
+  #     read_options: {
   #       user: 'info@email.co',
   #       refresh_token: REFRESH_TOKEN,
   #       client_id: CLIENT_ID,
@@ -368,11 +368,11 @@ module UseCases
   #     https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
   #
   def self.notify_support_email_from_imap_to_discord(options)
-    fetcher = Fetcher::Imap::SupportEmails.new(options[:fetch_options])
+    read = Read::Imap::SupportEmails.new(options[:read_options])
     mapper = Mapper::Imap::SupportEmails.new
     formatter = Formatter::SupportEmails.new(options[:format_options])
     dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(fetcher, mapper, formatter, dispatcher)
+    use_case_config = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_config)
   end

@@ -6,7 +6,7 @@ module UseCases
   # logic flow by coordinating the execution of its components to fulfill a specific use case.
   #
   class UseCase
-    attr_reader :fetcher, :mapper, :formatter, :dispatcher
+    attr_reader :read, :mapper, :formatter, :dispatcher
 
     # Initializes the use case with the necessary components.
     #
@@ -15,19 +15,19 @@ module UseCases
     # * <tt>Usecases::Types::Config</tt> config, The components required to instantiate a use case.
     #
     def initialize(config)
-      @fetcher = config.fetcher
+      @read = config.read
       @mapper = config.mapper
       @formatter = config.formatter
       @dispatcher = config.dispatcher
     end
 
-    # Executes the use case by orchestrating the sequential execution of the fetcher, mapper, formatter, and dispatcher.
+    # Executes the use case by orchestrating the sequential execution of the read, mapper, formatter, and dispatcher.
     #
     # <br>
     # <b>returns</b> <tt>Dispatcher::Discord::Types::Response</tt>
     #
     def perform
-      response = fetcher.fetch
+      response = read.execute
 
       mappings = mapper.map(response)
 

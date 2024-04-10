@@ -7,18 +7,18 @@ module Mapper
   module Notion
     ##
     # This class implementats the methods of the Mapper::Base module, specifically designed for preparing or
-    # shaping PTO's data coming from a Fetcher::Base implementation.
+    # shaping PTO's data coming from a Read::Base implementation.
     #
     class PtoToday
       include Base
 
       PTO_PARAMS = ["Description", "Desde?", "Hasta?"].freeze
 
-      # Implements the logic for shaping the results from a fetcher response.
+      # Implements the logic for shaping the results from a reader response.
       #
       # <br>
       # <b>Params:</b>
-      # * <tt>Fetcher::Notion::Types::Response</tt> notion_response: Notion response object.
+      # * <tt>Read::Notion::Types::Response</tt> notion_response: Notion response object.
       #
       # <br>
       # <b>returns</b> <tt>List<Domain::Pto></tt> ptos_list, mapped PTO's to be used by a Formatter::Base
