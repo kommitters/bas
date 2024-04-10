@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Fetcher::Postgres::PtoToday do
+RSpec.describe Read::Postgres::PtoToday do
   before do
     config = {
       connection: {
@@ -12,17 +12,17 @@ RSpec.describe Fetcher::Postgres::PtoToday do
       }
     }
 
-    @fetcher = described_class.new(config)
+    @read = described_class.new(config)
   end
 
   describe "attributes and arguments" do
     it { expect(described_class).to respond_to(:new).with(1).arguments }
 
-    it { expect(@fetcher).to respond_to(:config) }
-    it { expect(@fetcher).to respond_to(:fetch).with(0).arguments }
+    it { expect(@read).to respond_to(:config) }
+    it { expect(@read).to respond_to(:execute).with(0).arguments }
   end
 
-  describe ".fetch" do
+  describe ".execute" do
     let(:pg_conn) { instance_double(PG::Connection) }
     let(:fields) { %w[id individual_name start_date end_date] }
     let(:values) { [%w[5 2024-02-13 user1 2024-02-13 2024-02-14]] }
@@ -37,11 +37,11 @@ RSpec.describe Fetcher::Postgres::PtoToday do
       allow(pg_conn).to receive(:exec_params).and_return(@pg_result)
     end
 
-    it "fetch data from the postgres database when there are results" do
+    it "read data from the postgres database when there are results" do
       allow(@pg_result).to receive(:res_status).and_return("PGRES_TUPLES_OK")
       allow(@pg_result).to receive(:check_result).and_return(nil)
 
-      pg_response = @fetcher.fetch
+      pg_response = @read.execute
 
       expect(pg_response.status).to eq("PGRES_TUPLES_OK")
       expect(pg_response.message).to eq("success")
@@ -49,13 +49,13 @@ RSpec.describe Fetcher::Postgres::PtoToday do
       expect(pg_response.records).to eq(values)
     end
 
-    it "fetch data from the postgres database when there are no results" do
+    it "read data from the postgres database when there are no results" do
       allow(@pg_result).to receive(:fields).and_return([])
       allow(@pg_result).to receive(:values).and_return([])
       allow(@pg_result).to receive(:res_status).and_return("PGRES_TUPLES_OK")
       allow(@pg_result).to receive(:check_result).and_return(nil)
 
-      pg_response = @fetcher.fetch
+      pg_response = @read.execute
 
       expect(pg_response.status).to eq("PGRES_TUPLES_OK")
       expect(pg_response.message).to eq("success")
@@ -63,12 +63,12 @@ RSpec.describe Fetcher::Postgres::PtoToday do
       expect(pg_response.records).to eq([])
     end
 
-    it "fetch data from the postgres databases with a failure status" do
+    it "read data from the postgres databases with a failure status" do
       allow(@pg_result).to receive(:res_status).and_return("PGRES_EMPTY_QUERY")
       allow(@pg_result).to receive(:result_error_message).and_return("the query is empty")
       allow(@pg_result).to receive(:check_result).and_return(nil)
 
-      pg_response = @fetcher.fetch
+      pg_response = @read.execute
 
       expect(pg_response.status).to eq("PGRES_EMPTY_QUERY")
       expect(pg_response.message).to eq("the query is empty")
@@ -76,14 +76,14 @@ RSpec.describe Fetcher::Postgres::PtoToday do
       expect(pg_response.records).to eq(nil)
     end
 
-    it "fetch data from the postgres databases with a bad state" do
+    it "read data from the postgres databases with a bad state" do
       error_to_raise = PG::Error.new
 
       allow(@pg_result).to receive(:res_status).and_return("PGRES_BAD_RESPONSE")
       allow(@pg_result).to receive(:result_error_message).and_return("bad response")
       allow(@pg_result).to receive(:check_result).and_raise(error_to_raise)
 
-      expect { @fetcher.fetch }.to raise_exception(error_to_raise)
+      expect { @read.execute }.to raise_exception(error_to_raise)
     end
   end
 end

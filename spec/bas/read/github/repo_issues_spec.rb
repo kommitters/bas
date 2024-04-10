@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Fetcher::Github::RepoIssues do
+RSpec.describe Read::Github::RepoIssues do
   before do
     config = {
       app_id: "123456",
@@ -9,17 +9,17 @@ RSpec.describe Fetcher::Github::RepoIssues do
       repo: "Organization/Repository"
     }
 
-    @fetcher = described_class.new(config)
+    @read = described_class.new(config)
   end
 
   describe "attributes and arguments" do
     it { expect(described_class).to respond_to(:new).with(1).arguments }
 
-    it { expect(@fetcher).to respond_to(:config) }
-    it { expect(@fetcher).to respond_to(:fetch).with(0).arguments }
+    it { expect(@read).to respond_to(:config) }
+    it { expect(@read).to respond_to(:execute).with(0).arguments }
   end
 
-  describe ".fetch" do
+  describe ".execute" do
     let(:empty_response) { [] }
     let(:response) { [{ url: "repo_url" }] }
 
@@ -38,24 +38,24 @@ RSpec.describe Fetcher::Github::RepoIssues do
       allow(Octokit::Client).to receive(:new).and_return(octokit)
     end
 
-    it "fetch issues from the Github repo when there are no 'issues'" do
+    it "read issues from the Github repo when there are no 'issues'" do
       allow(octokit).to receive(:public_send).and_return(empty_response)
 
-      fetched_data = @fetcher.fetch
+      readed_data = @read.execute
 
-      expect(fetched_data).to be_an_instance_of(Fetcher::Github::Types::Response)
-      expect(fetched_data.results).to be_an_instance_of(Array)
-      expect(fetched_data.results.length).to eq(0)
+      expect(readed_data).to be_an_instance_of(Read::Github::Types::Response)
+      expect(readed_data.results).to be_an_instance_of(Array)
+      expect(readed_data.results.length).to eq(0)
     end
 
-    it "fetch issues from the Github repo when there are 'issues'" do
+    it "read issues from the Github repo when there are 'issues'" do
       allow(octokit).to receive(:public_send).and_return(response)
 
-      fetched_data = @fetcher.fetch
+      readed_data = @read.execute
 
-      expect(fetched_data).to be_an_instance_of(Fetcher::Github::Types::Response)
-      expect(fetched_data.results).to be_an_instance_of(Array)
-      expect(fetched_data.results.length).to eq(1)
+      expect(readed_data).to be_an_instance_of(Read::Github::Types::Response)
+      expect(readed_data.results).to be_an_instance_of(Array)
+      expect(readed_data.results.length).to eq(1)
     end
   end
 end

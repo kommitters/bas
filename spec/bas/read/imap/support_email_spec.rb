@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Fetcher::Imap::SupportEmails do
+RSpec.describe Read::Imap::SupportEmails do
   before do
     config = {
       user: "user@mail.co",
@@ -11,17 +11,17 @@ RSpec.describe Fetcher::Imap::SupportEmails do
       search_email: "support@mail.co"
     }
 
-    @fetcher = described_class.new(config)
+    @read = described_class.new(config)
   end
 
   describe "attributes and arguments" do
     it { expect(described_class).to respond_to(:new).with(1).arguments }
 
-    it { expect(@fetcher).to respond_to(:config) }
-    it { expect(@fetcher).to respond_to(:fetch).with(0).arguments }
+    it { expect(@read).to respond_to(:config) }
+    it { expect(@read).to respond_to(:execute).with(0).arguments }
   end
 
-  describe ".fetch" do
+  describe ".execute" do
     let(:body) { "{\"access_token\":\"ABCDEFG\"}" }
     let(:response) { double("http_respose", body: body) }
 
@@ -43,12 +43,12 @@ RSpec.describe Fetcher::Imap::SupportEmails do
       allow(Net::IMAP).to receive(:new).and_return(imap)
     end
 
-    it "fetch emails from the IMAP when there are results" do
-      fetched_data = @fetcher.fetch
+    it "read emails from the IMAP when there are results" do
+      readed_data = @read.execute
 
-      expect(fetched_data).to be_an_instance_of(Fetcher::Imap::Types::Response)
-      expect(fetched_data.results).to be_an_instance_of(Array)
-      expect(fetched_data.results.length).to eq(4)
+      expect(readed_data).to be_an_instance_of(Read::Imap::Types::Response)
+      expect(readed_data.results).to be_an_instance_of(Array)
+      expect(readed_data.results.length).to eq(4)
     end
   end
 end
