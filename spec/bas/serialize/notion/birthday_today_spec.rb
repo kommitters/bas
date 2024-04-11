@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Mapper::Notion::BirthdayToday do
+RSpec.describe Serialize::Notion::BirthdayToday do
   before do
-    @mapper = described_class.new
+    @serialize = described_class.new
     reader_config = {
       base_url: "https://api.notion.com",
       database_id: "c17e556d16c84272beb4ee73ab709631",
@@ -26,20 +26,20 @@ RSpec.describe Mapper::Notion::BirthdayToday do
 
   describe "attributes and arguments" do
     it { expect(described_class).to respond_to(:new).with(0).arguments }
-    it { expect(@mapper).to respond_to(:map).with(1).arguments }
+    it { expect(@serialize).to respond_to(:execute).with(1).arguments }
   end
 
-  describe ".map" do
-    it "maps the given data into a domain specific one" do
+  describe ".execute" do
+    it "serialize the given data into a domain specific one" do
       VCR.use_cassette("/notion/birthdays/read_with_filter") do
         birthdays_response = @read.execute
 
-        mapped_data = @mapper.map(birthdays_response)
+        serialized_data = @serialize.execute(birthdays_response)
 
-        are_birthdays = mapped_data.all? { |element| element.is_a?(Domain::Birthday) }
+        are_birthdays = serialized_data.all? { |element| element.is_a?(Domain::Birthday) }
 
-        expect(mapped_data).to be_an_instance_of(Array)
-        expect(mapped_data.length).to eq(1)
+        expect(serialized_data).to be_an_instance_of(Array)
+        expect(serialized_data.length).to eq(1)
         expect(are_birthdays).to be_truthy
       end
     end
