@@ -3,10 +3,10 @@
 require_relative "../../domain/pto"
 require_relative "../base"
 
-module Mapper
+module Serialize
   module Notion
     ##
-    # This class implementats the methods of the Mapper::Base module, specifically designed for preparing or
+    # This class implementats the methods of the Serialize::Base module, specifically designed for preparing or
     # shaping PTO's data coming from a Read::Base implementation.
     #
     class PtoToday
@@ -21,10 +21,10 @@ module Mapper
       # * <tt>Read::Notion::Types::Response</tt> notion_response: Notion response object.
       #
       # <br>
-      # <b>returns</b> <tt>List<Domain::Pto></tt> ptos_list, mapped PTO's to be used by a Formatter::Base
+      # <b>returns</b> <tt>List<Domain::Pto></tt> ptos_list, serialized PTO's to be used by a Formatter::Base
       # implementation.
       #
-      def map(notion_response)
+      def execute(notion_response)
         return [] if notion_response.results.empty?
 
         normalized_notion_data = normalize_response(notion_response.results)
