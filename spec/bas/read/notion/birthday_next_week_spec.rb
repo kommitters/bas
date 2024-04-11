@@ -21,11 +21,11 @@ RSpec.describe Read::Notion::BirthdayNextWeek do
     it "read data from the given configured notion database" do
       VCR.use_cassette("/notion/birthdays_next_week/read_with_filter") do
         birthdays_reader = described_class.new(@config)
-        readed_data = birthdays_reader.execute
+        read_data = birthdays_reader.execute
 
-        expect(readed_data).to be_an_instance_of(Read::Notion::Types::Response)
-        expect(readed_data.results).to be_an_instance_of(Array)
-        expect(readed_data.results.length).to eq(1)
+        expect(read_data).to be_an_instance_of(Read::Notion::Types::Response)
+        expect(read_data.results).to be_an_instance_of(Array)
+        expect(read_data.results.length).to eq(1)
       end
     end
 
@@ -35,11 +35,11 @@ RSpec.describe Read::Notion::BirthdayNextWeek do
         config[:database_id] = "8187370982134ed099f9d14385aa81c9"
 
         birthday_reader = described_class.new(config)
-        readed_data = birthday_reader.execute
+        read_data = birthday_reader.execute
 
-        expect(readed_data).to be_an_instance_of(Read::Notion::Types::Response)
-        expect(readed_data.results).to be_an_instance_of(Array)
-        expect(readed_data.results.length).to eq(0)
+        expect(read_data).to be_an_instance_of(Read::Notion::Types::Response)
+        expect(read_data.results).to be_an_instance_of(Array)
+        expect(read_data.results.length).to eq(0)
       end
     end
 

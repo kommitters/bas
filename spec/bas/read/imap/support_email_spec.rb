@@ -44,11 +44,11 @@ RSpec.describe Read::Imap::SupportEmails do
     end
 
     it "read emails from the IMAP when there are results" do
-      readed_data = @read.execute
+      read_data = @read.execute
 
-      expect(readed_data).to be_an_instance_of(Read::Imap::Types::Response)
-      expect(readed_data.results).to be_an_instance_of(Array)
-      expect(readed_data.results.length).to eq(4)
+      expect(read_data).to be_an_instance_of(Read::Imap::Types::Response)
+      expect(read_data.results).to be_an_instance_of(Array)
+      expect(read_data.results.length).to eq(4)
     end
   end
 end

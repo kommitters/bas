@@ -21,11 +21,11 @@ RSpec.describe Read::Notion::WorkItemsLimit do
     it "read data from the given configured notion database" do
       VCR.use_cassette("/notion/wip_limit/read_without_filter") do
         wip_reader = described_class.new(@config)
-        readed_data = wip_reader.execute
+        read_data = wip_reader.execute
 
-        expect(readed_data).to be_an_instance_of(Read::Notion::Types::Response)
-        expect(readed_data.results).to be_an_instance_of(Array)
-        expect(readed_data.results.length).to eq(3)
+        expect(read_data).to be_an_instance_of(Read::Notion::Types::Response)
+        expect(read_data.results).to be_an_instance_of(Array)
+        expect(read_data.results.length).to eq(3)
       end
     end
 
@@ -35,11 +35,11 @@ RSpec.describe Read::Notion::WorkItemsLimit do
         config[:database_id] = "5aebbdc871864f4fbab5596a41a81a01"
 
         wip_reader = described_class.new(config)
-        readed_data = wip_reader.execute
+        read_data = wip_reader.execute
 
-        expect(readed_data).to be_an_instance_of(Read::Notion::Types::Response)
-        expect(readed_data.results).to be_an_instance_of(Array)
-        expect(readed_data.results.length).to eq(0)
+        expect(read_data).to be_an_instance_of(Read::Notion::Types::Response)
+        expect(read_data.results).to be_an_instance_of(Array)
+        expect(read_data.results.length).to eq(0)
       end
     end
 

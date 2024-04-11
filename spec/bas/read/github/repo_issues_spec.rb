@@ -41,21 +41,21 @@ RSpec.describe Read::Github::RepoIssues do
     it "read issues from the Github repo when there are no 'issues'" do
       allow(octokit).to receive(:public_send).and_return(empty_response)
 
-      readed_data = @read.execute
+      read_data = @read.execute
 
-      expect(readed_data).to be_an_instance_of(Read::Github::Types::Response)
-      expect(readed_data.results).to be_an_instance_of(Array)
-      expect(readed_data.results.length).to eq(0)
+      expect(read_data).to be_an_instance_of(Read::Github::Types::Response)
+      expect(read_data.results).to be_an_instance_of(Array)
+      expect(read_data.results.length).to eq(0)
     end
 
     it "read issues from the Github repo when there are 'issues'" do
       allow(octokit).to receive(:public_send).and_return(response)
 
-      readed_data = @read.execute
+      read_data = @read.execute
 
-      expect(readed_data).to be_an_instance_of(Read::Github::Types::Response)
-      expect(readed_data.results).to be_an_instance_of(Array)
-      expect(readed_data.results.length).to eq(1)
+      expect(read_data).to be_an_instance_of(Read::Github::Types::Response)
+      expect(read_data.results).to be_an_instance_of(Array)
+      expect(read_data.results.length).to eq(1)
     end
   end
 end

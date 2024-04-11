@@ -21,11 +21,11 @@ RSpec.describe Read::Notion::PtoNextWeek do
     it "read data from the given configured notion database" do
       VCR.use_cassette("/notion/pto_next_week/read_with_filter") do
         pto_reader = described_class.new(@config)
-        readed_data = pto_reader.execute
+        read_data = pto_reader.execute
 
-        expect(readed_data).to be_an_instance_of(Read::Notion::Types::Response)
-        expect(readed_data.results).to be_an_instance_of(Array)
-        expect(readed_data.results.length).to eq(3)
+        expect(read_data).to be_an_instance_of(Read::Notion::Types::Response)
+        expect(read_data.results).to be_an_instance_of(Array)
+        expect(read_data.results.length).to eq(3)
       end
     end
 
@@ -35,11 +35,11 @@ RSpec.describe Read::Notion::PtoNextWeek do
         config[:database_id] = "68bcbb5f76e14e5eb00ff6726bd90f6c"
 
         pto_reader = described_class.new(config)
-        readed_data = pto_reader.execute
+        read_data = pto_reader.execute
 
-        expect(readed_data).to be_an_instance_of(Read::Notion::Types::Response)
-        expect(readed_data.results).to be_an_instance_of(Array)
-        expect(readed_data.results.length).to eq(0)
+        expect(read_data).to be_an_instance_of(Read::Notion::Types::Response)
+        expect(read_data.results).to be_an_instance_of(Array)
+        expect(read_data.results.length).to eq(0)
       end
     end
 
