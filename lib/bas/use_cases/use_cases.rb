@@ -10,13 +10,13 @@ require_relative "../read/postgres/use_case/pto_today"
 require_relative "../read/imap/use_case/support_emails"
 require_relative "../read/github/use_case/repo_issues"
 
-# mapper
-require_relative "../mapper/notion/birthday_today"
-require_relative "../mapper/notion/pto_today"
-require_relative "../mapper/notion/work_items_limit"
-require_relative "../mapper/postgres/pto_today"
-require_relative "../mapper/imap/support_emails"
-require_relative "../mapper/github/issues"
+# serialize
+require_relative "../serialize/notion/birthday_today"
+require_relative "../serialize/notion/pto_today"
+require_relative "../serialize/notion/work_items_limit"
+require_relative "../serialize/postgres/pto_today"
+require_relative "../serialize/imap/support_emails"
+require_relative "../serialize/github/issues"
 
 # formatter
 require_relative "../formatter/birthday"
@@ -76,10 +76,10 @@ module UseCases
   #
   def self.notify_birthday_from_notion_to_discord(options)
     read = Read::Notion::BirthdayToday.new(options[:read_options])
-    mapper = Mapper::Notion::BirthdayToday.new
+    serialize = Serialize::Notion::BirthdayToday.new
     formatter = Formatter::Birthday.new(options[:format_options])
     dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
+    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -128,10 +128,10 @@ module UseCases
   #
   def self.notify_next_week_birthday_from_notion_to_discord(options)
     read = Read::Notion::BirthdayNextWeek.new(options[:read_options])
-    mapper = Mapper::Notion::BirthdayToday.new
+    serialize = Serialize::Notion::BirthdayToday.new
     formatter = Formatter::Birthday.new(options[:format_options])
     dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_cofig = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
+    use_case_cofig = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_cofig)
   end
@@ -175,10 +175,10 @@ module UseCases
   #
   def self.notify_pto_from_notion_to_discord(options)
     read = Read::Notion::PtoToday.new(options[:read_options])
-    mapper = Mapper::Notion::PtoToday.new
+    serialize = Serialize::Notion::PtoToday.new
     formatter = Formatter::Pto.new(options[:format_options])
     dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
+    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -226,10 +226,10 @@ module UseCases
   #
   def self.notify_next_week_pto_from_notion_to_discord(options)
     read = Read::Notion::PtoNextWeek.new(options[:read_options])
-    mapper = Mapper::Notion::PtoToday.new
+    serialize = Serialize::Notion::PtoToday.new
     formatter = Formatter::Pto.new(options[:format_options])
     dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
+    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -280,10 +280,10 @@ module UseCases
   #
   def self.notify_pto_from_postgres_to_slack(options)
     read = Read::Postgres::PtoToday.new(options[:read_options])
-    mapper = Mapper::Postgres::PtoToday.new
+    serialize = Serialize::Postgres::PtoToday.new
     formatter = Formatter::Pto.new(options[:format_options])
     dispatcher = Dispatcher::Slack::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
+    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -327,10 +327,10 @@ module UseCases
   #
   def self.notify_wip_limit_from_notion_to_discord(options)
     read = Read::Notion::WorkItemsLimit.new(options[:read_options])
-    mapper = Mapper::Notion::WorkItemsLimit.new
+    serialize = Serialize::Notion::WorkItemsLimit.new
     formatter = Formatter::WorkItemsLimit.new(options[:format_options])
     dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
+    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -369,10 +369,10 @@ module UseCases
   #
   def self.notify_support_email_from_imap_to_discord(options)
     read = Read::Imap::SupportEmails.new(options[:read_options])
-    mapper = Mapper::Imap::SupportEmails.new
+    serialize = Serialize::Imap::SupportEmails.new
     formatter = Formatter::SupportEmails.new(options[:format_options])
     dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(read, mapper, formatter, dispatcher)
+    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
 
     UseCases::UseCase.new(use_case_config)
   end

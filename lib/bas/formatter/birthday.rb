@@ -13,7 +13,7 @@ module Formatter
     #
     # <br>
     # <b>Params:</b>
-    # * <tt>List<Domain::Birthday></tt> birthdays_list: list of mapped birthdays.
+    # * <tt>List<Domain::Birthday></tt> birthdays_list: list of serialized birthdays.
     #
     # <br>
     # <b>raises</b> <tt>Formatter::Exceptions::InvalidData</tt> when invalid data is provided.

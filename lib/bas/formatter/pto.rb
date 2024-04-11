@@ -26,7 +26,7 @@ module Formatter
     #
     # <br>
     # <b>Params:</b>
-    # * <tt>List<Domain::Pto></tt> pto_list: List of mapped PTO's.
+    # * <tt>List<Domain::Pto></tt> pto_list: List of serialized PTO's.
     #
     # <br>
     # <b>raises</b> <tt>Formatter::Exceptions::InvalidData</tt> when invalid data is provided.
