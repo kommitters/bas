@@ -9,12 +9,12 @@ module Mapper
   # suitable for downstream formatting processes.
   #
   module Base
-    # An method meant to prepare or organize the data coming from an implementation of the Fetcher::Base interface.
+    # An method meant to prepare or organize the data coming from an implementation of the Read::Base interface.
     # Must be overridden by subclasses, with specific logic based on the use case.
     #
     # <br>
     # <b>Params:</b>
-    # * <tt>Fetcher::Notion::Types::Response</tt> response: Response produced by a fetcher.
+    # * <tt>Read::Notion::Types::Response</tt> response: Response produced by a reader.
     #
     # <br>
     #

@@ -3,7 +3,7 @@
 RSpec.describe Mapper::Notion::BirthdayToday do
   before do
     @mapper = described_class.new
-    fetcher_config = {
+    reader_config = {
       base_url: "https://api.notion.com",
       database_id: "c17e556d16c84272beb4ee73ab709631",
       secret: "secret_BELfDH6cf4Glc9NLPLxvsvdl9iZVD4qBCyMDXqch51B",
@@ -21,7 +21,7 @@ RSpec.describe Mapper::Notion::BirthdayToday do
         "sorts": []
       }
     }
-    @fetcher = Fetcher::Notion::BirthdayToday.new(fetcher_config)
+    @read = Read::Notion::BirthdayToday.new(reader_config)
   end
 
   describe "attributes and arguments" do
@@ -31,8 +31,8 @@ RSpec.describe Mapper::Notion::BirthdayToday do
 
   describe ".map" do
     it "maps the given data into a domain specific one" do
-      VCR.use_cassette("/notion/birthdays/fetch_with_filter") do
-        birthdays_response = @fetcher.fetch
+      VCR.use_cassette("/notion/birthdays/read_with_filter") do
+        birthdays_response = @read.execute
 
         mapped_data = @mapper.map(birthdays_response)
 

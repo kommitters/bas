@@ -7,15 +7,15 @@ module Mapper
   module Github
     ##
     # This class implementats the methods of the Mapper::Base module, specifically designed for
-    # preparing or shaping Github issues data coming from a Fetcher::Base implementation.
+    # preparing or shaping Github issues data coming from a Read::Base implementation.
     class Issues
       include Base
 
-      # Implements the logic for shaping the results from a fetcher response.
+      # Implements the logic for shaping the results from a reader response.
       #
       # <br>
       # <b>Params:</b>
-      # * <tt>Fetcher::Github::Types::Response</tt> github_response: Array of github issues data.
+      # * <tt>Read::Github::Types::Response</tt> github_response: Array of github issues data.
       #
       # <br>
       # <b>return</b> <tt>List<Domain::Issue></tt> mapped github issues to be used by a

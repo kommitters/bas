@@ -13,7 +13,7 @@ RSpec.describe Mapper::Github::Issues do
   end
 
   before do
-    @imap_response = Fetcher::Github::Types::Response.new(issues)
+    @imap_response = Read::Github::Types::Response.new(issues)
     @mapper = described_class.new
   end
 

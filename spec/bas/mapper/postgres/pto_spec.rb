@@ -11,7 +11,7 @@ RSpec.describe Mapper::Postgres::PtoToday do
     allow(pg_result).to receive(:fields).and_return(fields)
     allow(pg_result).to receive(:values).and_return(values)
 
-    @pg_response = Fetcher::Postgres::Types::Response.new(pg_result)
+    @pg_response = Read::Postgres::Types::Response.new(pg_result)
     @mapper = described_class.new
   end
 

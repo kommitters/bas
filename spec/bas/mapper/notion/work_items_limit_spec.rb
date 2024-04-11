@@ -11,7 +11,7 @@ RSpec.describe Mapper::Notion::WorkItemsLimit do
 
     notion_result = { "results" => [item1, item2, item3] }
 
-    @notion_response = Fetcher::Notion::Types::Response.new(notion_result)
+    @notion_response = Read::Notion::Types::Response.new(notion_result)
     @mapper = described_class.new
   end
 

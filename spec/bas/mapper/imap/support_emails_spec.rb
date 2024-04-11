@@ -5,7 +5,7 @@ RSpec.describe Mapper::Imap::SupportEmails do
   let(:emails) { [double("email", date: "2024-03-13T12:00:00.000-05:00", subject: "subject", sender: sender)] }
 
   before do
-    @imap_response = Fetcher::Imap::Types::Response.new(emails)
+    @imap_response = Read::Imap::Types::Response.new(emails)
     @mapper = described_class.new
   end
 

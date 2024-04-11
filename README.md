@@ -44,14 +44,14 @@ notifications to a Discord channel.
 
 A *Use Case* object, consists on 4 main components, having it's own responsibility:
 
-### 1. Fetcher - Obtaining the data
+### 1. Read - Obtaining the data
 
-Specifically, a fetcher is an object in charged of bringing data from a data source. The gem already provides the base interface
-for building your own fetcher for your specific data source, or rely on already built classes if they match your purpose.
+Specifically, a reader is an object in charged of bringing data from a data source. The gem already provides the base interface
+for building your own reader for your specific data source, or rely on already built classes if they match your purpose.
 
-The base interface for a fetcher can be found under the `bas/fetcher/base.rb` class. Since this is a implementation of the `Fetcher::Base`
+The base interface for a reader can be found under the `bas/read/base.rb` class. Since this is a implementation of the `Read::Base`
 for bringing data from a Notion database, it was created on a new namespace for that data source, it can be found under
-`/bas/fetcher/notion/use_case/birthday_today.rb`. It implements specific logic for fetching the data and validating the response.
+`/bas/read/notion/use_case/birthday_today.rb`. It implements specific logic for reading the data and validating the response.
 
 ### 2. Mapper - Shaping it
 
@@ -139,7 +139,7 @@ filter = {
 }
 
 options = {
-    fetch_options: {
+    read_options: {
       base_url: "https://api.notion.com",
       database_id: NOTION_DATABASE_ID,
       secret: NOTION_API_INTEGRATION_SECRET,
@@ -235,7 +235,7 @@ module Notifier
   # Service description
   class UseCaseName
     def self.notify(*)
-      options = { fetch_options:, dispatch_options: }
+      options = { read_options:, dispatch_options: }
 
       begin
         use_case = UseCases.use_case_build_function(options)
@@ -246,18 +246,18 @@ module Notifier
       end
     end
 
-    def self.fetch_options
+    def self.read_options
       {
         base_url: NOTION_BASE_URL,
         database_id: NOTION_DATABASE_ID,
         secret: NOTION_SECRET,
         filter: {
-          filter: { "and": fetch_filter }
+          filter: { "and": read_filter }
         }
       }
     end
 
-    def self.fetch_filter
+    def self.read_filter
       today = Common::TimeZone.set_colombia_time_zone.strftime('%F').to_s
 
       [

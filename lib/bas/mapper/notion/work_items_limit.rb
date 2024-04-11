@@ -7,17 +7,17 @@ module Mapper
   module Notion
     ##
     # This class implementats the methods of the Mapper::Base module, specifically designed
-    # for preparing or shaping work items data coming from a Fetcher::Base implementation.
+    # for preparing or shaping work items data coming from a Read::Base implementation.
     class WorkItemsLimit
       include Base
 
       WORK_ITEM_PARAMS = ["Responsible domain"].freeze
 
-      # Implements the logic for shaping the results from a fetcher response.
+      # Implements the logic for shaping the results from a reader response.
       #
       # <br>
       # <b>Params:</b>
-      # * <tt>Fetcher::Notion::Types::Response</tt> notion_response: Notion response object.
+      # * <tt>Read::Notion::Types::Response</tt> notion_response: Notion response object.
       #
       # <br>
       # <b>return</b> <tt>List<Domain::WorkItem></tt> work_items_list, mapped work items to be used by a

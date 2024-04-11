@@ -3,10 +3,10 @@
 RSpec.describe Mapper::Notion::PtoToday do
   before do
     @mapper = described_class.new
-    fetcher_config = {
+    reader_config = {
       base_url: "https://api.notion.com",
-      database_id: "b68d11061aad43bd89f8f525ede2b598",
-      secret: "secret_ZELfDH6cf4Glc9NLPLxvsvdl9iZVD4qBCyMDXqch51C",
+      database_id: "8187370982134ed099f9d14385aa81c9",
+      secret: "secret_K5UCqm27GvAscTlaGJmS2se4fyM1K7is3OIZMw03NaC",
       filter: {
         "filter": {
           "and": [
@@ -27,7 +27,7 @@ RSpec.describe Mapper::Notion::PtoToday do
         "sorts": []
       }
     }
-    @fetcher = Fetcher::Notion::PtoToday.new(fetcher_config)
+    @read = Read::Notion::PtoToday.new(reader_config)
   end
 
   describe "attributes and arguments" do
@@ -37,8 +37,8 @@ RSpec.describe Mapper::Notion::PtoToday do
 
   describe ".map" do
     it "maps the given data into a domain specific one" do
-      VCR.use_cassette("/notion/ptos/fetch_with_filter") do
-        ptos_response = @fetcher.fetch
+      VCR.use_cassette("/notion/ptos/read_with_filter") do
+        ptos_response = @read.execute
         mapped_data = @mapper.map(ptos_response)
 
         are_ptos = mapped_data.all? { |element| element.is_a?(Domain::Pto) }
