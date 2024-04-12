@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Dispatcher
+module Process
   module Discord
     module Types
       ##
