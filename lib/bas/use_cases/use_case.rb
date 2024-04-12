@@ -6,7 +6,7 @@ module UseCases
   # logic flow by coordinating the execution of its components to fulfill a specific use case.
   #
   class UseCase
-    attr_reader :read, :serialize, :formatter, :dispatcher
+    attr_reader :read, :serialize, :formatter, :process
 
     # Initializes the use case with the necessary components.
     #
@@ -18,13 +18,13 @@ module UseCases
       @read = config.read
       @serialize = config.serialize
       @formatter = config.formatter
-      @dispatcher = config.dispatcher
+      @process = config.process
     end
 
-    # Executes the use case by orchestrating the sequential execution of the read, serialize, formatter, and dispatcher.
+    # Executes the use case by orchestrating the sequential execution of the read, serialize, formatter, and process.
     #
     # <br>
-    # <b>returns</b> <tt>Dispatcher::Discord::Types::Response</tt>
+    # <b>returns</b> <tt>Process::Discord::Types::Response</tt>
     #
     def perform
       response = read.execute
@@ -33,7 +33,7 @@ module UseCases
 
       formatted_payload = formatter.format(serialization)
 
-      dispatcher.dispatch(formatted_payload)
+      process.execute(formatted_payload)
     end
   end
 end

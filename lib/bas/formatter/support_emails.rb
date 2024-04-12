@@ -7,7 +7,7 @@ require_relative "./base"
 module Formatter
   ##
   # This class implements methods from the Formatter::Base module, tailored to format the
-  # Domain::Email structure for a dispatcher.
+  # Domain::Email structure for a Process.
   class SupportEmails < Base
     DEFAULT_TIME_ZONE = "+00:00"
 
@@ -31,7 +31,7 @@ module Formatter
     # <b>raises</b> <tt>Formatter::Exceptions::InvalidData</tt> when invalid data is provided.
     #
     # <br>
-    # <b>returns</b> <tt>String</tt> payload: formatted payload suitable for a Dispatcher.
+    # <b>returns</b> <tt>String</tt> payload: formatted payload suitable for a Processor.
     #
     def format(support_emails_list)
       raise Formatter::Exceptions::InvalidData unless support_emails_list.all? do |support_email|
