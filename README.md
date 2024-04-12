@@ -53,13 +53,13 @@ The base interface for a reader can be found under the `bas/read/base.rb` class.
 for bringing data from a Notion database, it was created on a new namespace for that data source, it can be found under
 `/bas/read/notion/use_case/birthday_today.rb`. It implements specific logic for reading the data and validating the response.
 
-### 2. Mapper - Shaping it
+### 2. Serialize - Shaping it
 
-The **Mapper** responsibility, is to shape the data using custom types from the app domain, bringing it into a
+The **Serializer** responsibility, is to shape the data using custom types from the app domain, bringing it into a
 common structure understandable for other components, specifically the **Formatter**.
 
-Because of the use case, the Mapper implementation for it, relies on specific types for representing a Birthday it self. It can be found
-under `/bas/mapper/notion/birthday_today.rb`
+Because of the use case, the Serializer implementation for it, relies on specific types for representing a Birthday it self. It can be found
+under `/bas/serialize/notion/birthday_today.rb`
 
 ### 3. Formatter - Preparing the message
 

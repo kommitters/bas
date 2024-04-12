@@ -2,10 +2,10 @@
 
 require_relative "../domain/exceptions/function_not_implemented"
 
-module Mapper
+module Serialize
   ##
-  # The Mapper::Base module serves as the foundation for implementing specific data shaping logic within the
-  # Mapper module. Defines essential methods, that provide a blueprint for organizing or shaping data in a manner
+  # The Serialize::Base module serves as the foundation for implementing specific data shaping logic within the
+  # Serialize module. Defines essential methods, that provide a blueprint for organizing or shaping data in a manner
   # suitable for downstream formatting processes.
   #
   module Base
@@ -21,9 +21,9 @@ module Mapper
     # <b>raises</b> <tt>Domain::Exceptions::FunctionNotImplemented</tt> when missing implementation.
     # <br>
     #
-    # <b>returns</b> <tt>List<Domain::></tt> Mapped list of data, ready to be formatted.
+    # <b>returns</b> <tt>List<Domain::></tt> Serialize list of data, ready to be formatted.
     #
-    def map(_response)
+    def execute(_response)
       raise Domain::Exceptions::FunctionNotImplemented
     end
   end

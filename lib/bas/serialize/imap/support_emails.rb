@@ -3,10 +3,10 @@
 require_relative "../../domain/email"
 require_relative "../base"
 
-module Mapper
+module Serialize
   module Imap
     ##
-    # This class implementats the methods of the Mapper::Base module, specifically designed for
+    # This class implements the methods of the Serialize::Base module, specifically designed for
     # preparing or shaping support emails data coming from a Read::Base implementation.
     class SupportEmails
       include Base
@@ -18,10 +18,10 @@ module Mapper
       # * <tt>Read::Imap::Types::Response</tt> imap_response: Array of imap emails data.
       #
       # <br>
-      # <b>return</b> <tt>List<Domain::Email></tt> support_emails_list, mapped support emails to be used by a
+      # <b>return</b> <tt>List<Domain::Email></tt> support_emails_list, serialized support emails to be used by a
       # Formatter::Base implementation.
       #
-      def map(imap_response)
+      def execute(imap_response)
         return [] if imap_response.results.empty?
 
         normalized_email_data = normalize_response(imap_response.results)

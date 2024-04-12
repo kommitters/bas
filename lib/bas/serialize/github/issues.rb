@@ -3,10 +3,10 @@
 require_relative "../../domain/issue"
 require_relative "../base"
 
-module Mapper
+module Serialize
   module Github
     ##
-    # This class implementats the methods of the Mapper::Base module, specifically designed for
+    # This class implements the methods of the Serialize::Base module, specifically designed for
     # preparing or shaping Github issues data coming from a Read::Base implementation.
     class Issues
       include Base
@@ -18,10 +18,10 @@ module Mapper
       # * <tt>Read::Github::Types::Response</tt> github_response: Array of github issues data.
       #
       # <br>
-      # <b>return</b> <tt>List<Domain::Issue></tt> mapped github issues to be used by a
+      # <b>return</b> <tt>List<Domain::Issue></tt> serialized github issues to be used by a
       # Formatter::Base implementation.
       #
-      def map(github_response)
+      def execute(github_response)
         return [] if github_response.results.empty?
 
         normalized_github_data = normalize_response(github_response.results)

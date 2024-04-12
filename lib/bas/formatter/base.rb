@@ -20,7 +20,7 @@ module Formatter
     end
 
     # This method is designed to provide a specified format for data from any implementation of
-    # the Mapper::Base interface.
+    # the Serialize::Base interface.
     # Must be overridden by subclasses, with specific logic based on the use case.
     #
     # <br>

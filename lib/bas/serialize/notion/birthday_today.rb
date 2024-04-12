@@ -3,10 +3,10 @@
 require_relative "../../domain/birthday"
 require_relative "../base"
 
-module Mapper
+module Serialize
   module Notion
     ##
-    # This class implementats the methods of the Mapper::Base module, specifically designed for preparing or
+    # This class implements the methods of the Serialize::Base module, specifically designed for preparing or
     # shaping birthdays data coming from a Read::Base implementation.
     class BirthdayToday
       include Base
@@ -20,10 +20,10 @@ module Mapper
       # * <tt>Read::Notion::Types::Response</tt> notion_response: Notion response object.
       #
       # <br>
-      # <b>return</b> <tt>List<Domain::Birthday></tt> birthdays_list, mapped birthdays to be used by a
+      # <b>return</b> <tt>List<Domain::Birthday></tt> birthdays_list, serialized birthdays to be used by a
       # Formatter::Base implementation.
       #
-      def map(notion_response)
+      def execute(notion_response)
         return [] if notion_response.results.empty?
 
         normalized_notion_data = normalize_response(notion_response.results)

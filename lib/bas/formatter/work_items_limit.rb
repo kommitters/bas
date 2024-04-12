@@ -24,7 +24,7 @@ module Formatter
     #
     # <br>
     # <b>Params:</b>
-    # * <tt>List<Domain::WorkItemsLimit></tt> work_items_list: List of mapped work items limits.
+    # * <tt>List<Domain::WorkItemsLimit></tt> work_items_list: List of serialized work items limits.
     #
     # <br>
     # <b>raises</b> <tt>Formatter::Exceptions::InvalidData</tt> when invalid data is provided.

@@ -3,10 +3,10 @@
 require_relative "../../domain/pto"
 require_relative "../base"
 
-module Mapper
+module Serialize
   module Postgres
     ##
-    # This class implementats the methods of the Mapper::Base module, specifically designed for preparing or
+    # This class implements the methods of the Serialize::Base module, specifically designed for preparing or
     # shaping PTO's data coming from the Read::Postgres::Pto class.
     #
     class PtoToday
@@ -17,10 +17,10 @@ module Mapper
       # * <tt>Read::Postgres::Types::Response</tt> pg_response: Postgres response object.
       #
       # <br>
-      # <b>returns</b> <tt>List<Domain::Pto></tt> ptos_list, mapped PTO's to be used by a Formatter::Base
+      # <b>returns</b> <tt>List<Domain::Pto></tt> ptos_list, serialized PTO's to be used by a Formatter::Base
       # implementation.
       #
-      def map(pg_response)
+      def execute(pg_response)
         return [] if pg_response.records.empty?
 
         ptos = build_map(pg_response)
