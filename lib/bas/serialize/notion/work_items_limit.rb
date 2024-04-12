@@ -6,7 +6,7 @@ require_relative "../base"
 module Serialize
   module Notion
     ##
-    # This class implementats the methods of the Serialize::Base module, specifically designed
+    # This class implements the methods of the Serialize::Base module, specifically designed
     # for preparing or shaping work items data coming from a Read::Base implementation.
     class WorkItemsLimit
       include Base

@@ -6,7 +6,7 @@ require_relative "../base"
 module Serialize
   module Github
     ##
-    # This class implementats the methods of the Serialize::Base module, specifically designed for
+    # This class implements the methods of the Serialize::Base module, specifically designed for
     # preparing or shaping Github issues data coming from a Read::Base implementation.
     class Issues
       include Base

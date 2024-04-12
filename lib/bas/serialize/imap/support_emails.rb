@@ -6,7 +6,7 @@ require_relative "../base"
 module Serialize
   module Imap
     ##
-    # This class implementats the methods of the Serialize::Base module, specifically designed for
+    # This class implements the methods of the Serialize::Base module, specifically designed for
     # preparing or shaping support emails data coming from a Read::Base implementation.
     class SupportEmails
       include Base
