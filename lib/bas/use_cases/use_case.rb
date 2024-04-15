@@ -38,15 +38,5 @@ module UseCases
 
       write.execute(process_response)
     end
-
-    private
-
-    def valid_format_response(serialization)
-      response = formatter.format(serialization)
-
-      return response if response.is_a?(Formatter::Types::Response)
-
-      raise Formatter::Exceptions::InvalidData
-    end
   end
 end

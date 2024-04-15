@@ -27,5 +27,13 @@ module Process
     def execute(format_response)
       Process::Types::Response.new(format_response.data)
     end
+
+    protected
+
+    def valid_format_response(format_response)
+      return format_response if format_response.is_a?(Formatter::Types::Response)
+
+      raise Formatter::Exceptions::InvalidData
+    end
   end
 end

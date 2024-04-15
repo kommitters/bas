@@ -37,7 +37,9 @@ module Process
       # <b>returns</b> <tt>Process::Types::Response</tt>
       #
       def execute(format_response)
-        body = post_body(format_response.data)
+        response = valid_format_response(format_response)
+
+        body = post_body(response.data)
 
         response = HTTParty.post(webhook, { body: body, headers: { "Content-Type" => "application/json" } })
 
