@@ -27,15 +27,17 @@ module Process
       #
       # <br>
       # <b>Params:</b>
-      # * <tt>String</tt> payload: Payload to be send to discord.
+      # * <tt>Formatter::Types::Response</tt> formatter response: standard formatter response
+      # with the Payload to be send to discord.
       # <br>
-      # <b>raises</b> <tt>Exceptions::Discord::InvalidWebookToken</tt> if the provided webhook token is invalid.
+      # <b>raises</b> <tt>Exceptions::Discord::InvalidWebookToken</tt> if the provided webhook
+      # token is invalid.
       #
       # <br>
-      # <b>returns</b> <tt>Process::Discord::Types::Response</tt>
+      # <b>returns</b> <tt>Process::Types::Response</tt>
       #
       def execute(format_response)
-        body = set_body(format_response.data)
+        body = post_body(format_response.data)
 
         response = HTTParty.post(webhook, { body: body, headers: { "Content-Type" => "application/json" } })
 
@@ -46,7 +48,7 @@ module Process
 
       private
 
-      def set_body(payload)
+      def post_body(payload)
         {
           username: name,
           avatar_url: "",

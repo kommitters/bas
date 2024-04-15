@@ -82,7 +82,7 @@ module UseCases
     serialize = Serialize::Notion::BirthdayToday.new
     formatter = Formatter::Birthday.new(options[:format_options])
     process = Process::Discord::Implementation.new(options[:process_options])
-    write = Write::Logs::ConsoleLog.new()
+    write = Write::Logs::ConsoleLog.new
     use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process, write)
 
     UseCases::UseCase.new(use_case_config)
@@ -135,7 +135,7 @@ module UseCases
     serialize = Serialize::Notion::BirthdayToday.new
     formatter = Formatter::Birthday.new(options[:format_options])
     process = Process::Discord::Implementation.new(options[:process_options])
-    write = Write::Logs::ConsoleLog.new()
+    write = Write::Logs::ConsoleLog.new
     use_case_cofig = UseCases::Types::Config.new(read, serialize, formatter, process, write)
 
     UseCases::UseCase.new(use_case_cofig)
@@ -183,7 +183,7 @@ module UseCases
     serialize = Serialize::Notion::PtoToday.new
     formatter = Formatter::Pto.new(options[:format_options])
     process = Process::Discord::Implementation.new(options[:process_options])
-    write = Write::Logs::ConsoleLog.new()
+    write = Write::Logs::ConsoleLog.new
     use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process, write)
 
     UseCases::UseCase.new(use_case_config)
@@ -235,7 +235,7 @@ module UseCases
     serialize = Serialize::Notion::PtoToday.new
     formatter = Formatter::Pto.new(options[:format_options])
     process = Process::Discord::Implementation.new(options[:process_options])
-    write = Write::Logs::ConsoleLog.new()
+    write = Write::Logs::ConsoleLog.new
     use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process, write)
 
     UseCases::UseCase.new(use_case_config)
@@ -290,7 +290,7 @@ module UseCases
     serialize = Serialize::Postgres::PtoToday.new
     formatter = Formatter::Pto.new(options[:format_options])
     process = Process::Slack::Implementation.new(options[:process_options])
-    write = Write::Logs::ConsoleLog.new()
+    write = Write::Logs::ConsoleLog.new
     use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process, write)
 
     UseCases::UseCase.new(use_case_config)
@@ -338,7 +338,7 @@ module UseCases
     serialize = Serialize::Notion::WorkItemsLimit.new
     formatter = Formatter::WorkItemsLimit.new(options[:format_options])
     process = Process::Discord::Implementation.new(options[:process_options])
-    write = Write::Logs::ConsoleLog.new()
+    write = Write::Logs::ConsoleLog.new
     use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process, write)
 
     UseCases::UseCase.new(use_case_config)
@@ -381,7 +381,7 @@ module UseCases
     serialize = Serialize::Imap::SupportEmails.new
     formatter = Formatter::SupportEmails.new(options[:format_options])
     process = Process::Discord::Implementation.new(options[:process_options])
-    write = Write::Logs::ConsoleLog.new()
+    write = Write::Logs::ConsoleLog.new
     use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process, write)
 
     UseCases::UseCase.new(use_case_config)

@@ -2,6 +2,9 @@
 
 module Process
   module Types
+    ##
+    # Represents a response received from a Process. It encapsulates the formatted data to be used by
+    # a Write component.
     class Response
       attr_reader :data
 

@@ -22,7 +22,7 @@ module Process
     # Must be overridden by subclasses, with specific logic based on the use case.
     #
     # <br>
-    # <b>returns</b> a <tt>Discord::Response</tt>
+    # <b>returns</b> a <tt>Process::Types::Response</tt>: standard output for a process
     #
     def execute(format_response)
       Process::Types::Response.new(format_response.data)

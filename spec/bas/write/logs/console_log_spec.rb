@@ -3,7 +3,7 @@
 RSpec.describe Write::Logs::ConsoleLog do
   before do
     @process_response = Process::Types::Response.new("")
-    @write = described_class.new()
+    @write = described_class.new
   end
 
   describe "attributes and arguments" do
@@ -14,7 +14,7 @@ RSpec.describe Write::Logs::ConsoleLog do
   end
 
   describe ".execute" do
-    it 'print a console log \'Process Executed\'' do
+    it 'print a console log "Process Executed"' do
       expect(@write.execute(@process_response)).to eq(true)
     end
   end
