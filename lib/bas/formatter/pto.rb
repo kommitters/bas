@@ -33,12 +33,8 @@ module Formatter
     # <b>raises</b> <tt>Formatter::Exceptions::InvalidData</tt> when invalid data is provided.
     #
     # <br>
-<<<<<<< Updated upstream
-    # <b>returns</b> <tt>String</tt> payload, formatted payload suitable for a Process.
-=======
     # <b>returns</b> <tt>Formatter::Types::Response</tt> formatter response: standard output for
     # the formatted payload suitable for a Processor.
->>>>>>> Stashed changes
     #
 
     def format(ptos_list)

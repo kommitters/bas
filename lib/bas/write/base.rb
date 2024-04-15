@@ -4,14 +4,14 @@ require_relative "../domain/exceptions/function_not_implemented"
 
 module Write
   ##
-  # The Write::Base class serves as the foundation for implementing specific data writers within the Write module.
+  # The Write::Base class serves as the foundation for implementing specific data write within the Write module.
   # Operating as an interface, this class defines essential attributes and methods, providing a blueprint for creating
-  # custom writers.
+  # a custom write.
   #
   class Base
     attr_reader :config
 
-    # Initializes the writer with essential configuration parameters.
+    # Initializes the write with essential configuration parameters.
     #
     def initialize(config = {})
       @config = config

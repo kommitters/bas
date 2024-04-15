@@ -69,16 +69,12 @@ implementation can be found under `/bas/formatter/birthday.rb`.
 
 ### 4. Process - Optional Data Process
 
-<<<<<<< Updated upstream
 Finally, the **Process** basically, allow required data process depending on the use case like sending formatted messages into a destination. In this case, since the use case was implemented for
-=======
-The **Processor** basically, allow required data process depending on the use case like sending formatted messages into a destination. In this case, since the use case was implemented for
->>>>>>> Stashed changes
 Discord, it implements specific logic to communicate with a Discord channel using a webhook. The webhook configuration and name for the 'Sender'
 in the channel should be provided with the initial use case configurations. It can be found under `/bas/process/discord/implementation.rb`
 
 ### 5. Write - Apply changes in a destination
-Finally, the **Writer** is in charge of creating or updating information in a destination. This is the last step in the pipeline, and it aims to allow the users to apply changes in a destination depending on the use case. These changes can be a transaction in a database, adding files in a cloud storage, or simply creating logs. For the Birthday use case, after the Process sends the notification, the Write creates a Log in the `$stdout`. It can be found under `lib/bas/write/logs/use_case/console_log.rb`
+Finally, the **Write** is in charge of creating or updating information in a destination. This is the last step in the pipeline, and it aims to allow the users to apply changes in a destination depending on the use case. These changes can be a transaction in a database, adding files in a cloud storage, or simply creating logs. For the Birthday use case, after the Process sends the notification, the Write creates a Log in the `$stdout`. It can be found under `lib/bas/write/logs/use_case/console_log.rb`
 
 ## Examples
 

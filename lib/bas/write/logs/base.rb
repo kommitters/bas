@@ -11,7 +11,7 @@ module Write
     class Base < Write::Base
       attr_reader :logger
 
-      # Initializes the writer with essential configuration parameters like the logger
+      # Initializes the write with essential configuration parameters like the logger
       # using the Logger gem.
       #
       def initialize(config = {})
