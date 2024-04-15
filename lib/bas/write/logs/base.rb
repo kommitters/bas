@@ -5,6 +5,7 @@ require_relative "../base"
 module Write
   module Logs
     class Base < Write::Base
+      attr_reader :logger
 
       def initialize(config = {})
         super(config)
