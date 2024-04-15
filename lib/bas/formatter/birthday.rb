@@ -7,7 +7,7 @@ require_relative "./base"
 module Formatter
   ##
   # This class implements methods from the Formatter::Base module, tailored to format the
-  # Domain::Birthday structure for a dispatcher.
+  # Domain::Birthday structure for a Process.
   class Birthday < Base
     # Implements the logic for building a formatted payload with the given template for birthdays.
     #
@@ -19,7 +19,7 @@ module Formatter
     # <b>raises</b> <tt>Formatter::Exceptions::InvalidData</tt> when invalid data is provided.
     #
     # <br>
-    # <b>returns</b> <tt>String</tt> payload: formatted payload suitable for a Dispatcher.
+    # <b>returns</b> <tt>String</tt> payload: formatted payload suitable for a Process.
     #
     def format(birthdays_list)
       raise Formatter::Exceptions::InvalidData unless birthdays_list.all? do |brithday|

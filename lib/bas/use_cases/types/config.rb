@@ -6,13 +6,13 @@ module UseCases
     # Represents a the configuration composing the initial components required by a UseCases::UseCase implementation.
     #
     class Config
-      attr_reader :read, :serialize, :formatter, :dispatcher
+      attr_reader :read, :serialize, :formatter, :process
 
-      def initialize(read, serialize, formatter, dispatcher)
+      def initialize(read, serialize, formatter, process)
         @read = read
         @serialize = serialize
         @formatter = formatter
-        @dispatcher = dispatcher
+        @process = process
       end
     end
   end

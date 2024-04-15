@@ -7,7 +7,7 @@ require_relative "./base"
 module Formatter
   ##
   # This class implements methods from the Formatter::Base module, tailored to format the
-  # Domain::WorkItemsLimit structure for a dispatcher.
+  # Domain::WorkItemsLimit structure for a Process.
   class WorkItemsLimit < Base
     DEFAULT_DOMAIN_LIMIT = 6
 
@@ -30,7 +30,7 @@ module Formatter
     # <b>raises</b> <tt>Formatter::Exceptions::InvalidData</tt> when invalid data is provided.
     #
     # <br>
-    # <b>returns</b> <tt>String</tt> payload, formatted payload suitable for a Dispatcher.
+    # <b>returns</b> <tt>String</tt> payload, formatted payload suitable for a Process.
     #
 
     def format(work_items_list)

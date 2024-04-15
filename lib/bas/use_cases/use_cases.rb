@@ -24,9 +24,9 @@ require_relative "../formatter/pto"
 require_relative "../formatter/work_items_limit"
 require_relative "../formatter/support_emails"
 
-# dispatcher
-require_relative "../dispatcher/discord/implementation"
-require_relative "../dispatcher/slack/implementation"
+# process
+require_relative "../process/discord/implementation"
+require_relative "../process/slack/implementation"
 
 require_relative "use_case"
 require_relative "./types/config"
@@ -45,7 +45,7 @@ module UseCases
   #       database_id: NOTION_DATABASE_ID,
   #       secret: NOTION_API_INTEGRATION_SECRET,
   #     },
-  #     dispatch_options: {
+  #     process_options: {
   #       webhook: "https://discord.com/api/webhooks/1199213527672565760/KmpoIzBet9xYG16oFh8W1RWHbpIqT7UtTBRrhfLcvWZdNiVZCTM-gpil2Qoy4eYEgpdf",
   #       name: "Birthday Bot"
   #     }
@@ -78,8 +78,8 @@ module UseCases
     read = Read::Notion::BirthdayToday.new(options[:read_options])
     serialize = Serialize::Notion::BirthdayToday.new
     formatter = Formatter::Birthday.new(options[:format_options])
-    dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
+    process = Process::Discord::Implementation.new(options[:process_options])
+    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -93,7 +93,7 @@ module UseCases
   #       database_id: NOTION_DATABASE_ID,
   #       secret: NOTION_API_INTEGRATION_SECRET,
   #     },
-  #     dispatch_options: {
+  #     process_options: {
   #       webhook: "https://discord.com/api/webhooks/1199213527672565760/KmpoIzBet9xYG16oFh8W1RWHbpIqT7UtTBRrhfLcvWZdNiVZCTM-gpil2Qoy4eYEgpdf",
   #       name: "Birthday Bot"
   #     },
@@ -130,8 +130,8 @@ module UseCases
     read = Read::Notion::BirthdayNextWeek.new(options[:read_options])
     serialize = Serialize::Notion::BirthdayToday.new
     formatter = Formatter::Birthday.new(options[:format_options])
-    dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_cofig = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
+    process = Process::Discord::Implementation.new(options[:process_options])
+    use_case_cofig = UseCases::Types::Config.new(read, serialize, formatter, process)
 
     UseCases::UseCase.new(use_case_cofig)
   end
@@ -146,7 +146,7 @@ module UseCases
   #       database_id: NOTION_DATABASE_ID,
   #       secret: NOTION_API_INTEGRATION_SECRET,
   #     },
-  #     dispatch_options: {
+  #     process_options: {
   #       webhook: "https://discord.com/api/webhooks/1199213527672565760/KmpoIzBet9xYG16oFh8W1RWHbpIqT7UtTBRrhfLcvWZdNiVZCTM-gpil2Qoy4eYEgpdf",
   #       name: "Pto Bot"
   #     }
@@ -177,8 +177,8 @@ module UseCases
     read = Read::Notion::PtoToday.new(options[:read_options])
     serialize = Serialize::Notion::PtoToday.new
     formatter = Formatter::Pto.new(options[:format_options])
-    dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
+    process = Process::Discord::Implementation.new(options[:process_options])
+    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -193,7 +193,7 @@ module UseCases
   #       database_id: NOTION_DATABASE_ID,
   #       secret: NOTION_API_INTEGRATION_SECRET,
   #     },
-  #     dispatch_options: {
+  #     process_options: {
   #       webhook: "https://discord.com/api/webhooks/1199213527672565760/KmpoIzBet9xYG16oFh8W1RWHbpIqT7UtTBRrhfLcvWZdNiVZCTM-gpil2Qoy4eYEgpdf",
   #       name: "Pto Bot"
   #     },
@@ -228,8 +228,8 @@ module UseCases
     read = Read::Notion::PtoNextWeek.new(options[:read_options])
     serialize = Serialize::Notion::PtoToday.new
     formatter = Formatter::Pto.new(options[:format_options])
-    dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
+    process = Process::Discord::Implementation.new(options[:process_options])
+    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -249,7 +249,7 @@ module UseCases
   #       password: "postgres"
   #     }
   #   },
-  #   dispatch_options:{
+  #   process_options:{
   #     webhook: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
   #     name: "Pto Bot"
   #   },
@@ -282,8 +282,8 @@ module UseCases
     read = Read::Postgres::PtoToday.new(options[:read_options])
     serialize = Serialize::Postgres::PtoToday.new
     formatter = Formatter::Pto.new(options[:format_options])
-    dispatcher = Dispatcher::Slack::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
+    process = Process::Slack::Implementation.new(options[:process_options])
+    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -298,7 +298,7 @@ module UseCases
   #       database_id: NOTION_DATABASE_ID,
   #       secret: NOTION_API_INTEGRATION_SECRET
   #     },
-  #     dispatch_options: {
+  #     process_options: {
   #       webhook: "https://discord.com/api/webhooks/1199213527672565760/KmpoIzBet9xYG16oFh8W1RWHbpIqT7UtTBRrhfLcvWZdNiVZCTM-gpil2Qoy4eYEgpdf",
   #       name: "wipLimit"
   #     }
@@ -329,8 +329,8 @@ module UseCases
     read = Read::Notion::WorkItemsLimit.new(options[:read_options])
     serialize = Serialize::Notion::WorkItemsLimit.new
     formatter = Formatter::WorkItemsLimit.new(options[:format_options])
-    dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
+    process = Process::Discord::Implementation.new(options[:process_options])
+    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process)
 
     UseCases::UseCase.new(use_case_config)
   end
@@ -349,7 +349,7 @@ module UseCases
   #       inbox: 'INBOX',
   #       search_email: 'support@email.co'
   #     },
-  #     dispatch_options: {
+  #     process_options: {
   #       webhook: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
   #       name: "emailSupport"
   #     }
@@ -371,8 +371,8 @@ module UseCases
     read = Read::Imap::SupportEmails.new(options[:read_options])
     serialize = Serialize::Imap::SupportEmails.new
     formatter = Formatter::SupportEmails.new(options[:format_options])
-    dispatcher = Dispatcher::Discord::Implementation.new(options[:dispatch_options])
-    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, dispatcher)
+    process = Process::Discord::Implementation.new(options[:process_options])
+    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process)
 
     UseCases::UseCase.new(use_case_config)
   end

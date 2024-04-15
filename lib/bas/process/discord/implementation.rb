@@ -4,26 +4,26 @@ require_relative "../base"
 require_relative "./exceptions/invalid_webhook_token"
 require_relative "./types/response"
 
-module Dispatcher
+module Process
   module Discord
     ##
-    # This class is an implementation of the Dispatcher::Base interface, specifically designed
-    # for dispatching messages to Discord.
+    # This class is an implementation of the Process::Base interface, specifically designed
+    # for sending messages to Discord.
     #
     class Implementation < Base
-      # Implements the dispatching logic for the Discord use case. It sends a POST request to
+      # Implements the sending process logic for the Discord use case. It sends a POST request to
       # the Discord webhook with the specified payload.
       #
       # <br>
       # <b>Params:</b>
-      # * <tt>String</tt> payload: Payload to be dispatched to discord.
+      # * <tt>String</tt> payload: Payload to be send to discord.
       # <br>
       # <b>raises</b> <tt>Exceptions::Discord::InvalidWebookToken</tt> if the provided webhook token is invalid.
       #
       # <br>
-      # <b>returns</b> <tt>Dispatcher::Discord::Types::Response</tt>
+      # <b>returns</b> <tt>Process::Discord::Types::Response</tt>
       #
-      def dispatch(payload)
+      def execute(payload)
         body = {
           username: name,
           avatar_url: "",
@@ -31,7 +31,7 @@ module Dispatcher
         }.to_json
         response = HTTParty.post(webhook, { body: body, headers: { "Content-Type" => "application/json" } })
 
-        discord_response = Dispatcher::Discord::Types::Response.new(response)
+        discord_response = Process::Discord::Types::Response.new(response)
 
         validate_response(discord_response)
       end

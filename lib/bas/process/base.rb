@@ -2,16 +2,16 @@
 
 require_relative "../domain/exceptions/function_not_implemented"
 
-module Dispatcher
+module Process
   ##
-  # Serves as a foundational structure for implementing specific dispatchers. Acting as an interface,
+  # Serves as a foundational structure for implementing specific process. Acting as an interface,
   # this class defines essential attributes and methods, providing a blueprint for creating custom
-  # dispatchers tailored to different platforms or services.
+  # process tailored to different platforms or services.
   #
   class Base
     attr_reader :webhook, :name
 
-    # Initializes the dispatcher with essential configuration parameters.
+    # Initializes the process with essential configuration parameters.
     #
     def initialize(config)
       @webhook = config[:webhook]
@@ -24,7 +24,7 @@ module Dispatcher
     # <br>
     # <b>returns</b> a <tt>Discord::Response</tt>
     #
-    def dispatch(_payload)
+    def execute(_payload)
       raise Domain::Exceptions::FunctionNotImplemented
     end
   end

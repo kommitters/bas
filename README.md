@@ -39,7 +39,7 @@ There are 7 currently implemented use cases:
 * WIP limit exceeded - from Notion to Discord
 * Support email notification - from IMAP to Discord
 
-For this example we'll analyze the birthday notification use case, bringing data from a notion database, and dispatching the
+For this example we'll analyze the birthday notification use case, bringing data from a notion database, and sending the
 notifications to a Discord channel.
 
 A *Use Case* object, consists on 4 main components, having it's own responsibility:
@@ -67,11 +67,11 @@ The **Formatter**, is in charge of preparing the message to be sent in our notif
 The template or 'format' to be used should be included in the use case configurations, which we'll review in a further step. It's
 implementation can be found under `/bas/formatter/birthday.rb`.
 
-### 4. Dispatcher - Sending your notification
+### 4. Process - Optional Data Process
 
-Finally, the **Dispatcher** basically, sends or dispatches the formatted message into a destination, since the use case was implemented for
+Finally, the **Process** basically, allow required data process depending on the use case like sending formatted messages into a destination. In this case, since the use case was implemented for
 Discord, it implements specific logic to communicate with a Discord channel using a webhook. The webhook configuration and name for the 'Sender'
-in the channel should be provided with the initial use case configurations. It can be found under `/bas/dispatcher/discord/implementation.rb`
+in the channel should be provided with the initial use case configurations. It can be found under `/bas/process/discord/implementation.rb`
 
 ## Examples
 
@@ -113,7 +113,7 @@ today = Date.now
 }
 ```
 
-* A template for the formatter to be used for formatting the payload to dispatch to Discord. For this specific case, the format of the messages should be:
+* A template for the formatter to be used for formatting the payload to be send to Discord. For this specific case, the format of the messages should be:
 
 `"NAME, Wishing you a very happy birthday! Enjoy your special day! :birthday: :gift:"`
 
@@ -145,7 +145,7 @@ options = {
       secret: NOTION_API_INTEGRATION_SECRET,
       filter: filter
     },
-    dispatch_options: {
+    process_options: {
       webhook: "https://discord.com/api/webhooks/1199213527672565760/KmpoIzBet9xYG16oFh8W1RWHbpIqT7UtTBRrhfLcvWZdNiVZCTM-gpil2Qoy4eYEgpdf",
       name: "Birthday Bot"
     }
@@ -235,7 +235,7 @@ module Notifier
   # Service description
   class UseCaseName
     def self.notify(*)
-      options = { read_options:, dispatch_options: }
+      options = { read_options:, process_options: }
 
       begin
         use_case = UseCases.use_case_build_function(options)
@@ -266,7 +266,7 @@ module Notifier
       ]
     end
 
-    def self.dispatch_options
+    def self.process_options
       {
         webhook: DISCORD_WEBHOOK,
         name: DISCORD_BOT_NAME
