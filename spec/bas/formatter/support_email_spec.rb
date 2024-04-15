@@ -29,8 +29,9 @@ RSpec.describe Formatter::SupportEmails do
       expectation = ":warning: The user1@mail.com has requested support the 2024-03-13 05:00:00 PM\n" \
                     ":warning: The user2@mail.com has requested support the 2024-03-13 05:00:00 PM\n"
 
-      expect(formatted_message).to be_an_instance_of(String)
-      expect(formatted_message).to eq(expectation)
+      expect(formatted_message).to be_a Formatter::Types::Response
+      expect(formatted_message.data).to be_an_instance_of(String)
+      expect(formatted_message.data).to eq(expectation)
     end
 
     it "raises an exception when data is not Domain::Email type" do

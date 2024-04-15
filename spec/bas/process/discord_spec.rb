@@ -7,7 +7,8 @@ RSpec.describe Process::Discord::Implementation do
       name: "Test Birthday Bot"
     }
 
-    @payload = "John Doe, Wishing you a very happy birthday! Enjoy your special day! :birthday: :gift:"
+    payload = "John Doe, Wishing you a very happy birthday! Enjoy your special day! :birthday: :gift:"
+    @format_response = Formatter::Types::Response.new(payload)
 
     @process = described_class.new(@config)
   end
@@ -25,9 +26,10 @@ RSpec.describe Process::Discord::Implementation do
       VCR.use_cassette("/discord/success_process") do
         discords_process = described_class.new(@config)
 
-        response = discords_process.execute(@payload)
+        response = discords_process.execute(@format_response)
 
-        expect(response.http_code).to eq(204)
+        expect(response).to be_a Process::Types::Response
+        expect(response.data.http_code).to eq(204)
       end
     end
 
@@ -35,8 +37,10 @@ RSpec.describe Process::Discord::Implementation do
       VCR.use_cassette("/discord/success_process_empty_name") do
         discords_process = described_class.new(@config)
 
-        response = discords_process.execute(@payload)
-        expect(response.http_code).to eq(204)
+        response = discords_process.execute(@format_response)
+
+        expect(response).to be_a Process::Types::Response
+        expect(response.data.http_code).to eq(204)
       end
     end
 
@@ -48,7 +52,7 @@ RSpec.describe Process::Discord::Implementation do
         discords_process = described_class.new(config)
 
         expect do
-          discords_process.execute(@payload)
+          discords_process.execute(@format_response)
         end.to raise_exception(Process::Discord::Exceptions::InvalidWebookToken)
       end
     end

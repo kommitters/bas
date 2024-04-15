@@ -26,8 +26,9 @@ RSpec.describe Formatter::Birthday do
       expectation = "Jane Doe, Wishing you a very happy birthday! Enjoy your special day! :birthday: :gift:\n" \
                     "John Doe, Wishing you a very happy birthday! Enjoy your special day! :birthday: :gift:\n"
 
-      expect(formatted_message).to be_an_instance_of(String)
-      expect(formatted_message).to eq(expectation)
+      expect(formatted_message).to be_a Formatter::Types::Response
+      expect(formatted_message.data).to be_an_instance_of(String)
+      expect(formatted_message.data).to eq(expectation)
     end
 
     it "raises an exception when the data is not Domain::Birthday type" do
