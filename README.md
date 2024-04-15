@@ -69,7 +69,7 @@ implementation can be found under `/bas/formatter/birthday.rb`.
 
 ### 4. Process - Optional Data Process
 
-Finally, the **Processor** basically, allow required data process depending on the use case like sending formatted messages into a destination. In this case, since the use case was implemented for
+Finally, the **Process** basically, allow required data process depending on the use case like sending formatted messages into a destination. In this case, since the use case was implemented for
 Discord, it implements specific logic to communicate with a Discord channel using a webhook. The webhook configuration and name for the 'Sender'
 in the channel should be provided with the initial use case configurations. It can be found under `/bas/process/discord/implementation.rb`
 

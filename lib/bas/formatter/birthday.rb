@@ -19,7 +19,7 @@ module Formatter
     # <b>raises</b> <tt>Formatter::Exceptions::InvalidData</tt> when invalid data is provided.
     #
     # <br>
-    # <b>returns</b> <tt>String</tt> payload: formatted payload suitable for a Processor.
+    # <b>returns</b> <tt>String</tt> payload: formatted payload suitable for a Process.
     #
     def format(birthdays_list)
       raise Formatter::Exceptions::InvalidData unless birthdays_list.all? do |brithday|

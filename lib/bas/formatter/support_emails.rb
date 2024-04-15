@@ -31,7 +31,7 @@ module Formatter
     # <b>raises</b> <tt>Formatter::Exceptions::InvalidData</tt> when invalid data is provided.
     #
     # <br>
-    # <b>returns</b> <tt>String</tt> payload: formatted payload suitable for a Processor.
+    # <b>returns</b> <tt>String</tt> payload: formatted payload suitable for a Process.
     #
     def format(support_emails_list)
       raise Formatter::Exceptions::InvalidData unless support_emails_list.all? do |support_email|
