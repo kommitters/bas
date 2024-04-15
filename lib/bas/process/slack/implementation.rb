@@ -58,7 +58,7 @@ module Process
         when 403
           raise Process::Slack::Exceptions::InvalidWebookToken, response.message
         else
-          response
+          Process::Types::Response.new(response)
         end
       end
     end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../domain/exceptions/function_not_implemented"
+require_relative "./types/response"
 
 module Process
   ##
@@ -23,8 +24,8 @@ module Process
     # <br>
     # <b>returns</b> a <tt>Discord::Response</tt>
     #
-    def execute(_format_response)
-      raise Domain::Exceptions::FunctionNotImplemented
+    def execute(format_response)
+      Process::Types::Response.new(format_response.data)
     end
   end
 end

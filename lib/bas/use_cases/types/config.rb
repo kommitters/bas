@@ -8,7 +8,7 @@ module UseCases
     class Config
       attr_reader :read, :serialize, :formatter, :process
 
-      def initialize(read, serialize, formatter, process)
+      def initialize(read, serialize, formatter, process = Process::Base.new())
         @read = read
         @serialize = serialize
         @formatter = formatter

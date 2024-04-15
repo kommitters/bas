@@ -18,7 +18,7 @@ module UseCases
       @read = config.read
       @serialize = config.serialize
       @formatter = config.formatter
-      @process = config.process || Process::Base.new()
+      @process = config.process
     end
 
     # Executes the use case by orchestrating the sequential execution of the read, serialize, formatter, and process.

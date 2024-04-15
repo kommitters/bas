@@ -59,7 +59,7 @@ module Process
         when 50_027
           raise Discord::Exceptions::InvalidWebookToken, response.message
         else
-          response
+          Process::Types::Response.new(response)
         end
       end
     end
