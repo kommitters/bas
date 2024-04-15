@@ -3,6 +3,7 @@
 require_relative "../domain/work_items_limit"
 require_relative "./exceptions/invalid_data"
 require_relative "./base"
+require_relative "./types/response"
 
 module Formatter
   ##
@@ -38,10 +39,12 @@ module Formatter
         work_item.is_a?(Domain::WorkItemsLimit)
       end
 
-      exceeded_domains(work_items_list).reduce("") do |payload, work_items_limit|
+      response = exceeded_domains(work_items_list).reduce("") do |payload, work_items_limit|
         built_template = build_template(Domain::WorkItemsLimit::ATTRIBUTES, work_items_limit)
         payload + format_message_by_case(built_template.gsub("\n", ""), work_items_limit)
       end
+
+      Formatter::Types::Response.new(response)
     end
 
     private

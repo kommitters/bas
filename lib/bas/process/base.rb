@@ -9,13 +9,12 @@ module Process
   # process tailored to different platforms or services.
   #
   class Base
-    attr_reader :webhook, :name
+    attr_reader :config
 
     # Initializes the process with essential configuration parameters.
     #
-    def initialize(config)
-      @webhook = config[:webhook]
-      @name = config[:name]
+    def initialize(config = {})
+      @config = config
     end
 
     # A method meant to send messages to an specific destination depending on the implementation.
@@ -24,7 +23,7 @@ module Process
     # <br>
     # <b>returns</b> a <tt>Discord::Response</tt>
     #
-    def execute(_payload)
+    def execute(_format_response)
       raise Domain::Exceptions::FunctionNotImplemented
     end
   end

@@ -11,6 +11,17 @@ module Process
     # for sending messages to Slack.
     #
     class Implementation < Base
+      attr_reader :webhook, :name
+
+      # Initializes the processor with essential configuration parameters.
+      #
+      def initialize(config = {})
+        super(config)
+
+        @webhook = config[:webhook]
+        @name = config[:name]
+      end
+
       # Implements the sending process logic for the Slack use case. It sends a POST request to
       # the Slack webhook with the specified payload.
       #
@@ -23,11 +34,8 @@ module Process
       # <br>
       # <b>returns</b> <tt>Process::Slack::Types::Response</tt>
       #
-      def execute(payload)
-        body = {
-          username: name,
-          text: payload
-        }.to_json
+      def execute(format_response)
+        body = set_body(format_response.data)
 
         response = HTTParty.post(webhook, { body: body, headers: { "Content-Type" => "application/json" } })
 
@@ -37,6 +45,13 @@ module Process
       end
 
       private
+
+      def set_body(payload)
+        {
+          username: name,
+          text: payload
+        }.to_json
+      end
 
       def validate_response(response)
         case response.http_code

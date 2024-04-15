@@ -18,7 +18,7 @@ module UseCases
       @read = config.read
       @serialize = config.serialize
       @formatter = config.formatter
-      @process = config.process
+      @process = config.process || Process::Base.new()
     end
 
     # Executes the use case by orchestrating the sequential execution of the read, serialize, formatter, and process.
@@ -31,9 +31,19 @@ module UseCases
 
       serialization = serialize.execute(response)
 
-      formatted_payload = formatter.format(serialization)
+      format_response = valid_format_response(serialization)
 
-      process.execute(formatted_payload)
+      process.execute(format_response)
+    end
+
+    private
+
+    def valid_format_response(serialization)
+      response = formatter.format(serialization)
+
+      return response if response.is_a?(Formatter::Types::Response)
+
+      raise Formatter::Exceptions::InvalidData
     end
   end
 end

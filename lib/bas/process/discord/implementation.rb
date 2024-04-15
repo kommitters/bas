@@ -11,6 +11,17 @@ module Process
     # for sending messages to Discord.
     #
     class Implementation < Base
+      attr_reader :webhook, :name
+
+      # Initializes the processor with essential configuration parameters.
+      #
+      def initialize(config = {})
+        super(config)
+
+        @webhook = config[:webhook]
+        @name = config[:name]
+      end
+
       # Implements the sending process logic for the Discord use case. It sends a POST request to
       # the Discord webhook with the specified payload.
       #
@@ -23,12 +34,9 @@ module Process
       # <br>
       # <b>returns</b> <tt>Process::Discord::Types::Response</tt>
       #
-      def execute(payload)
-        body = {
-          username: name,
-          avatar_url: "",
-          content: payload
-        }.to_json
+      def execute(format_response)
+        body = set_body(format_response.data)
+
         response = HTTParty.post(webhook, { body: body, headers: { "Content-Type" => "application/json" } })
 
         discord_response = Process::Discord::Types::Response.new(response)
@@ -37,6 +45,14 @@ module Process
       end
 
       private
+
+      def set_body(payload)
+        {
+          username: name,
+          avatar_url: "",
+          content: payload
+        }.to_json
+      end
 
       def validate_response(response)
         case response.code

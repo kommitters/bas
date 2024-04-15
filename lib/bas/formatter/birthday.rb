@@ -3,6 +3,7 @@
 require_relative "../domain/birthday"
 require_relative "./exceptions/invalid_data"
 require_relative "./base"
+require_relative "./types/response"
 
 module Formatter
   ##
@@ -26,9 +27,11 @@ module Formatter
         brithday.is_a?(Domain::Birthday)
       end
 
-      birthdays_list.reduce("") do |payload, birthday|
+      response = birthdays_list.reduce("") do |payload, birthday|
         payload + build_template(Domain::Birthday::ATTRIBUTES, birthday)
       end
+
+      Formatter::Types::Response.new(response)
     end
   end
 end

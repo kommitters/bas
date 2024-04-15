@@ -3,6 +3,7 @@
 require_relative "../domain/email"
 require_relative "./exceptions/invalid_data"
 require_relative "./base"
+require_relative "./types/response"
 
 module Formatter
   ##
@@ -38,9 +39,11 @@ module Formatter
         support_email.is_a?(Domain::Email)
       end
 
-      process_emails(support_emails_list).reduce("") do |payload, support_email|
+      response = process_emails(support_emails_list).reduce("") do |payload, support_email|
         payload + build_template(Domain::Email::ATTRIBUTES, support_email)
       end
+
+      Formatter::Types::Response.new(response)
     end
 
     private
