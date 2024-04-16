@@ -34,7 +34,7 @@ module Formatter
     #
     # <br>
     # <b>returns</b> <tt>Formatter::Types::Response</tt> formatter response: standard output for
-    # the formatted payload suitable for a Processor.
+    # the formatted payload suitable for a Process.
     #
 
     def format(ptos_list)

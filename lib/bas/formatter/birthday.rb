@@ -21,7 +21,7 @@ module Formatter
     #
     # <br>
     # <b>returns</b> <tt>Formatter::Types::Response</tt> formatter response: standard output for
-    # the formatted payload suitable for a Processor.
+    # the formatted payload suitable for a Process.
     #
     def format(birthdays_list)
       raise Formatter::Exceptions::InvalidData unless birthdays_list.all? do |brithday|

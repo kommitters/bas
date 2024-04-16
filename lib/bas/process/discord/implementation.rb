@@ -13,7 +13,7 @@ module Process
     class Implementation < Base
       attr_reader :webhook, :name
 
-      # Initializes the processor with essential configuration parameters.
+      # Initializes the process with essential configuration parameters.
       #
       def initialize(config = {})
         super(config)
