@@ -32,7 +32,7 @@ module UseCases
 
       serialization = serialize.execute(response)
 
-      format_response = valid_format_response(serialization)
+      format_response = formatter.format(serialization)
 
       process_response = process.execute(format_response)
 
