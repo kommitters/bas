@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.1 (16.04.2024)
+- [Use case format error](https://github.com/kommitters/bas/issues/22)
+
 ## 0.3.0 (16.04.2024)
 - [Rename the Fetcher to Read](https://github.com/kommitters/bas/issues/13)
 - [Rename the Mapper to Serialize](https://github.com/kommitters/bas/issues/14)
