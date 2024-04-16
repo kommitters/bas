@@ -3,6 +3,7 @@
 require_relative "../domain/birthday"
 require_relative "./exceptions/invalid_data"
 require_relative "./base"
+require_relative "./types/response"
 
 module Formatter
   ##
@@ -19,16 +20,19 @@ module Formatter
     # <b>raises</b> <tt>Formatter::Exceptions::InvalidData</tt> when invalid data is provided.
     #
     # <br>
-    # <b>returns</b> <tt>String</tt> payload: formatted payload suitable for a Process.
+    # <b>returns</b> <tt>Formatter::Types::Response</tt> formatter response: standard output for
+    # the formatted payload suitable for a Process.
     #
     def format(birthdays_list)
       raise Formatter::Exceptions::InvalidData unless birthdays_list.all? do |brithday|
         brithday.is_a?(Domain::Birthday)
       end
 
-      birthdays_list.reduce("") do |payload, birthday|
+      response = birthdays_list.reduce("") do |payload, birthday|
         payload + build_template(Domain::Birthday::ATTRIBUTES, birthday)
       end
+
+      Formatter::Types::Response.new(response)
     end
   end
 end

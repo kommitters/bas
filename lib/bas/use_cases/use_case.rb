@@ -6,7 +6,7 @@ module UseCases
   # logic flow by coordinating the execution of its components to fulfill a specific use case.
   #
   class UseCase
-    attr_reader :read, :serialize, :formatter, :process
+    attr_reader :read, :serialize, :formatter, :process, :write
 
     # Initializes the use case with the necessary components.
     #
@@ -19,6 +19,7 @@ module UseCases
       @serialize = config.serialize
       @formatter = config.formatter
       @process = config.process
+      @write = config.write
     end
 
     # Executes the use case by orchestrating the sequential execution of the read, serialize, formatter, and process.
@@ -31,9 +32,11 @@ module UseCases
 
       serialization = serialize.execute(response)
 
-      formatted_payload = formatter.format(serialization)
+      format_response = valid_format_response(serialization)
 
-      process.execute(formatted_payload)
+      process_response = process.execute(format_response)
+
+      write.execute(process_response)
     end
   end
 end

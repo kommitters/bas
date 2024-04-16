@@ -41,8 +41,9 @@ RSpec.describe Formatter::Pto do
                     ":beach: Day PTO is on PTO from 2024-01-11 (07:00 pm - 11:00 pm) to 2024-01-17\n" \
                     ":beach: Day PTO is on PTO from 2024-01-11 to 2024-01-17 (12:00 pm - 04:00 pm)\n"
 
-      expect(formatted_message).to be_an_instance_of(String)
-      expect(formatted_message).to eq(expectation)
+      expect(formatted_message).to be_a Formatter::Types::Response
+      expect(formatted_message.data).to be_an_instance_of(String)
+      expect(formatted_message.data).to eq(expectation)
     end
 
     it "raises an exception when data is not Domain::Pto type" do

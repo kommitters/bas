@@ -5,6 +5,7 @@ require "date"
 require_relative "../domain/pto"
 require_relative "./exceptions/invalid_data"
 require_relative "./base"
+require_relative "./types/response"
 
 module Formatter
   ##
@@ -32,7 +33,8 @@ module Formatter
     # <b>raises</b> <tt>Formatter::Exceptions::InvalidData</tt> when invalid data is provided.
     #
     # <br>
-    # <b>returns</b> <tt>String</tt> payload, formatted payload suitable for a Process.
+    # <b>returns</b> <tt>Formatter::Types::Response</tt> formatter response: standard output for
+    # the formatted payload suitable for a Process.
     #
 
     def format(ptos_list)
@@ -40,10 +42,12 @@ module Formatter
 
       ptos_list.each { |pto| pto.format_timezone(@timezone) }
 
-      ptos_list.reduce("") do |payload, pto|
+      response = ptos_list.reduce("") do |payload, pto|
         built_template = build_template(Domain::Pto::ATTRIBUTES, pto)
         payload + format_message_by_case(built_template.gsub("\n", ""), pto)
       end
+
+      Formatter::Types::Response.new(response)
     end
 
     private

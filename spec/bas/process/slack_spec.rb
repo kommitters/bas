@@ -7,7 +7,8 @@ RSpec.describe Process::Slack::Implementation do
       name: "Test Bot"
     }
 
-    @payload = "Some payload, to be sent, including icons :grinning:"
+    payload = "Some payload, to be sent, including icons :grinning:"
+    @format_response = Formatter::Types::Response.new(payload)
 
     @process = described_class.new(@config)
   end
@@ -25,10 +26,11 @@ RSpec.describe Process::Slack::Implementation do
       VCR.use_cassette("/slack/success_process") do
         discords_process = described_class.new(@config)
 
-        response = discords_process.execute(@payload)
+        response = discords_process.execute(@format_response)
 
-        expect(response).to be_an_instance_of(Process::Discord::Types::Response)
-        expect(response.http_code).to eq(200)
+        expect(response).to be_a Process::Types::Response
+        expect(response.data).to be_an_instance_of(Process::Discord::Types::Response)
+        expect(response.data.http_code).to eq(200)
       end
     end
 
@@ -36,9 +38,13 @@ RSpec.describe Process::Slack::Implementation do
       VCR.use_cassette("/slack/failed_process_empty_payload") do
         discords_process = described_class.new(@config)
 
-        response = discords_process.execute("")
-        expect(response).to be_an_instance_of(Process::Discord::Types::Response)
-        expect(response.http_code).to eq(400)
+        format_response = Formatter::Types::Response.new("")
+
+        response = discords_process.execute(format_response)
+
+        expect(response).to be_a Process::Types::Response
+        expect(response.data).to be_an_instance_of(Process::Discord::Types::Response)
+        expect(response.data.http_code).to eq(400)
       end
     end
 
@@ -50,7 +56,7 @@ RSpec.describe Process::Slack::Implementation do
         discords_process = described_class.new(config)
 
         expect do
-          discords_process.execute(@payload)
+          discords_process.execute(@format_response)
         end.to raise_exception(Process::Slack::Exceptions::InvalidWebookToken)
       end
     end

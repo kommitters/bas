@@ -3,6 +3,7 @@
 require_relative "../domain/email"
 require_relative "./exceptions/invalid_data"
 require_relative "./base"
+require_relative "./types/response"
 
 module Formatter
   ##
@@ -31,16 +32,19 @@ module Formatter
     # <b>raises</b> <tt>Formatter::Exceptions::InvalidData</tt> when invalid data is provided.
     #
     # <br>
-    # <b>returns</b> <tt>String</tt> payload: formatted payload suitable for a Process.
+    # <b>returns</b> <tt>Formatter::Types::Response</tt> formatter response: standard output for
+    # the formatted payload suitable for a Process.
     #
     def format(support_emails_list)
       raise Formatter::Exceptions::InvalidData unless support_emails_list.all? do |support_email|
         support_email.is_a?(Domain::Email)
       end
 
-      process_emails(support_emails_list).reduce("") do |payload, support_email|
+      response = process_emails(support_emails_list).reduce("") do |payload, support_email|
         payload + build_template(Domain::Email::ATTRIBUTES, support_email)
       end
+
+      Formatter::Types::Response.new(response)
     end
 
     private

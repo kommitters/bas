@@ -11,23 +11,35 @@ module Process
     # for sending messages to Slack.
     #
     class Implementation < Base
+      attr_reader :webhook, :name
+
+      # Initializes the process with essential configuration parameters.
+      #
+      def initialize(config = {})
+        super(config)
+
+        @webhook = config[:webhook]
+        @name = config[:name]
+      end
+
       # Implements the sending process logic for the Slack use case. It sends a POST request to
       # the Slack webhook with the specified payload.
       #
       # <br>
       # <b>Params:</b>
-      # * <tt>String</tt> payload: Payload to be send to slack.
+      # * <tt>Formatter::Types::Response</tt> formatter response: standard formatter response
+      # with the Payload to be send to slack.
       # <br>
-      # <b>raises</b> <tt>Exceptions::Slack::InvalidWebookToken</tt> if the provided webhook token is invalid.
+      # <b>raises</b> <tt>Exceptions::Slack::InvalidWebookToken</tt> if the provided webhook
+      # token is invalid.
       #
       # <br>
-      # <b>returns</b> <tt>Process::Slack::Types::Response</tt>
+      # <b>returns</b> <tt>Process::Types::Response</tt>
       #
-      def execute(payload)
-        body = {
-          username: name,
-          text: payload
-        }.to_json
+      def execute(format_response)
+        response = valid_format_response(format_response)
+
+        body = post_body(response.data)
 
         response = HTTParty.post(webhook, { body: body, headers: { "Content-Type" => "application/json" } })
 
@@ -38,12 +50,19 @@ module Process
 
       private
 
+      def post_body(payload)
+        {
+          username: name,
+          text: payload
+        }.to_json
+      end
+
       def validate_response(response)
         case response.http_code
         when 403
           raise Process::Slack::Exceptions::InvalidWebookToken, response.message
         else
-          response
+          Process::Types::Response.new(response)
         end
       end
     end

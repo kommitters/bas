@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../domain/exceptions/function_not_implemented"
+require_relative "./types/response"
 
 module Process
   ##
@@ -9,23 +10,30 @@ module Process
   # process tailored to different platforms or services.
   #
   class Base
-    attr_reader :webhook, :name
+    attr_reader :config
 
     # Initializes the process with essential configuration parameters.
     #
-    def initialize(config)
-      @webhook = config[:webhook]
-      @name = config[:name]
+    def initialize(config = {})
+      @config = config
     end
 
     # A method meant to send messages to an specific destination depending on the implementation.
     # Must be overridden by subclasses, with specific logic based on the use case.
     #
     # <br>
-    # <b>returns</b> a <tt>Discord::Response</tt>
+    # <b>returns</b> a <tt>Process::Types::Response</tt>: standard output for a process
     #
-    def execute(_payload)
-      raise Domain::Exceptions::FunctionNotImplemented
+    def execute(format_response)
+      Process::Types::Response.new(format_response.data)
+    end
+
+    protected
+
+    def valid_format_response(format_response)
+      return format_response if format_response.is_a?(Formatter::Types::Response)
+
+      raise Formatter::Exceptions::InvalidData
     end
   end
 end

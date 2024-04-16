@@ -29,8 +29,9 @@ RSpec.describe Formatter::WorkItemsLimit do
       formatted_message = @formatter.format(@data)
       expectation = "The kommit.marketing work-board wip limit was exceeded, 6 of 4\n"
 
-      expect(formatted_message).to be_an_instance_of(String)
-      expect(formatted_message).to eq(expectation)
+      expect(formatted_message).to be_a Formatter::Types::Response
+      expect(formatted_message.data).to be_an_instance_of(String)
+      expect(formatted_message.data).to eq(expectation)
     end
 
     it "raises an exception when data is not Domain::Pto type" do
