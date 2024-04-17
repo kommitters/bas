@@ -6,7 +6,7 @@ module Read
       ##
       # Represents a response received from the Octokit Github client. It encapsulates essential
       # information about the response, providing a structured way to handle and analyze
-      # it's responses.
+      # its responses.
       class Response
         attr_reader :status_code, :message, :results
 

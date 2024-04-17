@@ -3,7 +3,7 @@
 module Read
   module Notion
     ##
-    # Provides common fuctionalities along the Notion domain.
+    # Provides common fuctionalities along the Read::Notion domain.
     #
     module Helper
       def self.validate_response(response)
