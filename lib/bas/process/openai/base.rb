@@ -13,7 +13,7 @@ module Process
     # for requesting to the OpenAI API for chat completion.
     #
     class Base < Process::Base
-      OPEN_AI_BASE_URL = "https://api.openai.com"
+      OPENAI_BASE_URL = "https://api.openai.com"
       DEFAULT_N_CHOICES = 1
 
       # Initializes the process with essential configuration parameters.
@@ -40,13 +40,12 @@ module Process
       # <b>returns</b> <tt>Process::Types::Response</tt>
       #
       def process(messages)
-        url = "#{OPEN_AI_BASE_URL}/v1/chat/completions"
+        url = "#{OPENAI_BASE_URL}/v1/chat/completions"
 
         httparty_response = HTTParty.post(url, { body: body(messages).to_json, headers: })
-        puts httparty_response.inspect
 
         openai_response = Process::OpenAI::Types::Response.new(httparty_response)
-        puts openai_response.inspect
+
         response = Process::OpenAI::Helper.validate_response(openai_response)
 
         Process::Types::Response.new(response)

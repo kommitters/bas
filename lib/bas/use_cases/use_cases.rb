@@ -27,9 +27,11 @@ require_relative "../formatter/support_emails"
 # process
 require_relative "../process/discord/implementation"
 require_relative "../process/slack/implementation"
+require_relative "../process/openai/use_case/humanize_pto"
 
 # write
 require_relative "../write/logs/use_case/console_log"
+require_relative "../write/notion/use_case/notification"
 
 require_relative "use_case"
 require_relative "./types/config"
@@ -184,6 +186,64 @@ module UseCases
     formatter = Formatter::Pto.new(options[:format_options])
     process = Process::Discord::Implementation.new(options[:process_options])
     write = Write::Logs::ConsoleLog.new
+    use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process, write)
+
+    UseCases::UseCase.new(use_case_config)
+  end
+
+  # Provides an instance of the humanized PTO write from Notion to Notion use case implementation.
+  #
+  # <br>
+  # <b>Example</b>
+  #
+  #   options = {
+  #     read_options: {
+  #       database_id: READ_NOTION_DATABASE_ID,
+  #       secret: NOTION_API_INTEGRATION_SECRET
+  #     },
+  #     process_options: {
+  #       secret: OPENAI_API_SECRET_KEY,
+  #       model: "gpt-4"
+  #     },
+  #     format_options: {
+  #       template: ":beach: individual_name is on PTO",
+  #       timezone: "-05:00"
+  #     },
+  #     write_options: {
+  #       secret: NOTION_API_INTEGRATION_SECRET,
+  #       page_id: WRITE_NOTION_PAGE_ID,
+  #       timezone: "-05:00"
+  #     }
+  #   }
+  #
+  #   use_case = UseCases.write_humanized_pto_from_notion_to_notion(options)
+  #   use_case.perform
+  #
+  #   #################################################################################
+  #
+  #   Requirements:
+  #   * Read Notion database ID, from a database with the following structure:
+  #
+  #         ________________________________________________________________________________________________________
+  #         |    Person (person)   |        Desde? (date)                    |       Hasta? (date)                  |
+  #         | -------------------- | --------------------------------------- | ------------------------------------ |
+  #         |       John Doe       |       January 24, 2024                  |      January 27, 2024                |
+  #         |       Jane Doe       |       November 11, 2024 2:00 PM         |      November 11, 2024 6:00 PM       |
+  #         ---------------------------------------------------------------------------------------------------------
+  #
+  #   * Write Notion page ID, from a page with a "Notification" text property.
+  #     This property will be updated with the humanized notification.
+  #   * A Notion secret, which can be obtained, by creating an integration here: `https://developers.notion.com/`,
+  #     browsing on the <View my integations> option, and selecting the <New Integration> or <Create new>
+  #     integration** buttons. This should have permission to update.
+  #
+  def self.write_humanized_pto_from_notion_to_notion(options)
+    read = Read::Notion::PtoToday.new(options[:read_options])
+    serialize = Serialize::Notion::PtoToday.new
+    formatter = Formatter::Pto.new(options[:format_options])
+    process = Process::OpenAI::HumanizePto.new(options[:process_options])
+    write = Write::Notion::Notification.new(options[:write_options])
+
     use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process, write)
 
     UseCases::UseCase.new(use_case_config)

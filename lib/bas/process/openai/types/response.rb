@@ -18,7 +18,6 @@ module Process
           else
             @status_code = 200
             @message = "success"
-            puts response
             @choices = response["choices"]
           end
         end
