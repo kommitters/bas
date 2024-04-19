@@ -3,7 +3,7 @@
 module Read
   module Postgres
     ##
-    # Provides common fuctionalities along the Postgres domain.
+    # Provides common fuctionalities along the Read::Postgres domain.
     #
     module Helper
       def self.validate_response(response)

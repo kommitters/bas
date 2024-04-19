@@ -23,7 +23,7 @@ RSpec.describe Read::Imap::SupportEmails do
 
   describe ".execute" do
     let(:body) { "{\"access_token\":\"ABCDEFG\"}" }
-    let(:response) { double("http_respose", body: body) }
+    let(:response) { double("http_respose", body:) }
 
     let(:imap) do
       stub = {

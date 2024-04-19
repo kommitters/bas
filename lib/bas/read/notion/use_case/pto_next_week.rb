@@ -52,8 +52,8 @@ module Read
       def belong_next_week(property, after_day, before_day)
         {
           and: [
-            { property: property, date: { on_or_after: after_day } },
-            { property: property, date: { on_or_before: before_day } }
+            { property:, date: { on_or_after: after_day } },
+            { property:, date: { on_or_before: before_day } }
           ]
         }
       end

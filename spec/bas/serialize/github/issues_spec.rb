@@ -7,7 +7,7 @@ RSpec.describe Serialize::Github::Issues do
       url: "repo_url",
       title: "title",
       state: "state",
-      assignees: assignees,
+      assignees:,
       description: "description"
     }]
   end

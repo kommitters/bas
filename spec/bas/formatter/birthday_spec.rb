@@ -18,7 +18,7 @@ RSpec.describe Formatter::Birthday do
     before do
       template = "individual_name, Wishing you a very happy birthday! Enjoy your special day! :birthday: :gift:"
 
-      @formatter = described_class.new({ template: template })
+      @formatter = described_class.new({ template: })
     end
 
     it "format the given data into a specific message" do

@@ -5,7 +5,7 @@ module Read
     module Types
       ##
       # Represents a response received from the Notion API. It encapsulates essential information about the response,
-      # providing a structured way to handle and analyze it's responses.
+      # providing a structured way to handle and analyze its responses.
       class Response
         attr_reader :status_code, :message, :results
 
