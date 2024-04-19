@@ -2,7 +2,7 @@
 
 RSpec.describe Serialize::Imap::SupportEmails do
   let(:sender) { [{ "mailbox" => "user", "host" => "gmail.com" }] }
-  let(:emails) { [double("email", date: "2024-03-13T12:00:00.000-05:00", subject: "subject", sender: sender)] }
+  let(:emails) { [double("email", date: "2024-03-13T12:00:00.000-05:00", subject: "subject", sender:)] }
 
   before do
     @imap_response = Read::Imap::Types::Response.new(emails)

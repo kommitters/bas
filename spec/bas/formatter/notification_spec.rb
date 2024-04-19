@@ -22,7 +22,7 @@ RSpec.describe Formatter::Notification do
     end
 
     it "raises an exception when the data is not Domain::Notification type" do
-      invalid_data = [{ notification: "OpenAI notification"}]
+      invalid_data = [{ notification: "OpenAI notification" }]
 
       expect { @formatter.format(invalid_data) }.to raise_exception(Formatter::Exceptions::InvalidData)
     end

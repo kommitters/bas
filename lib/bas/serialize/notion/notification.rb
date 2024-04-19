@@ -21,8 +21,8 @@ module Serialize
       # * <tt>Read::Notion::Types::Response</tt> notion_response: Notion response object.
       #
       # <br>
-      # <b>returns</b> <tt>List<Domain::Notification></tt> notification_list, serialized notifications to be used by a Formatter::Base
-      # implementation.
+      # <b>returns</b> <tt>List<Domain::Notification></tt> notification_list, serialized
+      # notifications to be used by a Formatter::Base implementation.
       #
       def execute(notion_response)
         return [] if notion_response.results.empty?

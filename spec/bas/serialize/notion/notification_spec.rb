@@ -2,7 +2,11 @@
 
 RSpec.describe Serialize::Notion::Notification do
   before do
-    notification = { "properties" => { "Notification" => { "rich_text" => [{ "plain_text" => "OpenAI notification" }] } } }
+    notification = {
+      "properties" => {
+        "Notification" => { "rich_text" => [{ "plain_text" => "OpenAI notification" }] }
+      }
+    }
 
     notion_result = { "results" => [notification] }
 

@@ -31,7 +31,7 @@ module Read
       def read(filter)
         url = "#{NOTION_BASE_URL}/v1/databases/#{config[:database_id]}/query"
 
-        httparty_response = HTTParty.post(url, { body: filter.to_json, headers: headers })
+        httparty_response = HTTParty.post(url, { body: filter.to_json, headers: })
 
         notion_response = Read::Notion::Types::Response.new(httparty_response)
 

@@ -41,7 +41,7 @@ module Process
 
         body = post_body(response.data)
 
-        response = HTTParty.post(webhook, { body: body, headers: { "Content-Type" => "application/json" } })
+        response = HTTParty.post(webhook, { body:, headers: { "Content-Type" => "application/json" } })
 
         discord_response = Process::Discord::Types::Response.new(response)
 

@@ -31,7 +31,24 @@ RSpec.describe Read::Notion::Notification do
 
     let(:body) do
       { "object" => "list",
-        "results" => [{ "object" => "page", "id" => "4ba384b1-13e5-4c8d-b0d3-58bd93754cfc", "created_time" => "2024-01-22T20:27:00.000Z", "last_edited_time" => "2024-04-19T21:19:00.000Z", "created_by" => { "object" => "user", "id" => "7b6a0839-d5ad-4636-9509-8411cc70688d" }, "last_edited_by" => { "object" => "user", "id" => "36218f6e-eb2d-47f9-8b56-8faef5dff5cf" }, "cover" => nil, "icon" => nil, "parent" => { "type" => "database_id", "database_id" => "bd803082-d13a-469b-8893-67b5bed11f90" }, "archived" => false, "in_trash" => false, "properties" => { "Notification" => { "id" => "%40gQ%3B", "type" => "rich_text", "rich_text" => [{ "type" => "text", "text" => { "content" => "", "link" => nil }, "annotations" => { "bold" => false, "italic" => false, "strikethrough" => false, "underline" => false, "code" => false, "color" => "default" }, "plain_text" => "", "href" => nil }] }, "Created time" => { "id" => "Ntch", "type" => "created_time", "created_time" => "2024-01-22T20:27:00.000Z" }, "Type" => { "id" => "s%3Eqc", "type" => "rich_text", "rich_text" => [{ "type" => "text", "text" => { "content" => "pto", "link" => nil }, "annotations" => { "bold" => false, "italic" => false, "strikethrough" => false, "underline" => false, "code" => false, "color" => "default" }, "plain_text" => "pto", "href" => nil }] }, "Use Case" => { "id" => "title", "type" => "title", "title" => [{ "type" => "text", "text" => { "content" => "PTO", "link" => nil }, "annotations" => { "bold" => false, "italic" => false, "strikethrough" => false, "underline" => false, "code" => false, "color" => "default" }, "plain_text" => "PTO", "href" => nil }] } }, "url" => "https://www.notion.so/PTO-4ba384b113e54c8db0d358bd93754cfc", "public_url" => nil }], "next_cursor" => nil, "has_more" => false, "type" => "page_or_database", "page_or_database" => {}, "request_id" => "a6e3c577-38a5-43be-8a42-d7cee504afd2" }
+        "results" => [{
+          "object" => "page",
+          "id" => "4ba384b1-13e5-4c8d-b0d3-58bd93754cfc",
+          "created_time" => "2024-01-22T20:27:00.000Z",
+          "last_edited_time" => "2024-04-19T21:19:00.000Z",
+          "created_by" => { "object" => "user", "id" => "7b6a0839-d5ad-4636-9509-8411cc70688d" },
+          "last_edited_by" => { "object" => "user", "id" => "36218f6e-eb2d-47f9-8b56-8faef5dff5cf" },
+          "cover" => nil,
+          "icon" => nil,
+          "parent" => { "type" => "database_id", "database_id" => "bd803082-d13a-469b-8893-67b5bed11f90" },
+          "archived" => false,
+          "in_trash" => false,
+          "properties" => { "Notification" => { "id" => "%40gQ%3B", "type" => "rich_text", "rich_text" => [{ "type" => "text", "text" => { "content" => "", "link" => nil }, "annotations" => { "bold" => false, "italic" => false, "strikethrough" => false, "underline" => false, "code" => false, "color" => "default" }, "plain_text" => "", "href" => nil }] }, "Created time" => { "id" => "Ntch", "type" => "created_time", "created_time" => "2024-01-22T20:27:00.000Z" }, "Type" => { "id" => "s%3Eqc", "type" => "rich_text", "rich_text" => [{ "type" => "text", "text" => { "content" => "pto", "link" => nil }, "annotations" => { "bold" => false, "italic" => false, "strikethrough" => false, "underline" => false, "code" => false, "color" => "default" }, "plain_text" => "pto", "href" => nil }] }, "Use Case" => { "id" => "title", "type" => "title", "title" => [{ "type" => "text", "text" => { "content" => "PTO", "link" => nil }, "annotations" => { "bold" => false, "italic" => false, "strikethrough" => false, "underline" => false, "code" => false, "color" => "default" }, "plain_text" => "PTO", "href" => nil }] } }, "url" => "https://www.notion.so/PTO-4ba384b113e54c8db0d358bd93754cfc", "public_url" => nil # rubocop:disable Layout/LineLength
+        }],
+        "next_cursor" => nil,
+        "has_more" => false,
+        "type" => "page_or_database",
+        "page_or_database" => {}, "request_id" => "a6e3c577-38a5-43be-8a42-d7cee504afd2" }
     end
 
     it "read data from the given configured notion database" do

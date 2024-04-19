@@ -11,7 +11,7 @@ RSpec.describe Write::Notion::Notification do
     }
 
     choices = [{ "message" => { "role" => "assistant",
-                                "content" => "- John Doe:\n  - Out of office for the entire week (15th - 19th April)." } }]
+                                "content" => "- John Doe:\n  - Out of office for the entire week (15th - 19th April)." } }] # rubocop:disable Layout/LineLength
     openai_response = Process::OpenAI::Types::Response.new({ "choices" => choices })
     @process_response = Process::Types::Response.new(openai_response)
 
@@ -26,7 +26,7 @@ RSpec.describe Write::Notion::Notification do
 
   describe ".execute" do
     let(:request_body) do
-      "{\"properties\":{\"Notification\":{\"rich_text\":[{\"text\":{\"content\":\"- John Doe:\\n  - Out of office for the entire week (15th - 19th April).\"}}]}}}"
+      "{\"properties\":{\"Notification\":{\"rich_text\":[{\"text\":{\"content\":\"- John Doe:\\n  - Out of office for the entire week (15th - 19th April).\"}}]}}}" # rubocop:disable Layout/LineLength
     end
     let(:headers) do
       {
