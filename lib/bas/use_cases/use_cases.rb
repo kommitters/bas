@@ -5,6 +5,7 @@ require_relative "../read/notion/use_case/birthday_today"
 require_relative "../read/notion/use_case/birthday_next_week"
 require_relative "../read/notion/use_case/pto_today"
 require_relative "../read/notion/use_case/pto_next_week"
+require_relative "../read/notion/use_case/notification"
 require_relative "../read/notion/use_case/work_items_limit"
 require_relative "../read/postgres/use_case/pto_today"
 require_relative "../read/imap/use_case/support_emails"
@@ -14,6 +15,7 @@ require_relative "../read/github/use_case/repo_issues"
 require_relative "../serialize/notion/birthday_today"
 require_relative "../serialize/notion/pto_today"
 require_relative "../serialize/notion/work_items_limit"
+require_relative "../serialize/notion/notification"
 require_relative "../serialize/postgres/pto_today"
 require_relative "../serialize/imap/support_emails"
 require_relative "../serialize/github/issues"
@@ -23,6 +25,7 @@ require_relative "../formatter/birthday"
 require_relative "../formatter/pto"
 require_relative "../formatter/work_items_limit"
 require_relative "../formatter/support_emails"
+require_relative "../formatter/notification"
 
 # process
 require_relative "../process/discord/implementation"
@@ -32,6 +35,7 @@ require_relative "../process/openai/use_case/humanize_pto"
 # write
 require_relative "../write/logs/use_case/console_log"
 require_relative "../write/notion/use_case/notification"
+require_relative "../write/notion/use_case/empty_notification"
 
 require_relative "use_case"
 require_relative "./types/config"
@@ -152,10 +156,19 @@ module UseCases
   #     read_options: {
   #       database_id: NOTION_DATABASE_ID,
   #       secret: NOTION_API_INTEGRATION_SECRET,
+  #       use_case_title: "PTO"
+  #     },
+  #     format_options: {
+  #       template: ":beach: individual_name is on PTO",
+  #       timezone: "-05:00"
   #     },
   #     process_options: {
   #       webhook: "https://discord.com/api/webhooks/1199213527672565760/KmpoIzBet9xYG16oFh8W1RWHbpIqT7UtTBRrhfLcvWZdNiVZCTM-gpil2Qoy4eYEgpdf",
-  #       name: "Pto Bot"
+  #       name: "notificationBOT"
+  #     },
+  #     write_options: {
+  #       secret: NOTION_API_INTEGRATION_SECRET,
+  #       page_id: WRITE_NOTION_PAGE_ID
   #     }
   #   }
   #
@@ -174,6 +187,8 @@ module UseCases
   #         |       Jane Doe       |       November 11, 2024 2:00 PM         |      November 11, 2024 6:00 PM       |
   #         ---------------------------------------------------------------------------------------------------------
   #
+  #   * Write Notion page ID, from a page with a "Notification" text property.
+  #     This property will be updated with the humanized notification.
   #   * A Notion secret, which can be obtained, by creating an integration here: `https://developers.notion.com/`,
   #     browsing on the <View my integations> option, and selecting the <New Integration> or <Create new>
   #     integration** buttons.
@@ -181,11 +196,12 @@ module UseCases
   #     https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
   #
   def self.notify_pto_from_notion_to_discord(options)
-    read = Read::Notion::PtoToday.new(options[:read_options])
-    serialize = Serialize::Notion::PtoToday.new
-    formatter = Formatter::Pto.new(options[:format_options])
+    read = Read::Notion::Notification.new(options[:read_options])
+    serialize = Serialize::Notion::Notification.new
+    formatter = Formatter::Notification.new(options[:format_options])
     process = Process::Discord::Implementation.new(options[:process_options])
-    write = Write::Logs::ConsoleLog.new
+    write = Write::Notion::EmptyNotification.new(options[:write_options])
+
     use_case_config = UseCases::Types::Config.new(read, serialize, formatter, process, write)
 
     UseCases::UseCase.new(use_case_config)
@@ -201,18 +217,18 @@ module UseCases
   #       database_id: READ_NOTION_DATABASE_ID,
   #       secret: NOTION_API_INTEGRATION_SECRET
   #     },
-  #     process_options: {
-  #       secret: OPENAI_API_SECRET_KEY,
-  #       model: "gpt-4"
-  #     },
   #     format_options: {
   #       template: ":beach: individual_name is on PTO",
+  #       timezone: "-05:00"
+  #     },
+  #     process_options: {
+  #       secret: OPENAI_API_SECRET_KEY,
+  #       model: "gpt-4",
   #       timezone: "-05:00"
   #     },
   #     write_options: {
   #       secret: NOTION_API_INTEGRATION_SECRET,
   #       page_id: WRITE_NOTION_PAGE_ID,
-  #       timezone: "-05:00"
   #     }
   #   }
   #
