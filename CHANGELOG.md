@@ -1,5 +1,8 @@
 # Changelog
 
+# 0.4.0 (19.04.2024)
+- [[BAS] Add process for OpenAI](https://github.com/kommitters/bas/issues/25)
+
 ## 0.3.1 (16.04.2024)
 - [Use case format error](https://github.com/kommitters/bas/issues/22)
 
