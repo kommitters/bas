@@ -32,7 +32,7 @@ module Process
       # <br>
       # <b>Params:</b>
       # * <tt>Formatter::Types::Response</tt> formatter response: standard formatter response
-      # with the Payload to be send to slack.
+      # with the data to be send to OpenAI.
       # <br>
       # <b>raises</b> <tt>StandardError</tt> if the API returns an error response
       #
