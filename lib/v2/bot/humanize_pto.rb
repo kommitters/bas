@@ -1,22 +1,18 @@
 # frozen_string_literal: true
 
 require_relative './base'
-require_relative '../read/default'
-require_relative '../process/pto_today'
+require_relative '../read/postgres'
 require_relative '../write/postgres'
 
 module Bot
-  class FetchPtoFromNotion < Bot::Base
+  class HumanizePto < Bot::Base
     def read
-      reader = Read::Default.new()
+      reader = Read::Postgres.new(config[:read_options])
 
       reader.execute
     end
 
     def process(read_response)
-      processer = Process::PtoToday.new(config[:process_options], read_response)
-
-      processer.execute
     end
 
     def write(process_response)
