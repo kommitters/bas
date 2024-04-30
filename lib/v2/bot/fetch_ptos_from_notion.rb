@@ -16,11 +16,13 @@ module Bot
     def process(_read_response)
       response = Utils::Notion::Request.execute(params)
 
-      body = JSON.parse(response.body)
+      if response.code == 200
+        ptos_list = normalize_response(response.parsed_response["results"])
 
-      ptos_list = normalize_response(body["results"])
-
-      { ptos: ptos_list }
+        { success: { ptos: ptos_list } }
+      else
+        { error: { message: response.parsed_response, status_code: response.code } }
+      end
     end
 
     def write(process_response)

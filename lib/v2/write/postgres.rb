@@ -22,9 +22,17 @@ module Write
 
     def build_query
       query = "INSERT INTO #{config[:db_table]} (#{PTO_PARAMS}) VALUES ($1, $2, $3, $4, $5, $6);"
-      params = [process_response.to_json, config[:bot_name], false, "success", nil, 1]
+      params = build_params
 
       [query, params]
+    end
+
+    def build_params
+      if process_response[:success]
+        [process_response[:success].to_json, config[:bot_name], false, "success", nil, 1]
+      else
+        [nil, config[:bot_name], false, "failed", process_response[:error].to_json, 1]
+      end
     end
   end
 end
