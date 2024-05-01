@@ -14,22 +14,16 @@ module Bot
     end
 
     def process(read_response)
-      # TODO: Check when the read_response is nil so that we don't have to humanize any PTO
-      params = {
-        secret: process_options[:secret],
-        model: process_options[:model],
-        messages: messages(read_response)
-      }
+      return { success: { notification: "" } } if read_response.data.nil? || read_response.data["ptos"] == []
 
-      openai_response = Utils::OpenAI::ChatCompletion.execute(params)
+      params = build_params(read_response)
+      response = Utils::OpenAI::ChatCompletion.execute(params)
 
-      manage_response(openai_response)
-    end
-
-    def manage_response(openai_response)
-      return success_response(openai_response) if openai_response.code == 200
-
-      error_response(openai_response)
+      if response.code == 200
+        { success: { notification: response.parsed_response["choices"].first["message"]["content"] } }
+      else
+        { error: { message: response.parsed_response, status_code: response.code } }
+      end
     end
 
     def write(process_response)
@@ -39,6 +33,14 @@ module Bot
     end
 
     private
+
+    def build_params(read_response)
+      {
+        secret: process_options[:secret],
+        model: process_options[:model],
+        messages: messages(read_response)
+      }
+    end
 
     def messages(read_response)
       [
@@ -57,12 +59,6 @@ module Bot
       end.join("\n")
 
       process_options[:prompt].gsub("{data}", ptos_list_formatted_string)
-    end
-
-    def success_response(openai_response)
-      { success: {
-        notification: openai_response.parsed_response["choices"].first["message"]["content"]
-      } }
     end
 
     def error_response(openai_response)

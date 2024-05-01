@@ -11,12 +11,7 @@ module Read
     def execute
       response = Utils::Postgres::Request.execute(params)
 
-      puts "RECORDS BEFORE"
-      puts response.values.inspect
       records = response.values == [] ? nil : JSON.parse(response.values.first.first)
-      puts "RECORDS AFTER"
-      puts records.inspect
-      # data = JSON.parse(records)
 
       Read::Types::Response.new(records)
     end

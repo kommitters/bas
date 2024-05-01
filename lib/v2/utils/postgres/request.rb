@@ -11,8 +11,6 @@ module Utils
         execute_query(pg_connection, params[:query])
       end
 
-      private
-
       def self.execute_query(pg_connection, query)
         if query.is_a? String
           pg_connection.exec(query)
