@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../utils/exceptions/function_not_implemented'
+require_relative "../utils/exceptions/function_not_implemented"
 
 module Read
   class Base

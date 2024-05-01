@@ -11,7 +11,7 @@ module Write
       @process_response = process_response
     end
 
-    def execute(_process_response)
+    def execute
       raise Utils::Exceptions::FunctionNotImplemented
     end
   end

@@ -15,8 +15,6 @@ module Utils
         HTTParty.send(params[:method], url, { body: params[:filter].to_json, headers: })
       end
 
-      private
-
       def self.notion_headers(secret)
         {
           "Authorization" => "Bearer #{secret}",
