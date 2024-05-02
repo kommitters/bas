@@ -38,11 +38,11 @@ module Bot
         endpoint: "databases/#{process_options[:database_id]}/query",
         secret: process_options[:secret],
         method: "post",
-        filter:
+        body:
       }
     end
 
-    def filter
+    def body
       today = Time.now.utc.strftime("%F").to_s
 
       {

@@ -7,7 +7,13 @@ require_relative "../utils/postgres/request"
 require_relative "./types/response"
 
 module Read
+  ##
+  # This class is an implementation of the Read::Base interface, specifically designed
+  # to read from a PostgresDB used as <b>common storage</b>.
+  #
   class Postgres < Read::Base
+    # Execute the Postgres utility to read data from the <b>common storage</b>
+    #
     def execute
       response = Utils::Postgres::Request.execute(params)
 

@@ -4,9 +4,15 @@ require_relative "./base"
 require_relative "../utils/postgres/request"
 
 module Write
+  ##
+  # This class is an implementation of the Write::Base interface, specifically designed
+  # to wtite to a PostgresDB used as <b>common storage</b>.
+  #
   class Postgres < Write::Base
     PTO_PARAMS = "data, bot_name, archived, state, error_message, version"
 
+    # Execute the Postgres utility to write data in the <b>common storage</b>
+    #
     def execute
       Utils::Postgres::Request.execute(params)
     end
