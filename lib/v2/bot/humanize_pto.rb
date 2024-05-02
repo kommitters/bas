@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "httparty"
+
 require_relative "./base"
 require_relative "../read/postgres"
 require_relative "../write/postgres"
