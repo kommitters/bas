@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "httparty"
-
 require_relative "./base"
 require_relative "../read/postgres"
 require_relative "../write/postgres"
@@ -24,7 +22,9 @@ module Bot
       params = build_params(read_response)
       response = Utils::OpenAI::RunAssitant.execute(params)
 
-      return error_response(response) if response["status"] == "completed" || response.code != 200
+      if response.code != 200 || (!response["status"].nil? && response["status"] != "completed")
+        return error_response(response)
+      end
 
       sucess_response(response)
     end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "httparty"
+
 module Utils
   module OpenAI
     ##
@@ -25,12 +27,11 @@ module Utils
         @params = params
 
         run = create_thread_and_run
-        puts "RUN:::"
-        puts run.inspect
+
         return run unless run.code == 200
 
-        run = run.parsed_response
-        run_fetched = poll_run(run)
+        run_fetched = poll_run(run.parsed_response)
+
         return run_fetched unless run_fetched["status"] == "completed"
 
         list_messages(run_fetched)
