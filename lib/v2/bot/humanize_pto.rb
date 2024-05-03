@@ -11,6 +11,42 @@ module Bot
   # PostgresDb table, format them using an OpenAI Assistant with the OpenAI API, and
   # write the response as a notification on a PostgresDB table.
   #
+  # <br>
+  # <b>Example</b>
+  #
+  #   options = {
+  #     read_options: {
+  #       connection: {
+  #         host: "host",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "pto",
+  #       bot_name: "FetchPtosFromNotion"
+  #     },
+  #     process_options: {
+  #       secret: "openai secret key",
+  #       assistant_id: "assistant_id",
+  #       prompt: "optional additional prompt"
+  #     },
+  #     write_options: {
+  #       connection: {
+  #         host: "host",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "pto",
+  #       bot_name: "HumanizePto"
+  #     }
+  #   }
+  #
+  #   bot = Bot::HumanizePto.new(options)
+  #   bot.execute
+  #
   class HumanizePto < Bot::Base
     DEFAULT_PROMPT = "{data}"
 

@@ -10,6 +10,30 @@ module Bot
   # The Bot::FetchPtosFromNotion class serves as a bot implementation to read PTO's from a
   # notion database and write them on a PostgresDB table with a specific format.
   #
+  # <br>
+  # <b>Example</b>
+  #
+  #   options = {
+  #     process_options: {
+  #       database_id: "notion database id",
+  #       secret: "notion secret"
+  #     },
+  #     write_options: {
+  #       connection: {
+  #         host: "host",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "pto",
+  #       bot_name: "FetchPtosFromNotion"
+  #     }
+  #   }
+  #
+  #   bot = Bot::FetchPtosFromNotion.new(options)
+  #   bot.execute
+  #
   class FetchPtosFromNotion < Bot::Base
     # Read function to execute the default Read component
     #

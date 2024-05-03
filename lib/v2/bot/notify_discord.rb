@@ -10,6 +10,41 @@ module Bot
   # The Bot::NotifyDiscord class serves as a bot implementation to send messages to a
   # Discord readed from a PostgresDB table.
   #
+  # <br>
+  # <b>Example</b>
+  #
+  #   options = {
+  #     read_options: {
+  #       connection: {
+  #         host: "host",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "pto",
+  #       bot_name: "HumanizePto"
+  #     },
+  #     process_options: {
+  #       name: "bot name to be shown on discord",
+  #       webhook: "discord webhook"
+  #     },
+  #     write_options: {
+  #       connection: {
+  #         host: "host",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "pto",
+  #       bot_name: "NotifyDiscord"
+  #     }
+  #   }
+  #
+  #   bot = Bot::NotifyDiscord.new(options)
+  #   bot.execute
+  #
   class NotifyDiscord < Bot::Base
     # read function to execute the PostgresDB Read component
     #
