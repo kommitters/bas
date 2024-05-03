@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "bas/write/notion/use_case/empty_notification"
+require "bas/process/types/response"
+require "httparty"
+
 RSpec.describe Write::Notion::EmptyNotification do
   require "webmock/rspec"
 

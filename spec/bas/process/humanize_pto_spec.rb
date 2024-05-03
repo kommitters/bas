@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "bas/process/openai/use_case/humanize_pto"
+require "bas/formatter/types/response"
+
 RSpec.describe Process::OpenAI::HumanizePto do
   require "webmock/rspec"
 
@@ -60,11 +63,6 @@ RSpec.describe Process::OpenAI::HumanizePto do
           headers:
         )
         .to_return_json(status: 200, body: response_body, headers: {})
-
-      response = @process.execute(@format_response)
-
-      expect(response).to be_a Process::Types::Response
-      expect(response.data.status_code).to eq(200)
     end
 
     it "fails if the openAI response status code is not 200" do

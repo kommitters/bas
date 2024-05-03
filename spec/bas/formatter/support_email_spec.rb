@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/formatter/support_emails"
+
 RSpec.describe Formatter::SupportEmails do
   before do
     @data = [

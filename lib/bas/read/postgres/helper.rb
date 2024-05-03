@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Read
-  module Postgres
+  module PostgresBas
     ##
     # Provides common fuctionalities along the Read::Postgres domain.
     #

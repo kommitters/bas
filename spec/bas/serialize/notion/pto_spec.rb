@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "bas/serialize/notion/pto_today"
+require "bas/read/notion/types/response"
+require "bas/read/notion/use_case/pto_today"
+
 RSpec.describe Serialize::Notion::PtoToday do
   before do
     @serialize = described_class.new

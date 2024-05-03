@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/read/github/use_case/repo_issues"
+
 RSpec.describe Read::Github::RepoIssues do
   before do
     config = {

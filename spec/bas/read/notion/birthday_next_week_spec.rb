@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/read/notion/use_case/birthday_next_week"
+
 RSpec.describe Read::Notion::BirthdayNextWeek do
   before do
     @config = {

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/formatter/pto"
+
 RSpec.describe Formatter::Pto do
   before do
     day_from_interval = { from: "2024-01-11T19:00:00-05:00", to: "2024-01-11T23:00:00-05:00" }

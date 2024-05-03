@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/formatter/work_items_limit"
+
 RSpec.describe Formatter::WorkItemsLimit do
   before do
     @data = [

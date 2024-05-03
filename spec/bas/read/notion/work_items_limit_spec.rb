@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/read/notion/use_case/work_items_limit"
+
 RSpec.describe Read::Notion::WorkItemsLimit do
   before do
     @config = {

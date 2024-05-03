@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/read/base"
+
 RSpec.describe Read::Base do
   before do
     config = {}
@@ -15,7 +17,7 @@ RSpec.describe Read::Base do
 
   describe ".execute" do
     it "provides no implementation for the method" do
-      expect { @read.execute }.to raise_exception(Domain::Exceptions::FunctionNotImplemented)
+      expect { @read.execute }.to raise_exception(Domain::Exceptions::FunctionNotImplement)
     end
   end
 end

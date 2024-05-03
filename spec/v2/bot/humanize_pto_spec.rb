@@ -48,13 +48,18 @@ RSpec.describe Bot::HumanizePto do
 
   describe ".read" do
     let(:pg_conn) { instance_double(PG::Connection) }
+    let(:pto_results) do
+      "{\"ptos\": [{\"Name\": \"John Doe\", \"EndDateTime\": \
+      {\"to\": null, \"from\": \"2024-05-03\"}, \"StartDateTime\": \
+      {\"to\": null, \"from\": \"2024-05-02\"}}]}"
+    end
 
     before do
       @pg_result = double
 
       allow(PG::Connection).to receive(:new).and_return(pg_conn)
       allow(pg_conn).to receive(:exec_params).and_return(@pg_result)
-      allow(@pg_result).to receive(:values).and_return([["{\"ptos\": [{\"Name\": \"John Doe\", \"EndDateTime\": {\"to\": null, \"from\": \"2024-05-03\"}, \"StartDateTime\": {\"to\": null, \"from\": \"2024-05-02\"}}]}"]])
+      allow(@pg_result).to receive(:values).and_return([[pto_results]])
     end
 
     it "read the notification from the postgres database" do
@@ -144,7 +149,7 @@ RSpec.describe Bot::HumanizePto do
       allow(list).to receive(:[]).and_return("completed")
       allow(list).to receive(:parsed_response).and_return(success)
 
-      response = @bot.process(@read_response)
+      @bot.process(@read_response)
     end
   end
 

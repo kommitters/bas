@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "bas/process/slack/implementation"
+require "bas/formatter/types/response"
+
 RSpec.describe Process::Slack::Implementation do
   before do
     @config = {

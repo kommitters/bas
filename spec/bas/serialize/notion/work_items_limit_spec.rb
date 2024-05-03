@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "bas/serialize/notion/work_items_limit"
+require "bas/read/notion/types/response"
+require "bas/read/notion/use_case/work_items_limit"
+
 RSpec.describe Serialize::Notion::WorkItemsLimit do
   let(:fields) { %w[id individual_name start_date end_date] }
   let(:values) { [%w[5 2024-02-13 user1 2024-02-13 2024-02-14]] }

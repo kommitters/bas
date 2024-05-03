@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../domain/exceptions/function_not_implemented"
+require_relative "../domain/exceptions/function_not_implement"
 
 module Serialize
   ##
@@ -18,13 +18,13 @@ module Serialize
     #
     # <br>
     #
-    # <b>raises</b> <tt>Domain::Exceptions::FunctionNotImplemented</tt> when missing implementation.
+    # <b>raises</b> <tt>Domain::Exceptions::FunctionNotImplement</tt> when missing implementation.
     # <br>
     #
     # <b>returns</b> <tt>List<Domain::></tt> Serialize list of data, ready to be formatted.
     #
     def execute(_response)
-      raise Domain::Exceptions::FunctionNotImplemented
+      raise Domain::Exceptions::FunctionNotImplement
     end
   end
 end

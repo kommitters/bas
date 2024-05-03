@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Read
-  module Postgres
+  module PostgresBas
     module Types
       ##
       # Represents a response received from the Postgres API. It encapsulates essential information about the response,

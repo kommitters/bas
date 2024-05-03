@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/write/base"
+
 RSpec.describe Write::Base do
   before do
     @process_response = Process::Types::Response.new("")
@@ -15,7 +17,7 @@ RSpec.describe Write::Base do
 
   describe ".execute" do
     it "provides no implementation for the method" do
-      expect { @write.execute(@process_response) }.to raise_exception(Domain::Exceptions::FunctionNotImplemented)
+      expect { @write.execute(@process_response) }.to raise_exception(Domain::Exceptions::FunctionNotImplement)
     end
   end
 end

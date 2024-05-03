@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+require "bas/write/notion/use_case/notification"
+require "bas/process/types/response"
+require "bas/process/openai/types/response"
+require "httparty"
+
 RSpec.describe Write::Notion::Notification do
   require "webmock/rspec"
 

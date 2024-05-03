@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../domain/exceptions/function_not_implemented"
+require_relative "../domain/exceptions/function_not_implement"
 require_relative "./types/response"
 
 module Process

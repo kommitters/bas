@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/process/base"
+
 RSpec.describe Process::Base do
   before do
     @config = { webhook: "https://example.com/webhook", name: "Example Name" }
@@ -18,7 +20,7 @@ RSpec.describe Process::Base do
   describe ".execute" do
     it "provides no implementation for the method" do
       expect(@process.execute(@format_response)).to be_a Process::Types::Response
-      # expect { @process.execute(payload) }.to raise_exception(Domain::Exceptions::FunctionNotImplemented)
+      # expect { @process.execute(payload) }.to raise_exception(Domain::Exceptions::FunctionNotImplement)
     end
   end
 end

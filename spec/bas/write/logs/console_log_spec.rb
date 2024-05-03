@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "logger"
+require "bas/write/logs/use_case/console_log"
+require "bas/process/types/response"
+
 RSpec.describe Write::Logs::ConsoleLog do
   before do
     @process_response = Process::Types::Response.new("")

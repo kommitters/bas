@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/read/notion/use_case/pto_today"
+
 RSpec.describe Read::Notion::PtoToday do
   before do
     @config = {
