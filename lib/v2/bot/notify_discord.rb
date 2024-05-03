@@ -6,13 +6,21 @@ require_relative "../write/postgres"
 require_relative "../utils/discord/integration"
 
 module Bot
+  ##
+  # The Bot::NotifyDiscord class serves as a bot implementation to send messages to a
+  # Discord readed from a PostgresDB table.
+  #
   class NotifyDiscord < Bot::Base
+    # read function to execute the PostgresDB Read component
+    #
     def read
       reader = Read::Postgres.new(read_options)
 
       reader.execute
     end
 
+    # process function to execute the Discord utility to send the PTO's notification
+    #
     def process(read_response)
       return { success: {} } if read_response.data.nil? || read_response.data["notification"] == ""
 
@@ -26,6 +34,8 @@ module Bot
       end
     end
 
+    # write function to execute the PostgresDB write component
+    #
     def write(process_response)
       write = Write::Postgres.new(write_options, process_response)
 

@@ -6,17 +6,25 @@ require_relative "../write/postgres"
 require_relative "../utils/openai/run_assistant"
 
 module Bot
+  ##
+  # The Bot::HumanizePto class serves as a bot implementation to read PTO's from a
+  # PostgresDb table, format them using an OpenAI Assistant with the OpenAI API, and
+  # write the response as a notification on a PostgresDB table.
+  #
   class HumanizePto < Bot::Base
     DEFAULT_PROMPT = "{data}"
 
+    # read function to execute the PostgresDB Read component
+    #
     def read
       reader = Read::Postgres.new(read_options)
 
       reader.execute
     end
 
+    # process function to execute the OpenaAI utility to process the PTO's
+    #
     def process(read_response)
-      # Handle when no PTO records are available, or when no data is available due to errors in the previous bot process
       return { success: { notification: "" } } if read_response.data.nil? || read_response.data["ptos"] == []
 
       params = build_params(read_response)
@@ -29,6 +37,8 @@ module Bot
       sucess_response(response)
     end
 
+    # write function to execute the PostgresDB write component
+    #
     def write(process_response)
       write = Write::Postgres.new(write_options, process_response)
 

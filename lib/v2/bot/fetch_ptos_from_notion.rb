@@ -6,13 +6,21 @@ require_relative "../utils/notion/request"
 require_relative "../write/postgres"
 
 module Bot
+  ##
+  # The Bot::FetchPtosFromNotion class serves as a bot implementation to read PTO's from a
+  # notion database and write them on a PostgresDB table with a specific format.
+  #
   class FetchPtosFromNotion < Bot::Base
+    # Read function to execute the default Read component
+    #
     def read
       reader = Read::Default.new
 
       reader.execute
     end
 
+    # Process function to execute the Notion utility to fetch PTO's from the notion database
+    #
     def process(_read_response)
       response = Utils::Notion::Request.execute(params)
 
@@ -25,6 +33,8 @@ module Bot
       end
     end
 
+    # Write function to execute the PostgresDB write component
+    #
     def write(process_response)
       write = Write::Postgres.new(write_options, process_response)
 
