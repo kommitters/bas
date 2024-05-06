@@ -33,7 +33,7 @@ RSpec.describe Write::Postgres do
       expect(writer.execute).to_not be_nil
     end
 
-    it "save a faile reponse" do
+    it "save a failed reponse" do
       writer = described_class.new(@config, fail_process_result)
 
       expect(writer.execute).to_not be_nil

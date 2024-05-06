@@ -6,7 +6,7 @@ module Utils
   module OpenAI
     ##
     # This module is an OpenAI utility for using an already created OpenAI Assistant
-    # and get an AI response depending on the Assistant's intructions and prompt.
+    # and get an AI response depending on the Assistant's instructions and prompt.
     #
     module RunAssitant
       OPENAI_BASE_URL = "https://api.openai.com"
