@@ -79,7 +79,7 @@ module Utils
 
       # Polls the Run until it is processed.
       #
-      def self.poll_run(run) # rubocop:disable Metrics/MethodLength
+      def self.poll_run(run)
         url = "#{OPENAI_BASE_URL}/v1/threads/#{run["thread_id"]}/runs/#{run["id"]}"
 
         while true
@@ -89,8 +89,6 @@ module Utils
           case status
           when "queued", "in_progress", "cancelling" then sleep 1 # Wait one second and poll again
           when "completed", "requires_action", "cancelled", "failed", "expired" then break
-          else
-            puts "Unknown status response: #{status}"
           end
         end
 

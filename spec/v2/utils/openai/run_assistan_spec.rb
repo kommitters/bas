@@ -44,9 +44,9 @@ RSpec.describe Utils::OpenAI::RunAssitant do
       expect(response.code).to eq(404)
     end
 
-    it "should fail if the pol run fails" do
+    it "should fail if the poll run fails" do
       allow(run).to receive(:code).and_return(200)
-      allow(HTTParty).to receive(:get).and_return({ "status" => "failed" })
+      allow(HTTParty).to receive(:get).and_return({ "status" => "in_progress" }, { "status" => "failed" })
 
       run_id = run.parsed_response["id"]
       thread_id = run.parsed_response["thread_id"]
