@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "bas/serialize/imap/support_emails"
+require "bas/read/imap/types/response"
+
 RSpec.describe Serialize::Imap::SupportEmails do
   let(:sender) { [{ "mailbox" => "user", "host" => "gmail.com" }] }
   let(:emails) { [double("email", date: "2024-03-13T12:00:00.000-05:00", subject: "subject", sender:)] }

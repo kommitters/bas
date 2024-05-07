@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/formatter/notification"
+
 RSpec.describe Formatter::Notification do
   before do
     @data = [Domain::Notification.new("OpenAI notification")]

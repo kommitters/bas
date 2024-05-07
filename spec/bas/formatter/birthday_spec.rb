@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/formatter/birthday"
+
 RSpec.describe Formatter::Birthday do
   before do
     @data = [

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Read::Postgres::PtoToday do
+require "bas/read/postgres/use_case/pto_today"
+
+RSpec.describe Read::PostgresBas::PtoToday do
   before do
     config = {
       connection: {

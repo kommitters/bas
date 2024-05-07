@@ -3,7 +3,7 @@
 require_relative "../base"
 
 module Read
-  module Postgres
+  module PostgresBas
     ##
     # This class is an implementation of the Read::Postgres::Base interface, specifically designed
     # for reading Paid Time Off (PTO) data from a Postgres Database.

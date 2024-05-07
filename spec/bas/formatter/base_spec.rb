@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/formatter/base"
+
 RSpec.describe Formatter::Base do
   before do
     config = {}
@@ -9,7 +11,7 @@ RSpec.describe Formatter::Base do
   describe ".format" do
     it "provides no implementation for the method" do
       data = []
-      expect { @formatter.format(data) }.to raise_exception(Domain::Exceptions::FunctionNotImplemented)
+      expect { @formatter.format(data) }.to raise_exception(Domain::Exceptions::FunctionNotImplement)
     end
   end
 end

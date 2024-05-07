@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/read/notion/use_case/notification"
+
 RSpec.describe Read::Notion::Notification do
   require "webmock/rspec"
 

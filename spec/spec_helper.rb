@@ -5,6 +5,9 @@ require "vcr"
 require "simplecov"
 require "simplecov-lcov"
 
+# Set the load path to your gem's lib directory
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+
 SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
 SimpleCov.formatter = SimpleCov::Formatter::LcovFormatter
 SimpleCov.start

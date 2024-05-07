@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../domain/exceptions/function_not_implemented"
+require_relative "../domain/exceptions/function_not_implement"
 require "erb"
 
 module Formatter
@@ -28,12 +28,12 @@ module Formatter
     # * <tt>List<Domain::></tt> domain_data: List of specific domain objects depending on the use case.
     #
     # <br>
-    # <b>raises</b> <tt>Domain::Exceptions::FunctionNotImplemented</tt> when missing implementation.
+    # <b>raises</b> <tt>Domain::Exceptions::FunctionNotImplement</tt> when missing implementation.
     #
     # <b>returns</b> <tt>String</tt> Formatted payload suitable for a Process::Base implementation.
     #
     def format(_domain_data)
-      raise Domain::Exceptions::FunctionNotImplemented
+      raise Domain::Exceptions::FunctionNotImplement
     end
 
     protected

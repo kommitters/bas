@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/read/imap/use_case/support_emails"
+
 RSpec.describe Read::Imap::SupportEmails do
   before do
     config = {

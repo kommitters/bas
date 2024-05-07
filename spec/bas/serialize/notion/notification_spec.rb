@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "bas/serialize/notion/notification"
+require "bas/read/notion/types/response"
+
 RSpec.describe Serialize::Notion::Notification do
   before do
     notification = {

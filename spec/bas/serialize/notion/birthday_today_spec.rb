@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "bas/serialize/notion/birthday_today"
+require "bas/read/notion/types/response"
+require "bas/read/notion/use_case/birthday_today"
+
 RSpec.describe Serialize::Notion::BirthdayToday do
   before do
     @serialize = described_class.new

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../domain/exceptions/function_not_implemented"
+require_relative "../domain/exceptions/function_not_implement"
 
 module Write
   ##
@@ -21,16 +21,16 @@ module Write
     # Must be overridden by subclasses, with specific logic based on the use case.
     #
     # <br>
-    # <b>raises</b> <tt>Domain::Exceptions::FunctionNotImplemented</tt> when missing implementation.
+    # <b>raises</b> <tt>Domain::Exceptions::FunctionNotImplement</tt> when missing implementation.
     #
     def execute(_process_response)
-      raise Domain::Exceptions::FunctionNotImplemented
+      raise Domain::Exceptions::FunctionNotImplement
     end
 
     protected
 
     def write(_method, _data)
-      raise Domain::Exceptions::FunctionNotImplemented
+      raise Domain::Exceptions::FunctionNotImplement
     end
   end
 end

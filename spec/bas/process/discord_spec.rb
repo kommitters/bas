@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "bas/process/discord/implementation"
+require "bas/formatter/types/response"
+
 RSpec.describe Process::Discord::Implementation do
   before do
     @config = {

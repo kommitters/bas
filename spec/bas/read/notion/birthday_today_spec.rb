@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "bas/read/notion/use_case/birthday_today"
+
 RSpec.describe Read::Notion::BirthdayToday do
   before do
     @config = {

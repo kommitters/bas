@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "bas/serialize/github/issues"
+require "bas/read/github/types/response"
+
 RSpec.describe Serialize::Github::Issues do
   let(:assignees) { [{ login: "username" }] }
   let(:issues) do

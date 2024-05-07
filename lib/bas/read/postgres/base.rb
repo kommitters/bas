@@ -7,7 +7,7 @@ require_relative "./types/response"
 require_relative "./helper"
 
 module Read
-  module Postgres
+  module PostgresBas
     ##
     # This class is an implementation of the Read::Base interface, specifically designed
     # for reading data from Postgres.
@@ -25,9 +25,9 @@ module Read
 
         pg_result = execute_query(pg_connection, query)
 
-        postgres_response = Read::Postgres::Types::Response.new(pg_result)
+        postgres_response = Read::PostgresBas::Types::Response.new(pg_result)
 
-        Read::Postgres::Helper.validate_response(postgres_response)
+        Read::PostgresBas::Helper.validate_response(postgres_response)
       end
 
       private
