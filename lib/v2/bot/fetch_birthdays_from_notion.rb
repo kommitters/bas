@@ -26,7 +26,7 @@ module Bot
   #         user: "postgres",
   #         password: "postgres"
   #       },
-  #       db_table: "birthdays",
+  #       db_table: "use_cases",
   #       bot_name: "FetchBirthdaysFromNotion"
   #     }
   #   }
@@ -43,7 +43,7 @@ module Bot
       reader.execute
     end
 
-    # Process function to execute the Notion utility to fetch PTO's from the notion database
+    # Process function to execute the Notion utility to fetch birthdays from a notion database
     #
     def process(_read_response)
       response = Utils::Notion::Request.execute(params)
