@@ -64,7 +64,7 @@ RSpec.describe Bot::FetchDomainsWipLimitFromNotion do
       allow(@pg_result).to receive(:values).and_return([[wip_count_results]])
     end
 
-    it "read the notification from the postgres database" do
+    it "read the domains wip counts from the postgres database" do
       read = @bot.read
 
       expect(read).to be_a Read::Types::Response
@@ -99,7 +99,7 @@ RSpec.describe Bot::FetchDomainsWipLimitFromNotion do
       allow(HTTParty).to receive(:send).and_return(response)
     end
 
-    it "returns a success hash with the wip's count by domain" do
+    it "returns a success hash with the wip's count and limits by domain" do
       allow(response).to receive(:code).and_return(200)
       allow(response).to receive(:parsed_response).and_return({ "results" => domain_limits })
 

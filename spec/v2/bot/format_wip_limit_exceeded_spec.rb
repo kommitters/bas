@@ -62,7 +62,7 @@ RSpec.describe Bot::FormatWipLimitExceeded do
       allow(@pg_result).to receive(:values).and_return([[exceedded_wip_limit_results]])
     end
 
-    it "read the notification from the postgres database" do
+    it "read the exceeded wip counts by domain from the postgres database" do
       read = @bot.read
 
       expect(read).to be_a Read::Types::Response
@@ -85,13 +85,13 @@ RSpec.describe Bot::FormatWipLimitExceeded do
       expect(@bot.process(read_response)).to eq({ success: { notification: "" } })
     end
 
-    it "returns an empty success hash when the birthdays list is empty" do
+    it "returns an empty success hash when the exceeded_domain_count hash is empty" do
       read_response = Read::Types::Response.new({ "exceeded_domain_count" => {} })
 
       expect(@bot.process(read_response)).to eq({ success: { notification: "" } })
     end
 
-    it "returns a success hash with the list of formatted birthdays" do
+    it "returns a success hash with the list of formatted exceeded domain count" do
       read_response = Read::Types::Response.new({ "exceeded_domain_count" => exceedded_wip_limit })
       processed = @bot.process(read_response)
 

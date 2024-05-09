@@ -61,7 +61,7 @@ RSpec.describe Bot::CompareWipLimitCount do
       allow(@pg_result).to receive(:values).and_return([[domains_wip_limit_counts_results]])
     end
 
-    it "read the notification from the postgres database" do
+    it "read the wip's count and limits by domain from the postgres database" do
       read = @bot.read
 
       expect(read).to be_a Read::Types::Response
