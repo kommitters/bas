@@ -7,7 +7,7 @@ require "httparty"
 module Utils
   module Imap
     ##
-    # This module is a Imap utility for request emails from a Imap server
+    # This module is a Imap utility for request emails from an Imap server
     #
     class Request
       def initialize(params, query)
