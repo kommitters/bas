@@ -46,6 +46,7 @@ module Bot
   #
   class FormatEmails < Bot::Base
     EMAIL_ATTRIBUTES = %w[subject sender date].freeze
+    DEFAULT_TIME_ZONE = "+00:00"
 
     # read function to execute the PostgresDB Read component
     #
@@ -62,7 +63,7 @@ module Bot
 
       emails_list = read_response.data["emails"]
 
-      notification = emails_list.reduce("") do |payload, email|
+      notification = process_emails(emails_list).reduce("") do |payload, email|
         "#{payload} #{build_template(EMAIL_ATTRIBUTES, email)} \n"
       end
 
@@ -78,6 +79,32 @@ module Bot
     end
 
     private
+
+    def process_emails(emails)
+      emails.each do |email|
+        date = DateTime.parse(email["date"]).to_time
+        email["date"] = at_timezone(date)
+      end
+      emails.filter! { |email| email["date"] > time_window } unless process_options[:frequency].nil?
+
+      format_timestamp(emails)
+    end
+
+    def format_timestamp(emails)
+      emails.each { |email| email["date"] = email["date"].strftime("%F %r") }
+    end
+
+    def time_window
+      date_time = Time.now - (60 * 60 * process_options[:frequency])
+
+      at_timezone(date_time)
+    end
+
+    def at_timezone(date)
+      timezone = process_options[:timezone] || DEFAULT_TIME_ZONE
+
+      Time.at(date, in: timezone)
+    end
 
     def build_template(attributes, instance)
       template = process_options[:template]

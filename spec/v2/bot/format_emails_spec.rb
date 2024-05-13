@@ -76,7 +76,7 @@ RSpec.describe Bot::FormatEmails do
     let(:emails) { [{ "date" => "Thu, 09 May", "sender" => "user@mail.com" }] }
 
     let(:formatted_emails) do
-      " The user@mail.com has requested support the Thu, 09 May \n"
+      " The user@mail.com has requested support the 2024-05-09 12:00:00 AM \n"
     end
 
     it "returns an empty success hash when the birthdays list is empty" do
