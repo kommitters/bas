@@ -77,15 +77,26 @@ module Bot
     end
 
     def body
-      today = Time.now.utc.strftime("%F").to_s
+      { filter: { "or": conditions } }
+    end
 
+    def conditions
+      [
+        today_condition,
+        { property: "StartDateTime", date: { this_week: {} } },
+        { property: "EndDateTime", date: { this_week: {} } },
+        { property: "StartDateTime", date: { next_week: {} } },
+        { property: "EndDateTime", date: { next_week: {} } }
+      ]
+    end
+
+    def today_condition
+      today = Time.now.utc.strftime("%F").to_s
       {
-        filter: {
-          "and": [
-            { property: "StartDateTime", date: { on_or_before: today } },
-            { property: "EndDateTime", date: { on_or_after: today } }
-          ]
-        }
+        "and": [
+          { property: "StartDateTime", date: { on_or_before: today } },
+          { property: "EndDateTime", date: { on_or_after: today } }
+        ]
       }
     end
 
