@@ -57,8 +57,8 @@ module Bot
 
     # Process function to format the notification using a template
     #
-    def process(read_response)
-      return { success: { notification: "" } } if unprocessable_response(read_response.data)
+    def process
+      return { success: { notification: "" } } if unprocessable_response
 
       exceedded_limits_list = read_response.data["exceeded_domain_count"]
 
@@ -71,7 +71,7 @@ module Bot
 
     # Write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute
@@ -79,8 +79,8 @@ module Bot
 
     private
 
-    def unprocessable_response(read_data)
-      read_data.nil? || read_data["exceeded_domain_count"] == {}
+    def unprocessable_response
+      read_response.data.nil? || read_response.data["exceeded_domain_count"] == {}
     end
 
     def build_template(attributes, instance)

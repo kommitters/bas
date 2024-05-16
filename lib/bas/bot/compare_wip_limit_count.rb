@@ -52,8 +52,8 @@ module Bot
 
     # Process function to compare the domains wip counts and limits
     #
-    def process(read_response)
-      return { success: { exceeded_domain_count: {} } } if unprocessable_response(read_response.data)
+    def process
+      return { success: { exceeded_domain_count: {} } } if unprocessable_response
 
       domains_limits = read_response.data["domains_limits"]
       domain_wip_count = read_response.data["domain_wip_count"]
@@ -65,7 +65,7 @@ module Bot
 
     # Write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute
@@ -73,7 +73,9 @@ module Bot
 
     private
 
-    def unprocessable_response(read_data)
+    def unprocessable_response
+      read_data = read_response.data
+
       read_data.nil? || read_data == {} || read_data["domains_limits"] == [] || read_data["domain_wip_count"] == []
     end
 
