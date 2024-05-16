@@ -36,8 +36,8 @@ RSpec.describe Bot::FormatWipLimitExceeded do
 
     it { expect(@bot).to respond_to(:execute).with(0).arguments }
     it { expect(@bot).to respond_to(:read).with(0).arguments }
-    it { expect(@bot).to respond_to(:process).with(1).arguments }
-    it { expect(@bot).to respond_to(:write).with(1).arguments }
+    it { expect(@bot).to respond_to(:process).with(0).arguments }
+    it { expect(@bot).to respond_to(:write).with(0).arguments }
 
     it { expect(@bot).to respond_to(:read_options) }
     it { expect(@bot).to respond_to(:process_options) }
@@ -80,20 +80,20 @@ RSpec.describe Bot::FormatWipLimitExceeded do
     let(:formatted_exceedded_wip_limit) { " :warning: The engineering WIP limit was exceeded by 1 \n" }
 
     it "returns an empty success hash when the record was not found" do
-      read_response = Read::Types::Response.new(nil)
+      @bot.read_response = Read::Types::Response.new(nil)
 
-      expect(@bot.process(read_response)).to eq({ success: { notification: "" } })
+      expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
     it "returns an empty success hash when the exceeded_domain_count hash is empty" do
-      read_response = Read::Types::Response.new({ "exceeded_domain_count" => {} })
+      @bot.read_response = Read::Types::Response.new({ "exceeded_domain_count" => {} })
 
-      expect(@bot.process(read_response)).to eq({ success: { notification: "" } })
+      expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
     it "returns a success hash with the list of formatted exceeded domain count" do
-      read_response = Read::Types::Response.new({ "exceeded_domain_count" => exceedded_wip_limit })
-      processed = @bot.process(read_response)
+      @bot.read_response = Read::Types::Response.new({ "exceeded_domain_count" => exceedded_wip_limit })
+      processed = @bot.process
 
       expect(processed).to eq({ success: { notification: formatted_exceedded_wip_limit } })
     end
@@ -112,9 +112,9 @@ RSpec.describe Bot::FormatWipLimitExceeded do
     end
 
     it "save the process success response in a postgres table" do
-      process_response = { success: { notification: formatted_exceedded_wip_limit } }
+      @bot.process_response = { success: { notification: formatted_exceedded_wip_limit } }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
   end
 end

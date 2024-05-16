@@ -36,8 +36,8 @@ RSpec.describe Bot::FormatEmails do
 
     it { expect(@bot).to respond_to(:execute).with(0).arguments }
     it { expect(@bot).to respond_to(:read).with(0).arguments }
-    it { expect(@bot).to respond_to(:process).with(1).arguments }
-    it { expect(@bot).to respond_to(:write).with(1).arguments }
+    it { expect(@bot).to respond_to(:process).with(0).arguments }
+    it { expect(@bot).to respond_to(:write).with(0).arguments }
 
     it { expect(@bot).to respond_to(:read_options) }
     it { expect(@bot).to respond_to(:process_options) }
@@ -80,20 +80,20 @@ RSpec.describe Bot::FormatEmails do
     end
 
     it "returns an empty success hash when the birthdays list is empty" do
-      read_response = Read::Types::Response.new({ "emails" => [] })
+      @bot.read_response = Read::Types::Response.new({ "emails" => [] })
 
-      expect(@bot.process(read_response)).to eq({ success: { notification: "" } })
+      expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
     it "returns an empty success hash when the record was not found" do
-      read_response = Read::Types::Response.new(nil)
+      @bot.read_response = Read::Types::Response.new(nil)
 
-      expect(@bot.process(read_response)).to eq({ success: { notification: "" } })
+      expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
     it "returns a success hash with the list of formatted birthdays" do
-      read_response = Read::Types::Response.new({ "emails" => emails })
-      processed = @bot.process(read_response)
+      @bot.read_response = Read::Types::Response.new({ "emails" => emails })
+      processed = @bot.process
 
       expect(processed).to eq({ success: { notification: formatted_emails } })
     end
@@ -114,9 +114,9 @@ RSpec.describe Bot::FormatEmails do
     end
 
     it "save the process success response in a postgres table" do
-      process_response = { success: { notification: formatted_emails } }
+      @bot.process_response = { success: { notification: formatted_emails } }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
   end
 end

@@ -35,8 +35,10 @@ module Read
     end
 
     def build_query
-      query = "SELECT data, inserted_at FROM #{config[:db_table]} WHERE archived=$1 AND bot_name=$2 AND state=$3 ORDER BY inserted_at DESC"
+      where = "archived=$1 AND bot_name=$2 AND state=$3 ORDER BY inserted_at DESC"
       params = [false, config[:bot_name], "success"]
+
+      query = "SELECT data, inserted_at FROM #{config[:db_table]} WHERE #{where}"
 
       [query, params]
     end

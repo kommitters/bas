@@ -33,8 +33,8 @@ RSpec.describe Bot::CompareWipLimitCount do
 
     it { expect(@bot).to respond_to(:execute).with(0).arguments }
     it { expect(@bot).to respond_to(:read).with(0).arguments }
-    it { expect(@bot).to respond_to(:process).with(1).arguments }
-    it { expect(@bot).to respond_to(:write).with(1).arguments }
+    it { expect(@bot).to respond_to(:process).with(0).arguments }
+    it { expect(@bot).to respond_to(:write).with(0).arguments }
 
     it { expect(@bot).to respond_to(:read_options) }
     it { expect(@bot).to respond_to(:process_options) }
@@ -81,32 +81,32 @@ RSpec.describe Bot::CompareWipLimitCount do
     let(:exceeded_domain_count) { [{ domain: "engineering", exceeded: 1 }] }
 
     it "returns an empty success hash when the record was not found" do
-      read_response = Read::Types::Response.new(nil)
+      @bot.read_response = Read::Types::Response.new(nil)
 
-      expect(@bot.process(read_response)).to eq({ success: { exceeded_domain_count: {} } })
+      expect(@bot.process).to eq({ success: { exceeded_domain_count: {} } })
     end
 
     it "returns an empty success hash when the limits count hash is empty" do
-      read_response = Read::Types::Response.new({})
+      @bot.read_response = Read::Types::Response.new({})
 
-      expect(@bot.process(read_response)).to eq({ success: { exceeded_domain_count: {} } })
+      expect(@bot.process).to eq({ success: { exceeded_domain_count: {} } })
     end
 
     it "returns an empty success hash when the domains_limits list is empty" do
-      read_response = Read::Types::Response.new({ "domains_limits" => [] })
+      @bot.read_response = Read::Types::Response.new({ "domains_limits" => [] })
 
-      expect(@bot.process(read_response)).to eq({ success: { exceeded_domain_count: {} } })
+      expect(@bot.process).to eq({ success: { exceeded_domain_count: {} } })
     end
 
     it "returns an empty success hash when the domain_wip_count list is empty" do
-      read_response = Read::Types::Response.new({ "domains_limits" => [{}], "domain_wip_count" => [] })
+      @bot.read_response = Read::Types::Response.new({ "domains_limits" => [{}], "domain_wip_count" => [] })
 
-      expect(@bot.process(read_response)).to eq({ success: { exceeded_domain_count: {} } })
+      expect(@bot.process).to eq({ success: { exceeded_domain_count: {} } })
     end
 
     it "returns a success hash with the hash of wip limits counts" do
-      read_response = Read::Types::Response.new(formatted_domains_wip_limit_counts)
-      processed = @bot.process(read_response)
+      @bot.read_response = Read::Types::Response.new(formatted_domains_wip_limit_counts)
+      processed = @bot.process
 
       expect(processed).to eq({ success: { exceeded_domain_count: } })
     end
@@ -125,9 +125,9 @@ RSpec.describe Bot::CompareWipLimitCount do
     end
 
     it "save the process success response in a postgres table" do
-      process_response = { success: { exceeded_domain_count: } }
+      @bot.process_response = { success: { exceeded_domain_count: } }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
   end
 end

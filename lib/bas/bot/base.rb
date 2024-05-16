@@ -10,7 +10,8 @@ module Bot
   # for creating custom bots formed by a Read, Process, and Write components.
   #
   class Base
-    attr_reader :read_options, :process_options, :write_options, :read_response, :process_response, :write_response
+    attr_reader :read_options, :process_options, :write_options
+    attr_accessor :read_response, :process_response, :write_response
 
     def initialize(config)
       @read_options = config[:read_options]

@@ -38,8 +38,8 @@ RSpec.describe Bot::HumanizePto do
 
     it { expect(@bot).to respond_to(:execute).with(0).arguments }
     it { expect(@bot).to respond_to(:read).with(0).arguments }
-    it { expect(@bot).to respond_to(:process).with(1).arguments }
-    it { expect(@bot).to respond_to(:write).with(1).arguments }
+    it { expect(@bot).to respond_to(:process).with(0).arguments }
+    it { expect(@bot).to respond_to(:write).with(0).arguments }
 
     it { expect(@bot).to respond_to(:read_options) }
     it { expect(@bot).to respond_to(:process_options) }
@@ -90,29 +90,29 @@ RSpec.describe Bot::HumanizePto do
     let(:error_response) { { "code": 50_027, "message": "Invalid Webhook Token" } }
 
     before do
-      @read_response = Read::Types::Response.new({ "ptos" => [pto] })
+      @bot.read_response = Read::Types::Response.new({ "ptos" => [pto] })
 
       allow(HTTParty).to receive(:post).and_return(run)
       allow(HTTParty).to receive(:get).and_return(pol, list)
     end
 
     it "returns an empty success hash when the ptos list is empty" do
-      read_response = Read::Types::Response.new({ "ptos" => [] })
+      @bot.read_response = Read::Types::Response.new({ "ptos" => [] })
 
-      expect(@bot.process(read_response)).to eq({ success: { notification: "" } })
+      expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
     it "returns an empty success hash when the record was not found" do
-      read_response = Read::Types::Response.new(nil)
+      @bot.read_response = Read::Types::Response.new(nil)
 
-      expect(@bot.process(read_response)).to eq({ success: { notification: "" } })
+      expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
     it "returns an error when the thread and run build fail" do
       allow(run).to receive(:code).and_return(404)
       allow(run).to receive(:[]).and_return("completed")
 
-      response = @bot.process(@read_response)
+      response = @bot.process
 
       expect(response).to eq({ error: { message: { "id" => "run_id", "thread_id" => "thread_id" },
                                         status_code: 404 } })
@@ -123,7 +123,7 @@ RSpec.describe Bot::HumanizePto do
       allow(pol).to receive(:[]).and_return("failed")
       allow(pol).to receive(:code).and_return(401)
 
-      response = @bot.process(@read_response)
+      response = @bot.process
 
       expect(response).to eq({ error: { message: { error: { message: "pol run fail" } },
                                         status_code: 401 } })
@@ -135,7 +135,7 @@ RSpec.describe Bot::HumanizePto do
       allow(pol).to receive(:code).and_return(200)
       allow(list).to receive(:code).and_return(500)
 
-      response = @bot.process(@read_response)
+      response = @bot.process
 
       expect(response).to eq({ error: { message: { error: { message: "list message fail" } },
                                         status_code: 500 } })
@@ -149,7 +149,7 @@ RSpec.describe Bot::HumanizePto do
       allow(list).to receive(:[]).and_return("completed")
       allow(list).to receive(:parsed_response).and_return(success)
 
-      @bot.process(@read_response)
+      @bot.process
     end
   end
 
@@ -165,15 +165,15 @@ RSpec.describe Bot::HumanizePto do
     end
 
     it "save the process success response in a postgres table" do
-      process_response = { success: {} }
+      @bot.process_response = { success: {} }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
 
     it "save the process fail response in a postgres table" do
-      process_response = { error: { message: error_response, status_code: 401 } }
+      @bot.process_response = { error: { message: error_response, status_code: 401 } }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
   end
 end

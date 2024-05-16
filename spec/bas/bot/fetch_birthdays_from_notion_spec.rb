@@ -4,19 +4,26 @@ require "bas/bot/fetch_birthdays_from_notion"
 
 RSpec.describe Bot::FetchBirthdaysFromNotion do
   before do
+    connection = {
+      host: "localhost",
+      port: 5432,
+      dbname: "bas",
+      user: "postgres",
+      password: "postgres"
+    }
+
     config = {
+      read_options: {
+        connection:,
+        db_table: "use_cases",
+        bot_name: "FetchBirthdaysFromNotion"
+      },
       process_options: {
         database_id: "database_id",
         secret: "secret"
       },
       write_options: {
-        connection: {
-          host: "host",
-          port: 5432,
-          dbname: "bas",
-          user: "postgres",
-          password: "postgres"
-        },
+        connection:,
         db_table: "use_cases",
         bot_name: "FetchBirthdaysFromNotion"
       }
@@ -30,8 +37,8 @@ RSpec.describe Bot::FetchBirthdaysFromNotion do
 
     it { expect(@bot).to respond_to(:execute).with(0).arguments }
     it { expect(@bot).to respond_to(:read).with(0).arguments }
-    it { expect(@bot).to respond_to(:process).with(1).arguments }
-    it { expect(@bot).to respond_to(:write).with(1).arguments }
+    it { expect(@bot).to respond_to(:process).with(0).arguments }
+    it { expect(@bot).to respond_to(:write).with(0).arguments }
 
     it { expect(@bot).to respond_to(:read_options) }
     it { expect(@bot).to respond_to(:process_options) }
@@ -39,7 +46,35 @@ RSpec.describe Bot::FetchBirthdaysFromNotion do
   end
 
   describe ".read" do
-    it { expect(@bot.read).to be_a Read::Types::Response }
+    let(:pg_conn) { instance_double(PG::Connection) }
+    let(:birthdays_results) do
+      "{\"birthdays\": [\
+      {\"name\": \"John Doe\", \"birthday_date\": \"2024-05-03\"},\
+      {\"name\": \"Jane Doe\", \"birthday_date\": \"2024-05-03\"}\
+      ]}"
+    end
+
+    let(:formatted_birthdays) do
+      { "birthdays" => [{ "name" => "John Doe", "birthday_date" => "2024-05-03" },
+                        { "name" => "Jane Doe", "birthday_date" => "2024-05-03" }] }
+    end
+
+    before do
+      @pg_result = double
+
+      allow(PG::Connection).to receive(:new).and_return(pg_conn)
+      allow(pg_conn).to receive(:exec_params).and_return(@pg_result)
+      allow(@pg_result).to receive(:values).and_return([[birthdays_results]])
+    end
+
+    it "read the notification from the postgres database" do
+      read = @bot.read
+
+      expect(read).to be_a Read::Types::Response
+      expect(read.data).to be_a Hash
+      expect(read.data).to_not be_nil
+      expect(read.data).to eq(formatted_birthdays)
+    end
   end
 
   describe ".process" do
@@ -64,7 +99,7 @@ RSpec.describe Bot::FetchBirthdaysFromNotion do
     let(:response) { double("http_response") }
 
     before do
-      @read_response = Read::Types::Response.new
+      @bot.read_response = Read::Types::Response.new
 
       allow(HTTParty).to receive(:send).and_return(response)
     end
@@ -73,7 +108,7 @@ RSpec.describe Bot::FetchBirthdaysFromNotion do
       allow(response).to receive(:code).and_return(200)
       allow(response).to receive(:parsed_response).and_return({ "results" => [birthday] })
 
-      processed = @bot.process(@read_response)
+      processed = @bot.process
 
       expect(processed).to eq({ success: { birthdays: [formatted_birthday] } })
     end
@@ -82,7 +117,7 @@ RSpec.describe Bot::FetchBirthdaysFromNotion do
       allow(response).to receive(:code).and_return(404)
       allow(response).to receive(:parsed_response).and_return(error_response)
 
-      processed = @bot.process(@read_response)
+      processed = @bot.process
 
       expect(processed).to eq({ error: { message: error_response, status_code: 404 } })
     end
@@ -108,15 +143,15 @@ RSpec.describe Bot::FetchBirthdaysFromNotion do
     end
 
     it "save the process success response in a postgres table" do
-      process_response = { success: { birthdays: [formatted_birthday] } }
+      @bot.process_response = { success: { birthdays: [formatted_birthday] } }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
 
     it "save the process fail response in a postgres table" do
-      process_response = { error: { message: error_response, status_code: 404 } }
+      @bot.process_response = { error: { message: error_response, status_code: 404 } }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
   end
 end

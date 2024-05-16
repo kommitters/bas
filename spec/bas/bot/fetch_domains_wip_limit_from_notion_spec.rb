@@ -43,8 +43,8 @@ RSpec.describe Bot::FetchDomainsWipLimitFromNotion do
 
     it { expect(@bot).to respond_to(:execute).with(0).arguments }
     it { expect(@bot).to respond_to(:read).with(0).arguments }
-    it { expect(@bot).to respond_to(:process).with(1).arguments }
-    it { expect(@bot).to respond_to(:write).with(1).arguments }
+    it { expect(@bot).to respond_to(:process).with(0).arguments }
+    it { expect(@bot).to respond_to(:write).with(0).arguments }
 
     it { expect(@bot).to respond_to(:read_options) }
     it { expect(@bot).to respond_to(:process_options) }
@@ -94,7 +94,7 @@ RSpec.describe Bot::FetchDomainsWipLimitFromNotion do
     let(:response) { double("http_response") }
 
     before do
-      @read_response = Read::Types::Response.new(domains_wip_count)
+      @bot.read_response = Read::Types::Response.new(domains_wip_count)
 
       allow(HTTParty).to receive(:send).and_return(response)
     end
@@ -103,7 +103,7 @@ RSpec.describe Bot::FetchDomainsWipLimitFromNotion do
       allow(response).to receive(:code).and_return(200)
       allow(response).to receive(:parsed_response).and_return({ "results" => domain_limits })
 
-      processed = @bot.process(@read_response)
+      processed = @bot.process
 
       expect(processed).to eq({ success: formatted_domain_wip_limits_counts })
     end
@@ -112,7 +112,7 @@ RSpec.describe Bot::FetchDomainsWipLimitFromNotion do
       allow(response).to receive(:code).and_return(404)
       allow(response).to receive(:parsed_response).and_return(error_response)
 
-      processed = @bot.process(@read_response)
+      processed = @bot.process
 
       expect(processed).to eq({ error: { message: error_response, status_code: 404 } })
     end
@@ -135,15 +135,15 @@ RSpec.describe Bot::FetchDomainsWipLimitFromNotion do
     end
 
     it "save the process success response in a postgres table" do
-      process_response = { success: formatted_domain_wip_limits_counts }
+      @bot.process_response = { success: formatted_domain_wip_limits_counts }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
 
     it "save the process fail response in a postgres table" do
-      process_response = { error: { message: error_response, status_code: 404 } }
+      @bot.process_response = { error: { message: error_response, status_code: 404 } }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
   end
 end
