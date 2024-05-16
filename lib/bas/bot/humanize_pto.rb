@@ -60,10 +60,9 @@ module Bot
 
     # process function to execute the OpenaAI utility to process the PTO's
     #
-    def process(read_response)
-      return { success: { notification: "" } } if read_response.data.nil? || read_response.data["ptos"] == []
+    def process
+      return { success: { notification: "" } } if unprocessable_response
 
-      params = build_params(read_response)
       response = Utils::OpenAI::RunAssitant.execute(params)
 
       if response.code != 200 || (!response["status"].nil? && response["status"] != "completed")
@@ -75,7 +74,7 @@ module Bot
 
     # write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute
@@ -83,15 +82,19 @@ module Bot
 
     private
 
-    def build_params(read_response)
+    def unprocessable_response
+      read_response.data.nil? || read_response.data["ptos"] == []
+    end
+
+    def params
       {
         assistant_id: process_options[:assistant_id],
         secret: process_options[:secret],
-        prompt: build_prompt(read_response)
+        prompt: build_prompt
       }
     end
 
-    def build_prompt(read_response)
+    def build_prompt
       prompt = process_options[:prompt] || DEFAULT_PROMPT
       ptos_list = read_response.data["ptos"]
 
