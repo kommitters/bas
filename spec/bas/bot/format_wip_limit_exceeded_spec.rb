@@ -16,7 +16,7 @@ RSpec.describe Bot::FormatWipLimitExceeded do
       read_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "CompareWipLimitCount"
+        tag: "CompareWipLimitCount"
       },
       process_options: {
         template: ":warning: The <domain> WIP limit was exceeded by <exceeded>"
@@ -24,7 +24,7 @@ RSpec.describe Bot::FormatWipLimitExceeded do
       write_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "FormatWipLimitExceeded"
+        tag: "FormatWipLimitExceeded"
       }
     }
 

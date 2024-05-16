@@ -23,7 +23,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "pto",
-  #       bot_name: "HumanizePto"
+  #       tag: "HumanizePto"
   #     },
   #     process_options: {
   #       name: "bot name to be shown on discord",
@@ -38,7 +38,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "pto",
-  #       bot_name: "NotifyDiscord"
+  #       tag: "NotifyDiscord"
   #     }
   #   }
   #

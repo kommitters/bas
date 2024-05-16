@@ -16,7 +16,7 @@ RSpec.describe Bot::FetchDomainsWipLimitFromNotion do
       read_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "FetchDomainsWipCountsFromNotion"
+        tag: "FetchDomainsWipCountsFromNotion"
       },
       process_options: {
         database_id: "database_id",
@@ -31,7 +31,7 @@ RSpec.describe Bot::FetchDomainsWipLimitFromNotion do
           password: "postgres"
         },
         db_table: "use_cases",
-        bot_name: "FetchDomainsWipLimitFromNotion"
+        tag: "FetchDomainsWipLimitFromNotion"
       }
     }
 

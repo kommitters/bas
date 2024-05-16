@@ -23,7 +23,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FetchEmailsFromImap"
+  #       tag: "FetchEmailsFromImap"
   #     },
   #     process_options: {
   #       template: "emails template message"
@@ -37,7 +37,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FormatEmails"
+  #       tag: "FormatEmails"
   #     }
   #   }
   #

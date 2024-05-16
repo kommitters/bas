@@ -28,7 +28,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FetchDomainsWipCountsFromNotion"
+  #       tag: "FetchDomainsWipCountsFromNotion"
   #     }
   #   }
   #

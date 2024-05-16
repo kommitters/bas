@@ -24,7 +24,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "pto",
-  #       bot_name: "FetchPtosFromNotion"
+  #       tag: "FetchPtosFromNotion"
   #     },
   #     process_options: {
   #       secret: "openai secret key",
@@ -40,7 +40,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "pto",
-  #       bot_name: "HumanizePto"
+  #       tag: "HumanizePto"
   #     }
   #   }
   #

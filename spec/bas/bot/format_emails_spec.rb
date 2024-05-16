@@ -16,7 +16,7 @@ RSpec.describe Bot::FormatEmails do
       read_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "FetchEmailsFromImap"
+        tag: "FetchEmailsFromImap"
       },
       process_options: {
         template: "The <sender> has requested support the <date>"
@@ -24,7 +24,7 @@ RSpec.describe Bot::FormatEmails do
       write_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "FormatEmails"
+        tag: "FormatEmails"
       }
     }
 

@@ -27,7 +27,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "birthdays",
-  #       bot_name: "FetchNextWeekBirthdaysFromNotion"
+  #       tag: "FetchNextWeekBirthdaysFromNotion"
   #     }
   #   }
   #

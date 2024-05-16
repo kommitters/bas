@@ -20,7 +20,7 @@ RSpec.describe Bot::GarbageCollector do
       write_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "GarbageCollector"
+        tag: "GarbageCollector"
       }
     }
 

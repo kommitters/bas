@@ -16,7 +16,7 @@ RSpec.describe Bot::FormatBirthdays do
       read_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "FetchBirthdaysFromNotion"
+        tag: "FetchBirthdaysFromNotion"
       },
       process_options: {
         template: "<name>, Wishing you a very happy birthday!"
@@ -24,7 +24,7 @@ RSpec.describe Bot::FormatBirthdays do
       write_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "FormatBirthdays"
+        tag: "FormatBirthdays"
       }
     }
 

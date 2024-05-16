@@ -25,7 +25,7 @@ RSpec.describe Bot::FetchEmailsFromImap do
           password: "postgres"
         },
         db_table: "use_cases",
-        bot_name: "FetchEmailsFromImap"
+        tag: "FetchEmailsFromImap"
       }
     }
 

@@ -18,7 +18,7 @@ RSpec.describe Bot::FetchPtosFromNotion do
           password: "postgres"
         },
         db_table: "pto",
-        bot_name: "FetchPtosFromNotion"
+        tag: "FetchPtosFromNotion"
       }
     }
 

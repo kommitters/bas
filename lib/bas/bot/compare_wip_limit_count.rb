@@ -23,7 +23,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FetchDomainsWipLimitFromNotion"
+  #       tag: "FetchDomainsWipLimitFromNotion"
   #     },
   #     write_options: {
   #       connection: {
@@ -34,7 +34,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "CompareWipLimitCount"
+  #       tag: "CompareWipLimitCount"
   #     }
   #   }
   #

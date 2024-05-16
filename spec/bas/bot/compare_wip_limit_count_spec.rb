@@ -16,12 +16,12 @@ RSpec.describe Bot::CompareWipLimitCount do
       read_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "FetchDomainsWipLimitFromNotion"
+        tag: "FetchDomainsWipLimitFromNotion"
       },
       write_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "CompareWipLimitCount"
+        tag: "CompareWipLimitCount"
       }
     }
 

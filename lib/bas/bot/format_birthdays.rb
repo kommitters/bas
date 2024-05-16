@@ -23,7 +23,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FetchBirthdaysFromNotion"
+  #       tag: "FetchBirthdaysFromNotion"
   #     },
   #     process_options: {
   #       template: "birthday template message"
@@ -37,7 +37,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FormatBirthdays"
+  #       tag: "FormatBirthdays"
   #     }
   #   }
   #

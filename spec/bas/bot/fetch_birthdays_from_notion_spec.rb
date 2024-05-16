@@ -16,7 +16,7 @@ RSpec.describe Bot::FetchBirthdaysFromNotion do
       read_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "FetchBirthdaysFromNotion"
+        tag: "FetchBirthdaysFromNotion"
       },
       process_options: {
         database_id: "database_id",
@@ -25,7 +25,7 @@ RSpec.describe Bot::FetchBirthdaysFromNotion do
       write_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "FetchBirthdaysFromNotion"
+        tag: "FetchBirthdaysFromNotion"
       }
     }
 

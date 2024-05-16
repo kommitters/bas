@@ -27,7 +27,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FetchBirthdaysFromNotion"
+  #       tag: "FetchBirthdaysFromNotion"
   #     }
   #   }
   #

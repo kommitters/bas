@@ -23,7 +23,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "CompareWipLimitCount"
+  #       tag: "CompareWipLimitCount"
   #     },
   #     process_options: {
   #       template: "exceeded wip limit template message"
@@ -37,7 +37,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FormatWipLimitExceeded"
+  #       tag: "FormatWipLimitExceeded"
   #     }
   #   }
   #

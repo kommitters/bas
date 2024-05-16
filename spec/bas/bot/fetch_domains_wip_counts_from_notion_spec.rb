@@ -18,7 +18,7 @@ RSpec.describe Bot::FetchDomainsWipCountsFromNotion do
           password: "postgres"
         },
         db_table: "use_cases",
-        bot_name: "FetchDomainsWipCountsFromNotion"
+        tag: "FetchDomainsWipCountsFromNotion"
       }
     }
 

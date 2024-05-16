@@ -16,7 +16,7 @@ RSpec.describe Bot::NotifyDiscord do
       read_options: {
         connection:,
         db_table: "pto",
-        bot_name: "HumanizePto"
+        tag: "HumanizePto"
       },
       process_options: {
         name: "discordBotName",
@@ -25,7 +25,7 @@ RSpec.describe Bot::NotifyDiscord do
       write_options: {
         connection:,
         db_table: "pto",
-        bot_name: "NotifyDiscord"
+        tag: "NotifyDiscord"
       }
     }
 
