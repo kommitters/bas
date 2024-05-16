@@ -35,17 +35,17 @@ module Bot
   #   bot.execute
   #
   class FetchBirthdaysFromNotion < Bot::Base
-    # Read function to execute the default Read component
+    # read function to execute the PostgresDB Read component
     #
     def read
-      reader = Read::Default.new
+      reader = Read::Postgres.new(read_options)
 
       reader.execute
     end
 
     # Process function to execute the Notion utility to fetch birthdays from a notion database
     #
-    def process(_read_response)
+    def process
       response = Utils::Notion::Request.execute(params)
 
       if response.code == 200
@@ -59,7 +59,7 @@ module Bot
 
     # Write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute
@@ -81,11 +81,20 @@ module Bot
 
       {
         filter: {
-          or: [
-            { property: "BD_this_year", date: { equals: today } }
-          ]
+          and: [{ property: "BD_this_year", date: { equals: today } }] + last_edited_condition
         }
       }
+    end
+
+    def last_edited_condition
+      return [] if read_response.inserted_at.nil?
+
+      [
+        {
+          timestamp: "last_edited_time",
+          last_edited_time: { on_or_after: read_response.inserted_at }
+        }
+      ]
     end
 
     def normalize_response(results)

@@ -56,10 +56,9 @@ module Bot
 
     # process function to execute the Discord utility to send the PTO's notification
     #
-    def process(read_response)
+    def process
       return { success: {} } if read_response.data.nil? || read_response.data["notification"] == ""
 
-      params = build_params(read_response)
       response = Utils::Discord::Integration.execute(params)
 
       if response.code == 204
@@ -71,7 +70,7 @@ module Bot
 
     # write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute
@@ -79,7 +78,7 @@ module Bot
 
     private
 
-    def build_params(read_response)
+    def params
       {
         name: process_options[:name],
         notification: read_response.data["notification"],

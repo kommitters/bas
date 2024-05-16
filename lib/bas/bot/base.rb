@@ -10,7 +10,7 @@ module Bot
   # for creating custom bots formed by a Read, Process, and Write components.
   #
   class Base
-    attr_reader :read_options, :process_options, :write_options
+    attr_reader :read_options, :process_options, :write_options, :read_response, :process_response, :write_response
 
     def initialize(config)
       @read_options = config[:read_options]
@@ -19,12 +19,12 @@ module Bot
     end
 
     def execute
-      read_response = read
+      @read_response = read
 
-      process_response = process(read_response)
+      @process_response = process
       raise Utils::Exceptions::InvalidProcessResponse unless process_response.is_a?(Hash)
 
-      write(process_response)
+      @write_response = write
     end
 
     protected
@@ -33,11 +33,11 @@ module Bot
       raise Utils::Exceptions::FunctionNotImplemented
     end
 
-    def process(_read_response)
+    def process
       raise Utils::Exceptions::FunctionNotImplemented
     end
 
-    def write(_process_response)
+    def write
       raise Utils::Exceptions::FunctionNotImplemented
     end
   end

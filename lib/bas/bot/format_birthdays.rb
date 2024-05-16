@@ -57,7 +57,7 @@ module Bot
 
     # Process function to format the notification using a template
     #
-    def process(read_response)
+    def process
       return { success: { notification: "" } } if read_response.data.nil? || read_response.data["birthdays"] == []
 
       birthdays_list = read_response.data["birthdays"]
@@ -71,7 +71,7 @@ module Bot
 
     # Write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute
