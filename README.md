@@ -1,8 +1,8 @@
 # BAS - Business Automation System
 
-Many organizations and individuals rely on automation across various contexts in their daily operations. With BAS, we aim to provide an open-source platform that empowers users to create customized automation systems tailored to their unique requirements. BAS consists of a series of abstract components designed to facilitate the creation of diverse use cases, regardless of context.
+Many organizations and individuals rely on automation across various contexts in their daily operations. With BAS, we aim to provide an open-source platform that empowers users to create customized automation systems tailored to their unique requirements. BAS consists of a series of abstract components designed to facilitate the creation of diverse bots, regardless of context.
 
-The underlying idea is to develop generic components that can serve a wide range of needs, this approach ensures that all members of the community can leverage the platform's evolving suite of components and use cases to their advantage.
+The underlying idea is to develop generic components that can serve a wide range of needs, this approach ensures that all members of the community can leverage the platform's evolving suite of components and bots to their advantage.
 
 ![Gem Version](https://img.shields.io/gem/v/bas?style=for-the-badge)
 ![Gem Total Downloads](https://img.shields.io/gem/dt/bas?style=for-the-badge)
@@ -26,59 +26,38 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 * Ruby 2.6.0 or higher
 
-## Building my own use case
+## BOT
+A bot is a tool in charge of executing a specific automation task. The pipeline of a bot consists of reading from a data source, processing a specific task, and then writing a result in storage.
 
-The gem provides with basic interfaces, types, and methods to shape your own use cases in an easy way.
+## Use case
+A use case is an automation problem greater than the one managed by a single bot. A use case comprises a set of bots that are agnostic between them and each one solves a specific task (parts of the automation problem). To connect the bots, a shared storage should be used. This shared storage could be a PostgresDB database, an S3 bucket, or any kind of storage where the bots will read and write data so another bot can use it to execute their tasks.
 
-There are 7 currently implemented use cases:
-* Birthday notifications - from Notion to Discord
-* Next Week Birthday notifications - from Notion to Discord
-* PTO notifications - from Notion to Discord
-* Next Week PTO notifications - from Notion to Discord
-* PTO notifications - from Postgres to Slack
-* WIP limit exceeded - from Notion to Discord
-* Support email notification - from IMAP to Discord
+For example, a system to notify birthdays in a company (automation problem) can be solved with three bots: one to fetch the data from an external data source, one to format the birthday message, and the last one to notify somewhere.
 
-For this example we'll analyze the birthday notification use case, bringing data from a notion database, and sending the
-notifications to a Discord channel.
+## Building my own BOT
 
-A *Use Case* object, consists on 5 main components, having it's own responsibility:
+The gem provides with basic interfaces, types, and methods to shape your own bot in an easy way. Since the process of reading and writing in a shared storage is separated from the main task, two base classes were defined to deal with this executions, leaving the logic of the specific task in the bot file.
 
-### 1. Read - Obtaining the data
+### 1. Read - Obtaining the data from the Shared Storage
 
-Specifically, a reader is an object in charged of bringing data from a data source. The gem already provides the base interface
-for building your own reader for your specific data source, or rely on already built classes if they match your purpose.
+Specifically, a reader is an object in charged of bringing data from a shared storage. The gem already provides the base interface
+for building your own reader for your specific shared storage, or rely on already built classes if they match your purpose.
 
-The base interface for a reader can be found under the `bas/read/base.rb` class. Since this is a implementation of the `Read::Base`
-for bringing data from a Notion database, it was created on a new namespace for that data source, it can be found under
-`/bas/read/notion/use_case/birthday_today.rb`. It implements specific logic for reading the data and validating the response.
+The base interface for a reader can be found under the `bas/read/base.rb` class.
 
-### 2. Serialize - Shaping it
+### 2. Write - Apply changes in a shared storage
+The **Write** is in charge of creating or updating information in a shared storage. This is the last step for every BOT. These changes can be a transaction in a database, adding files in a cloud storage, or simply creating logs.
 
-The **Serializer** responsibility, is to shape the data using custom types from the app domain, bringing it into a
-common structure understandable for other components, specifically the **Formatter**.
+The base interface for a writer can be found under the `bas/write/base.rb` class.
 
-Because of the use case, the Serializer implementation for it, relies on specific types for representing a Birthday it self. It can be found
-under `/bas/serialize/notion/birthday_today.rb`
+### 3. Bot - Solve a specific automation task
+The bot execute the logic to solve an specific task. For this, it can use the data from the read step, and then returns a processed response to be wrote by the write component. Every bot reads from a shared storage and writes in a shared storage.
 
-### 3. Formatter - Preparing the message
-
-The **Formatter**, is in charge of preparing the message to be sent in our notification, and give it the right format with the right data.
-The template or 'format' to be used should be included in the use case configurations, which we'll review in a further step. It's
-implementation can be found under `/bas/formatter/birthday.rb`.
-
-### 4. Process - Optional Data Process
-
-Finally, the **Process** basically, allow required data process depending on the use case like sending formatted messages into a destination. In this case, since the use case was implemented for
-Discord, it implements specific logic to communicate with a Discord channel using a webhook. The webhook configuration and name for the 'Sender'
-in the channel should be provided with the initial use case configurations. It can be found under `/bas/process/discord/implementation.rb`
-
-### 5. Write - Apply changes in a destination
-Finally, the **Write** is in charge of creating or updating information in a destination. This is the last step in the pipeline, and it aims to allow the users to apply changes in a destination depending on the use case. These changes can be a transaction in a database, adding files in a cloud storage, or simply creating logs. For the Birthday use case, after the Process sends the notification, the Write creates a Log in the `$stdout`. It can be found under `lib/bas/write/logs/use_case/console_log.rb`
+The base interface for a bot can be found under the `bas/bot/base.rb` class.
 
 ## Examples
 
-In this example, we demonstrate how to instantiate a birthday notification use case and execute it in a basic Ruby project. We'll also cover its deployment in a serverless configuration, specifically using a simple Lambda deployment.
+In this example, we demonstrate how to instantiate a birthday notification bot and execute it in a basic Ruby project. We'll also cover its deployment in a serverless configuration, specifically using a simple Lambda deployment.
 
 ### Preparing the configurations
 
@@ -94,74 +73,37 @@ With the following formula for the **BD_this_year** column: `dateAdd(prop("BD"),
 
 * A Notion secret, which can be obtained, by creating an integration here: `https://developers.notion.com/`, browsing on the **View my integrations** option, and selecting the **New Integration** or **Create new integration** buttons.
 
-* A webhook key, which can be generated directly on discord on the desired channel, following this instructions: `https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks`
+### Instantiating the FetchBirthdayFromNotion Bot
 
-* A filter, to determine which data to bring from the database, for this specific case, the filter we used is:
-
-```
-#### file.rb ####
-today = Date.now
-{
-    "filter": {
-      "or": [
-        {
-          "property": "BD_this_year",
-          "date": {
-            "equals": today
-          }
-        }
-      ]
-    },
-    "sorts": []
-}
-```
-
-* A template for the formatter to be used for formatting the payload to be send to Discord. For this specific case, the format of the messages should be:
-
-`"NAME, Wishing you a very happy birthday! Enjoy your special day! :birthday: :gift:"`
-
-### Instantiating the Use Case
-
-To instantiate the use case, the `UseCases` module should provide a method for this purpose, for this specific case, the `notify_birthday_from_notion_to_discord`
-is the desired one.
+The specific bot can be found in the `bas/bot/fetch_birthdays_from_notion.rb` file.
 
 **Normal ruby code**
 ```
-filter = {
-    "filter": {
-      "or": [
-        {
-          "property": "BD_this_year",
-          "date": {
-            "equals": today
-          }
-        }
-      ]
-    },
-    "sorts": []
-}
-
 options = {
-    read_options: {
-      base_url: "https://api.notion.com",
-      database_id: NOTION_DATABASE_ID,
-      secret: NOTION_API_INTEGRATION_SECRET,
-      filter: filter
+  process_options: {
+    database_id: "notion database id",
+    secret: "notion secret"
+  },
+  write_options: {
+    connection: {
+      host: "host",
+      port: 5432,
+      dbname: "bas",
+      user: "postgres",
+      password: "postgres"
     },
-    process_options: {
-      webhook: "https://discord.com/api/webhooks/1199213527672565760/KmpoIzBet9xYG16oFh8W1RWHbpIqT7UtTBRrhfLcvWZdNiVZCTM-gpil2Qoy4eYEgpdf",
-      name: "Birthday Bot"
-    }
+    db_table: "use_cases",
+    bot_name: "FetchBirthdaysFromNotion"
+  }
 }
 
-use_case = UseCases.notify_birthday_from_notion_to_discord(options)
-
-use_case.perform
+bot = Bot::FetchBirthdaysFromNotion.new(options)
+bot.execute
 
 ```
 
 ### Serverless
-We'll explain how to configure and deploy a use case with serverless, this example will cover the PTO's notifications use case.
+We'll explain how to configure and deploy a bot with serverless.
 
 #### Configuring environment variables
 Create the environment variables configuration file.
@@ -173,15 +115,11 @@ cp env.yml.example env.yml
 And put the following env variables
 ```
 dev:
-  NOTION_DATABASE_ID: NOTION_DATABASE_ID
-  NOTION_SECRET: NOTION_SECRET
-  DISCORD_WEBHOOK: DISCORD_WEBHOOK
-  DISCORD_BOT_NAME: DISCORD_BOT_NAME
+  BIRTHDAY_NOTION_DATABASE_ID: "BIRTHDAY_NOTION_DATABASE_ID"
+  BIRTHDAY_NOTION_SECRET: "BIRTHDAY_NOTION_SECRET"
 prod:
-  NOTION_DATABASE_ID: NOTION_DATABASE_ID
-  NOTION_SECRET: NOTION_SECRET
-  DISCORD_WEBHOOK: DISCORD_WEBHOOK
-  DISCORD_BOT_NAME: DISCORD_BOT_NAME
+  BIRTHDAY_NOTION_DATABASE_ID: "BIRTHDAY_NOTION_DATABASE_ID"
+  BIRTHDAY_NOTION_SECRET: "BIRTHDAY_NOTION_SECRET"
 
 ```
 
@@ -225,60 +163,45 @@ On your serverless configuration, create your lambda function, on your serverles
 ```ruby
 # frozen_string_literal: true
 
-require 'bas'
+require 'bas/bot/fetch_birthdays_from_notion'
 
 # Initialize the environment variables
-NOTION_BASE_URL = 'https://api.notion.com'
-NOTION_DATABASE_ID = ENV.fetch('PTO_NOTION_DATABASE_ID')
-NOTION_SECRET = ENV.fetch('PTO_NOTION_SECRET')
-DISCORD_WEBHOOK = ENV.fetch('PTO_DISCORD_WEBHOOK')
-DISCORD_BOT_NAME = ENV.fetch('PTO_DISCORD_BOT_NAME')
+NOTION_DATABASE_ID = ENV.fetch('NOTION_DATABASE_ID')
+NOTION_SECRET = ENV.fetch('NOTION_SECRET')
 
 module Notifier
   # Service description
   class UseCaseName
     def self.notify(*)
-      options = { read_options:, process_options: }
+      options = { process_options: , write_options: }
 
       begin
-        use_case = UseCases.use_case_build_function(options)
+        use_case = Bot::FetchBirthdaysFromNotion.new(options)
 
-        use_case.perform
+        use_case.execute
       rescue StandardError => e
         { body: { message: e.message } }
       end
     end
 
-    def self.read_options
-      {
-        base_url: NOTION_BASE_URL,
-        database_id: NOTION_DATABASE_ID,
-        secret: NOTION_SECRET,
-        filter: {
-          filter: { "and": read_filter }
-        }
-      }
-    end
-
-    def self.read_filter
-      today = Common::TimeZone.set_colombia_time_zone.strftime('%F').to_s
-
-      [
-        { property: 'Desde?', date: { on_or_before: today } },
-        { property: 'Hasta?', date: { on_or_after: today } }
-      ]
-    end
-
     def self.process_options
       {
-        webhook: DISCORD_WEBHOOK,
-        name: DISCORD_BOT_NAME
+        database_id: NOTION_DATABASE_ID,
+        secret: NOTION_SECRET
       }
     end
 
-    def self.format_options
+    def self.write_options
       {
-        template: ':beach: individual_name is on PTO'
+        connection: {
+          host: "host",
+          port: 5432,
+          dbname: "bas",
+          user: "postgres",
+          password: "postgres"
+        },
+        db_table: "use_cases",
+        bot_name: "FetchBirthdaysFromNotion"
       }
     end
   end
@@ -290,18 +213,16 @@ In the `serverless.yml` file, add a new instance in the `functions` block with t
 
 ```bash
 functions:
-  ptoNotification:
-    handler: src/lambdas/pto_notification.Notifier::PTO.notify
+  fetchBirthdayFromNotion:
+    handler: src/lambdas/birthday_fetch.Bot::Birthday.fetch
     environment:
-      PTO_NOTION_DATABASE_ID: ${file(./env.yml):${env:STAGE}.PTO_NOTION_DATABASE_ID}
-      PTO_NOTION_SECRET: ${file(./env.yml):${env:STAGE}.PTO_NOTION_SECRET}
-      PTO_DISCORD_WEBHOOK: ${file(./env.yml):${env:STAGE}.PTO_DISCORD_WEBHOOK}
-      PTO_DISCORD_BOT_NAME: ${file(./env.yml):${env:STAGE}.DISCORD_BOT_NAME}
+      BIRTHDAY_NOTION_DATABASE_ID: ${file(./env.yml):${env:STAGE}.BIRTHDAY_NOTION_DATABASE_ID}
+      BIRTHDAY_NOTION_SECRET: ${file(./env.yml):${env:STAGE}.BIRTHDAY_NOTION_SECRET}
     events:
       - schedule:
-          name: pto-daily-notification
-          description: "Notify every 24 hours at 8:30 a.m (UTC-5) from monday to friday"
-          rate: cron(${file(./env.yml):${env:STAGE}.PTO_SCHEDULER})
+          name: birthday-fetch
+          description: "Fetch every 24 hours at 8:30 a.m (UTC-5) from monday to friday"
+          rate: cron(${file(./env.yml):${env:STAGE}.BIRTHDAY_FETCH_SCHEDULER})
           enabled: true
 ```
 
