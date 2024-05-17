@@ -16,7 +16,7 @@ RSpec.describe Bot::FormatBirthdays do
       read_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "FetchBirthdaysFromNotion"
+        tag: "FetchBirthdaysFromNotion"
       },
       process_options: {
         template: "<name>, Wishing you a very happy birthday!"
@@ -24,7 +24,7 @@ RSpec.describe Bot::FormatBirthdays do
       write_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "FormatBirthdays"
+        tag: "FormatBirthdays"
       }
     }
 
@@ -36,8 +36,8 @@ RSpec.describe Bot::FormatBirthdays do
 
     it { expect(@bot).to respond_to(:execute).with(0).arguments }
     it { expect(@bot).to respond_to(:read).with(0).arguments }
-    it { expect(@bot).to respond_to(:process).with(1).arguments }
-    it { expect(@bot).to respond_to(:write).with(1).arguments }
+    it { expect(@bot).to respond_to(:process).with(0).arguments }
+    it { expect(@bot).to respond_to(:write).with(0).arguments }
 
     it { expect(@bot).to respond_to(:read_options) }
     it { expect(@bot).to respond_to(:process_options) }
@@ -63,7 +63,7 @@ RSpec.describe Bot::FormatBirthdays do
 
       allow(PG::Connection).to receive(:new).and_return(pg_conn)
       allow(pg_conn).to receive(:exec_params).and_return(@pg_result)
-      allow(@pg_result).to receive(:values).and_return([[birthdays_results]])
+      allow(@pg_result).to receive(:values).and_return([[1, birthdays_results, "date"]])
     end
 
     it "read the notification from the postgres database" do
@@ -93,20 +93,20 @@ RSpec.describe Bot::FormatBirthdays do
     end
 
     it "returns an empty success hash when the birthdays list is empty" do
-      read_response = Read::Types::Response.new({ "birthdays" => [] })
+      @bot.read_response = Read::Types::Response.new(1, { "birthdays" => [] }, "date")
 
-      expect(@bot.process(read_response)).to eq({ success: { notification: "" } })
+      expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
     it "returns an empty success hash when the record was not found" do
-      read_response = Read::Types::Response.new(nil)
+      @bot.read_response = Read::Types::Response.new(1, nil, "date")
 
-      expect(@bot.process(read_response)).to eq({ success: { notification: "" } })
+      expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
     it "returns a success hash with the list of formatted birthdays" do
-      read_response = Read::Types::Response.new({ "birthdays" => birthdays })
-      processed = @bot.process(read_response)
+      @bot.read_response = Read::Types::Response.new(1, { "birthdays" => birthdays }, "date")
+      processed = @bot.process
 
       expect(processed).to eq({ success: { notification: formatted_birthday } })
     end
@@ -127,9 +127,9 @@ RSpec.describe Bot::FormatBirthdays do
     end
 
     it "save the process success response in a postgres table" do
-      process_response = { success: { notification: formatted_birthday } }
+      @bot.process_response = { success: { notification: formatted_birthday } }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
   end
 end

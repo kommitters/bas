@@ -17,9 +17,13 @@ module Read
     def execute
       response = Utils::Postgres::Request.execute(params)
 
-      records = response.values == [] ? nil : JSON.parse(response.values.first.first)
+      unless response.values == []
+        id = response.values.first[0]
+        data = JSON.parse(response.values.first[1])
+        inserted_at = response.values.first[2]
+      end
 
-      Read::Types::Response.new(records)
+      Read::Types::Response.new(id, data, inserted_at)
     end
 
     private
@@ -32,10 +36,9 @@ module Read
     end
 
     def build_query
-      query = "SELECT data FROM #{config[:db_table]} WHERE archived=$1 AND bot_name=$2 AND state=$3"
-      params = [false, config[:bot_name], "success"]
+      query = "SELECT id, data, inserted_at FROM #{config[:db_table]} WHERE status='success' AND #{config[:where]}"
 
-      [query, params]
+      [query, config[:params]]
     end
   end
 end

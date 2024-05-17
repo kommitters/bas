@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "./base"
+require_relative "../version"
 require_relative "../utils/postgres/request"
 
 module Write
@@ -9,7 +10,7 @@ module Write
   # to wtite to a PostgresDB used as <b>common storage</b>.
   #
   class Postgres < Write::Base
-    PTO_PARAMS = "data, bot_name, archived, state, error_message, version"
+    PTO_PARAMS = "data, tag, archived, stage, status, error_message, version"
 
     # Execute the Postgres utility to write data in the <b>common storage</b>
     #
@@ -27,7 +28,7 @@ module Write
     end
 
     def build_query
-      query = "INSERT INTO #{config[:db_table]} (#{PTO_PARAMS}) VALUES ($1, $2, $3, $4, $5, $6);"
+      query = "INSERT INTO #{config[:db_table]} (#{PTO_PARAMS}) VALUES ($1, $2, $3, $4, $5, $6, $7);"
       params = build_params
 
       [query, params]
@@ -35,9 +36,9 @@ module Write
 
     def build_params
       if process_response[:success]
-        [process_response[:success].to_json, config[:bot_name], false, "success", nil, 1]
+        [process_response[:success].to_json, config[:tag], false, "unprocessed", "success", nil, Bas::VERSION]
       else
-        [nil, config[:bot_name], false, "failed", process_response[:error].to_json, 1]
+        [nil, config[:tag], false, "unprocessed", "failed", process_response[:error].to_json, Bas::VERSION]
       end
     end
   end

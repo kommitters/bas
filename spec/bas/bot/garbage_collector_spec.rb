@@ -20,7 +20,7 @@ RSpec.describe Bot::GarbageCollector do
       write_options: {
         connection:,
         db_table: "use_cases",
-        bot_name: "GarbageCollector"
+        tag: "GarbageCollector"
       }
     }
 
@@ -32,8 +32,8 @@ RSpec.describe Bot::GarbageCollector do
 
     it { expect(@bot).to respond_to(:execute).with(0).arguments }
     it { expect(@bot).to respond_to(:read).with(0).arguments }
-    it { expect(@bot).to respond_to(:process).with(1).arguments }
-    it { expect(@bot).to respond_to(:write).with(1).arguments }
+    it { expect(@bot).to respond_to(:process).with(0).arguments }
+    it { expect(@bot).to respond_to(:write).with(0).arguments }
 
     it { expect(@bot).to respond_to(:read_options) }
     it { expect(@bot).to respond_to(:process_options) }
@@ -49,7 +49,7 @@ RSpec.describe Bot::GarbageCollector do
     let(:pg_result) { instance_double(PG::Result) }
 
     before do
-      @read_response = Read::Types::Response.new
+      @bot.read_response = Read::Types::Response.new
 
       allow(PG::Connection).to receive(:new).and_return(pg_conn)
       allow(pg_conn).to receive(:exec).and_return(pg_result)
@@ -58,7 +58,7 @@ RSpec.describe Bot::GarbageCollector do
     it "returns a success hash if the records were updated" do
       allow(pg_result).to receive(:res_status).and_return("PGRES_COMMAND_OK")
 
-      processed = @bot.process(@read_response)
+      processed = @bot.process
 
       expect(processed).to eq({ success: { archived: true } })
     end
@@ -67,7 +67,7 @@ RSpec.describe Bot::GarbageCollector do
       allow(pg_result).to receive(:res_status).and_return("PGRES_BAD_RESPONSE")
       allow(pg_result).to receive(:result_error_message).and_return("error_message")
 
-      processed = @bot.process(@read_response)
+      processed = @bot.process
 
       expect(processed).to eq({ error: { message: "error_message", status_code: "PGRES_BAD_RESPONSE" } })
     end
@@ -84,15 +84,15 @@ RSpec.describe Bot::GarbageCollector do
     end
 
     it "save the process success response in a postgres table" do
-      process_response = { success: { archived: true } }
+      @bot.process_response = { success: { archived: true } }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
 
     it "save the process fail response in a postgres table" do
-      process_response = { error: { message: "error_message", status_code: "PGRES_BAD_RESPONSE" } }
+      @bot.process_response = { error: { message: "error_message", status_code: "PGRES_BAD_RESPONSE" } }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
   end
 end

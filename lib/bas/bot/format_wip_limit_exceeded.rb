@@ -23,7 +23,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "CompareWipLimitCount"
+  #       tag: "CompareWipLimitCount"
   #     },
   #     process_options: {
   #       template: "exceeded wip limit template message"
@@ -37,7 +37,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FormatWipLimitExceeded"
+  #       tag: "FormatWipLimitExceeded"
   #     }
   #   }
   #
@@ -50,15 +50,15 @@ module Bot
     # read function to execute the PostgresDB Read component
     #
     def read
-      reader = Read::Postgres.new(read_options)
+      reader = Read::Postgres.new(read_options.merge(conditions))
 
       reader.execute
     end
 
     # Process function to format the notification using a template
     #
-    def process(read_response)
-      return { success: { notification: "" } } if unprocessable_response(read_response.data)
+    def process
+      return { success: { notification: "" } } if unprocessable_response
 
       exceedded_limits_list = read_response.data["exceeded_domain_count"]
 
@@ -71,7 +71,7 @@ module Bot
 
     # Write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute
@@ -79,8 +79,11 @@ module Bot
 
     private
 
-    def unprocessable_response(read_data)
-      read_data.nil? || read_data["exceeded_domain_count"] == {}
+    def conditions
+      {
+        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
+        params: [false, read_options[:tag], "unprocessed"]
+      }
     end
 
     def build_template(attributes, instance)

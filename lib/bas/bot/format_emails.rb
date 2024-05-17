@@ -23,7 +23,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FetchEmailsFromImap"
+  #       tag: "FetchEmailsFromImap"
   #     },
   #     process_options: {
   #       template: "emails template message"
@@ -37,7 +37,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FormatEmails"
+  #       tag: "FormatEmails"
   #     }
   #   }
   #
@@ -51,15 +51,15 @@ module Bot
     # read function to execute the PostgresDB Read component
     #
     def read
-      reader = Read::Postgres.new(read_options)
+      reader = Read::Postgres.new(read_options.merge(conditions))
 
       reader.execute
     end
 
     # Process function to format the notification using a template
     #
-    def process(read_response)
-      return { success: { notification: "" } } if read_response.data.nil? || read_response.data["emails"] == []
+    def process
+      return { success: { notification: "" } } if unprocessable_response
 
       emails_list = read_response.data["emails"]
 
@@ -72,13 +72,20 @@ module Bot
 
     # Write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute
     end
 
     private
+
+    def conditions
+      {
+        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
+        params: [false, read_options[:tag], "unprocessed"]
+      }
+    end
 
     def process_emails(emails)
       emails.each do |email|

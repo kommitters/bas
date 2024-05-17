@@ -28,7 +28,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FetchDomainsWipCountsFromNotion"
+  #       tag: "FetchDomainsWipCountsFromNotion"
   #     }
   #   }
   #
@@ -46,7 +46,7 @@ module Bot
 
     # Process function to execute the Notion utility to fetch work item from the notion database
     #
-    def process(_read_response)
+    def process
       response = Utils::Notion::Request.execute(params)
 
       if response.code == 200
@@ -61,7 +61,7 @@ module Bot
 
     # Write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute

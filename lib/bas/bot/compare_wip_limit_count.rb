@@ -23,7 +23,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FetchDomainsWipLimitFromNotion"
+  #       tag: "FetchDomainsWipLimitFromNotion"
   #     },
   #     write_options: {
   #       connection: {
@@ -34,7 +34,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "CompareWipLimitCount"
+  #       tag: "CompareWipLimitCount"
   #     }
   #   }
   #
@@ -45,15 +45,15 @@ module Bot
     # read function to execute the PostgresDB Read component
     #
     def read
-      reader = Read::Postgres.new(read_options)
+      reader = Read::Postgres.new(read_options.merge(conditions))
 
       reader.execute
     end
 
     # Process function to compare the domains wip counts and limits
     #
-    def process(read_response)
-      return { success: { exceeded_domain_count: {} } } if unprocessable_response(read_response.data)
+    def process
+      return { success: { exceeded_domain_count: {} } } if unprocessable_response
 
       domains_limits = read_response.data["domains_limits"]
       domain_wip_count = read_response.data["domain_wip_count"]
@@ -65,7 +65,7 @@ module Bot
 
     # Write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute
@@ -73,8 +73,11 @@ module Bot
 
     private
 
-    def unprocessable_response(read_data)
-      read_data.nil? || read_data == {} || read_data["domains_limits"] == [] || read_data["domain_wip_count"] == []
+    def conditions
+      {
+        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
+        params: [false, read_options[:tag], "unprocessed"]
+      }
     end
 
     def exceedded_counts(limits, counts)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "./base"
-require_relative "../read/default"
+require_relative "../read/postgres"
 require_relative "../utils/notion/request"
 require_relative "../write/postgres"
 
@@ -27,7 +27,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FetchBirthdaysFromNotion"
+  #       tag: "FetchBirthdaysFromNotion"
   #     }
   #   }
   #
@@ -35,17 +35,17 @@ module Bot
   #   bot.execute
   #
   class FetchBirthdaysFromNotion < Bot::Base
-    # Read function to execute the default Read component
+    # read function to execute the PostgresDB Read component
     #
     def read
-      reader = Read::Default.new
+      reader = Read::Postgres.new(read_options.merge(conditions))
 
       reader.execute
     end
 
     # Process function to execute the Notion utility to fetch birthdays from a notion database
     #
-    def process(_read_response)
+    def process
       response = Utils::Notion::Request.execute(params)
 
       if response.code == 200
@@ -59,13 +59,20 @@ module Bot
 
     # Write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute
     end
 
     private
+
+    def conditions
+      {
+        where: "archived=$1 AND tag=$2 ORDER BY inserted_at DESC",
+        params: [false, read_options[:tag]]
+      }
+    end
 
     def params
       {
@@ -81,11 +88,20 @@ module Bot
 
       {
         filter: {
-          or: [
-            { property: "BD_this_year", date: { equals: today } }
-          ]
+          and: [{ property: "BD_this_year", date: { equals: today } }] + last_edited_condition
         }
       }
+    end
+
+    def last_edited_condition
+      return [] if read_response.inserted_at.nil?
+
+      [
+        {
+          timestamp: "last_edited_time",
+          last_edited_time: { on_or_after: read_response.inserted_at }
+        }
+      ]
     end
 
     def normalize_response(results)

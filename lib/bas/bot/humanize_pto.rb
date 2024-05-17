@@ -24,7 +24,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "pto",
-  #       bot_name: "FetchPtosFromNotion"
+  #       tag: "FetchPtosFromNotion"
   #     },
   #     process_options: {
   #       secret: "openai secret key",
@@ -40,7 +40,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "pto",
-  #       bot_name: "HumanizePto"
+  #       tag: "HumanizePto"
   #     }
   #   }
   #
@@ -53,17 +53,16 @@ module Bot
     # read function to execute the PostgresDB Read component
     #
     def read
-      reader = Read::Postgres.new(read_options)
+      reader = Read::Postgres.new(read_options.merge(conditions))
 
       reader.execute
     end
 
     # process function to execute the OpenaAI utility to process the PTO's
     #
-    def process(read_response)
-      return { success: { notification: "" } } if read_response.data.nil? || read_response.data["ptos"] == []
+    def process
+      return { success: { notification: "" } } if unprocessable_response
 
-      params = build_params(read_response)
       response = Utils::OpenAI::RunAssitant.execute(params)
 
       if response.code != 200 || (!response["status"].nil? && response["status"] != "completed")
@@ -75,7 +74,7 @@ module Bot
 
     # write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute
@@ -83,15 +82,22 @@ module Bot
 
     private
 
-    def build_params(read_response)
+    def conditions
       {
-        assistant_id: process_options[:assistant_id],
-        secret: process_options[:secret],
-        prompt: build_prompt(read_response)
+        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
+        params: [false, read_options[:tag], "unprocessed"]
       }
     end
 
-    def build_prompt(read_response)
+    def params
+      {
+        assistant_id: process_options[:assistant_id],
+        secret: process_options[:secret],
+        prompt: build_prompt
+      }
+    end
+
+    def build_prompt
       prompt = process_options[:prompt] || DEFAULT_PROMPT
       ptos_list = read_response.data["ptos"]
 

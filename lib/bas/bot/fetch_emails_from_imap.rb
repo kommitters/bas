@@ -28,7 +28,7 @@ module Bot
   #     write_options: {
   #       connection:,
   #       db_table: "use_cases",
-  #       bot_name: "FetchEmailsFromImap"
+  #       tag: "FetchEmailsFromImap"
   #     }
   #   }
   #
@@ -46,7 +46,7 @@ module Bot
 
     # Process function to request email from an imap server using the imap utility
     #
-    def process(_read_response)
+    def process
       response = Utils::Imap::Request.new(process_options, query).execute
 
       if response[:error]
@@ -60,7 +60,7 @@ module Bot
 
     # Write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute

@@ -25,7 +25,7 @@ RSpec.describe Bot::FetchEmailsFromImap do
           password: "postgres"
         },
         db_table: "use_cases",
-        bot_name: "FetchEmailsFromImap"
+        tag: "FetchEmailsFromImap"
       }
     }
 
@@ -37,8 +37,8 @@ RSpec.describe Bot::FetchEmailsFromImap do
 
     it { expect(@bot).to respond_to(:execute).with(0).arguments }
     it { expect(@bot).to respond_to(:read).with(0).arguments }
-    it { expect(@bot).to respond_to(:process).with(1).arguments }
-    it { expect(@bot).to respond_to(:write).with(1).arguments }
+    it { expect(@bot).to respond_to(:process).with(0).arguments }
+    it { expect(@bot).to respond_to(:write).with(0).arguments }
 
     it { expect(@bot).to respond_to(:read_options) }
     it { expect(@bot).to respond_to(:process_options) }
@@ -71,7 +71,7 @@ RSpec.describe Bot::FetchEmailsFromImap do
     let(:email) { { :message_id => 1, "sender" => "user@mail.com", "date" => "10/05/2024", "subject" => "test" } }
 
     before do
-      @read_response = Read::Types::Response.new
+      @bot.read_response = Read::Types::Response.new
 
       allow(HTTParty).to receive(:post).and_return(response)
       allow(Net::IMAP).to receive(:new).and_return(imap)
@@ -80,7 +80,7 @@ RSpec.describe Bot::FetchEmailsFromImap do
     it "returns a success hash with list of emails" do
       allow(response).to receive(:[]).and_return(nil, "ABCDEFG123456")
 
-      processed = @bot.process(@read_response)
+      processed = @bot.process
 
       expect(processed[:success][:emails]).to include(email)
     end
@@ -88,7 +88,7 @@ RSpec.describe Bot::FetchEmailsFromImap do
     it "returns an error hash when the access_token can not be requested" do
       allow(response).to receive(:[]).and_return(true)
 
-      processed = @bot.process(@read_response)
+      processed = @bot.process
 
       expect(processed).to eq({ error: { error: response } })
     end
@@ -97,7 +97,7 @@ RSpec.describe Bot::FetchEmailsFromImap do
       allow(response).to receive(:[]).and_return(nil)
       allow(imap).to receive(:search).and_raise(StandardError)
 
-      processed = @bot.process(@read_response)
+      processed = @bot.process
 
       expect(processed).to eq({ error: { error: "StandardError" } })
     end
@@ -117,15 +117,15 @@ RSpec.describe Bot::FetchEmailsFromImap do
     end
 
     it "save the process success response in a postgres table" do
-      process_response = { success: { emails: [email] } }
+      @bot.process_response = { success: { emails: [email] } }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
 
     it "save the process fail response in a postgres table" do
-      process_response = { error: { message: error_response, status_code: 404 } }
+      @bot.process_response = { error: { message: error_response, status_code: 404 } }
 
-      expect(@bot.write(process_response)).to_not be_nil
+      expect(@bot.write).to_not be_nil
     end
   end
 end

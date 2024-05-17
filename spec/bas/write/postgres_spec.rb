@@ -17,7 +17,7 @@ RSpec.describe Write::Postgres do
         password: "postgres"
       },
       db_table: "bas_table",
-      bot_name: "BasBot"
+      tag: "BasBot"
     }
 
     pg_result = instance_double(PG::Result)

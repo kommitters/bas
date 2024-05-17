@@ -24,7 +24,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FetchDomainsWipCountsFromNotion"
+  #       tag: "FetchDomainsWipCountsFromNotion"
   #     },
   #     process_options: {
   #       database_id: "notion database id",
@@ -39,7 +39,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "use_cases",
-  #       bot_name: "FetchDomainsWipLimitFromNotion"
+  #       tag: "FetchDomainsWipLimitFromNotion"
   #     }
   #   }
   #
@@ -50,20 +50,20 @@ module Bot
     # read function to execute the PostgresDB Read component
     #
     def read
-      reader = Read::Postgres.new(read_options)
+      reader = Read::Postgres.new(read_options.merge(conditions))
 
       reader.execute
     end
 
     # Process function to execute the Notion utility to fetch domain wip limits from the notion database
     #
-    def process(read_response)
+    def process
       response = Utils::Notion::Request.execute(params)
 
       if response.code == 200
         domains_limits = normalize_response(response.parsed_response["results"])
 
-        wip_limit_data = wip_count(read_response).merge({ domains_limits: })
+        wip_limit_data = wip_count.merge({ domains_limits: })
 
         { success: wip_limit_data }
       else
@@ -73,13 +73,20 @@ module Bot
 
     # Write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute
     end
 
     private
+
+    def conditions
+      {
+        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
+        params: [false, read_options[:tag], "unprocessed"]
+      }
+    end
 
     def params
       {
@@ -120,7 +127,7 @@ module Bot
       data["number"]
     end
 
-    def wip_count(read_response)
+    def wip_count
       read_response.data.nil? ? {} : read_response.data
     end
   end

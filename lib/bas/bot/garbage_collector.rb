@@ -51,7 +51,7 @@ module Bot
 
     # Process function to update records in a PostgresDB database table
     #
-    def process(_read_response)
+    def process
       response = Utils::Postgres::Request.execute(params)
 
       if response.res_status == SUCCESS_STATUS
@@ -63,7 +63,7 @@ module Bot
 
     # Write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute

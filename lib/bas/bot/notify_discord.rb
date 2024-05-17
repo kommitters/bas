@@ -23,7 +23,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "pto",
-  #       bot_name: "HumanizePto"
+  #       tag: "HumanizePto"
   #     },
   #     process_options: {
   #       name: "bot name to be shown on discord",
@@ -38,7 +38,7 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "pto",
-  #       bot_name: "NotifyDiscord"
+  #       tag: "NotifyDiscord"
   #     }
   #   }
   #
@@ -49,17 +49,16 @@ module Bot
     # read function to execute the PostgresDB Read component
     #
     def read
-      reader = Read::Postgres.new(read_options)
+      reader = Read::Postgres.new(read_options.merge(conditions))
 
       reader.execute
     end
 
     # process function to execute the Discord utility to send the PTO's notification
     #
-    def process(read_response)
-      return { success: {} } if read_response.data.nil? || read_response.data["notification"] == ""
+    def process
+      return { success: {} } if unprocessable_response
 
-      params = build_params(read_response)
       response = Utils::Discord::Integration.execute(params)
 
       if response.code == 204
@@ -71,7 +70,7 @@ module Bot
 
     # write function to execute the PostgresDB write component
     #
-    def write(process_response)
+    def write
       write = Write::Postgres.new(write_options, process_response)
 
       write.execute
@@ -79,7 +78,14 @@ module Bot
 
     private
 
-    def build_params(read_response)
+    def conditions
+      {
+        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
+        params: [false, read_options[:tag], "unprocessed"]
+      }
+    end
+
+    def params
       {
         name: process_options[:name],
         notification: read_response.data["notification"],

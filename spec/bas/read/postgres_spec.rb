@@ -21,9 +21,9 @@ RSpec.describe Read::Postgres do
     let(:pg_conn) { instance_double(PG::Connection) }
     let(:failes_result) { [] }
     let(:success_result) do
-      [["{\"ptos\": [{\"Name\": \"John Doe\", \"EndDateTime\": \
+      [[1, "{\"ptos\": [{\"Name\": \"John Doe\", \"EndDateTime\": \
       {\"to\": null, \"from\": \"2024-05-01\"}, \"StartDateTime\": \
-      {\"to\": null, \"from\": \"2024-05-01\"}}]}"]]
+      {\"to\": null, \"from\": \"2024-05-01\"}}]}", "date"]]
     end
 
     before do
