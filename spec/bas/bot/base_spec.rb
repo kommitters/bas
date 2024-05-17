@@ -46,4 +46,29 @@ RSpec.describe Bot::Base do
       expect { @bot.execute }.to raise_exception(Utils::Exceptions::FunctionNotImplemented)
     end
   end
+
+  describe ".execute successful" do
+    let(:pg_conn) { instance_double(PG::Connection) }
+
+    before do
+      pg_result = instance_double(PG::Result)
+
+      allow(PG::Connection).to receive(:new).and_return(pg_conn)
+      allow(pg_conn).to receive(:exec_params).and_return(pg_result)
+    end
+
+    it "execute the bot with an old record found" do
+      read_response = Read::Types::Response.new(1, {}, "date")
+
+      allow_any_instance_of(described_class).to receive(:read).and_return(read_response)
+      allow_any_instance_of(described_class).to receive(:process).and_return({})
+      allow_any_instance_of(described_class).to receive(:write).and_return(true)
+
+      @bot.execute
+
+      expect(@bot.read_response).to eql(read_response)
+      expect(@bot.process_response).to eql({})
+      expect(@bot.write_response).to eql(true)
+    end
+  end
 end

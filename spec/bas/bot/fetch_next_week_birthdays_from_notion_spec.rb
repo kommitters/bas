@@ -119,6 +119,17 @@ RSpec.describe Bot::FetchNextWeekBirthdaysFromNotion do
       expect(processed).to eq({ success: { birthdays: [formatted_birthday] } })
     end
 
+    it "returns a success hash with the list of formatted new birthdays" do
+      allow(response).to receive(:code).and_return(200)
+      allow(response).to receive(:parsed_response).and_return({ "results" => [birthday] })
+
+      @bot.read_response = Read::Types::Response.new(1, birthday, "date")
+
+      processed = @bot.process
+
+      expect(processed).to eq({ success: { birthdays: [formatted_birthday] } })
+    end
+
     it "returns an error hash with the error message" do
       allow(response).to receive(:code).and_return(404)
       allow(response).to receive(:parsed_response).and_return(error_response)

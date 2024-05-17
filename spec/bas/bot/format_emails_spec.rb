@@ -19,7 +19,8 @@ RSpec.describe Bot::FormatEmails do
         tag: "FetchEmailsFromImap"
       },
       process_options: {
-        template: "The <sender> has requested support the <date>"
+        template: "The <sender> has requested support the <date>",
+        frequency: 1
       },
       write_options: {
         connection:,
@@ -73,10 +74,11 @@ RSpec.describe Bot::FormatEmails do
   end
 
   describe ".process" do
-    let(:emails) { [{ "date" => "Thu, 09 May", "sender" => "user@mail.com" }] }
+    let(:date) { Time.now.utc.strftime("%F %r") }
+    let(:emails) { [{ "date" => date, "sender" => "user@mail.com" }] }
 
     let(:formatted_emails) do
-      " The user@mail.com has requested support the 2024-05-09 12:00:00 AM \n"
+      " The user@mail.com has requested support the #{date} \n"
     end
 
     it "returns an empty success hash when the birthdays list is empty" do
@@ -93,6 +95,7 @@ RSpec.describe Bot::FormatEmails do
 
     it "returns a success hash with the list of formatted birthdays" do
       @bot.read_response = Read::Types::Response.new(1, { "emails" => emails }, "date")
+
       processed = @bot.process
 
       expect(processed).to eq({ success: { notification: formatted_emails } })
