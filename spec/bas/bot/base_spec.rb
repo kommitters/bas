@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "bas/bot/base"
+require "bas/read/types/response"
 
 RSpec.describe Bot::Base do
   before do
@@ -19,25 +20,27 @@ RSpec.describe Bot::Base do
   end
 
   describe ".execute" do
+    let(:read_response) { Read::Types::Response.new }
+
     it "provides no implementation for the method read" do
       expect { @bot.execute }.to raise_exception(Utils::Exceptions::FunctionNotImplemented)
     end
 
     it "provides no implementation for the method process" do
-      allow_any_instance_of(described_class).to receive(:read).and_return(true)
+      allow_any_instance_of(described_class).to receive(:read).and_return(read_response)
 
       expect { @bot.execute }.to raise_exception(Utils::Exceptions::FunctionNotImplemented)
     end
 
     it "provides invalid process response if process method not returns a hash" do
-      allow_any_instance_of(described_class).to receive(:read).and_return(true)
+      allow_any_instance_of(described_class).to receive(:read).and_return(read_response)
       allow_any_instance_of(described_class).to receive(:process).and_return(true)
 
       expect { @bot.execute }.to raise_exception(Utils::Exceptions::InvalidProcessResponse)
     end
 
     it "provides no implementation for the method write" do
-      allow_any_instance_of(described_class).to receive(:read).and_return(true)
+      allow_any_instance_of(described_class).to receive(:read).and_return(read_response)
       allow_any_instance_of(described_class).to receive(:process).and_return({})
 
       expect { @bot.execute }.to raise_exception(Utils::Exceptions::FunctionNotImplemented)

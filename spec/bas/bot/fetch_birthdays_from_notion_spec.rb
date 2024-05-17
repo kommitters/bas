@@ -64,7 +64,7 @@ RSpec.describe Bot::FetchBirthdaysFromNotion do
 
       allow(PG::Connection).to receive(:new).and_return(pg_conn)
       allow(pg_conn).to receive(:exec_params).and_return(@pg_result)
-      allow(@pg_result).to receive(:values).and_return([[birthdays_results]])
+      allow(@pg_result).to receive(:values).and_return([[1, birthdays_results, "date"]])
     end
 
     it "read the notification from the postgres database" do

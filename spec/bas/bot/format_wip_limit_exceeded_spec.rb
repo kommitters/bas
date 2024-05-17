@@ -59,7 +59,7 @@ RSpec.describe Bot::FormatWipLimitExceeded do
 
       allow(PG::Connection).to receive(:new).and_return(pg_conn)
       allow(pg_conn).to receive(:exec_params).and_return(@pg_result)
-      allow(@pg_result).to receive(:values).and_return([[exceedded_wip_limit_results]])
+      allow(@pg_result).to receive(:values).and_return([[1, exceedded_wip_limit_results, "date"]])
     end
 
     it "read the exceeded wip counts by domain from the postgres database" do
@@ -80,19 +80,19 @@ RSpec.describe Bot::FormatWipLimitExceeded do
     let(:formatted_exceedded_wip_limit) { " :warning: The engineering WIP limit was exceeded by 1 \n" }
 
     it "returns an empty success hash when the record was not found" do
-      @bot.read_response = Read::Types::Response.new(nil)
+      @bot.read_response = Read::Types::Response.new(1, nil, "date")
 
       expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
     it "returns an empty success hash when the exceeded_domain_count hash is empty" do
-      @bot.read_response = Read::Types::Response.new({ "exceeded_domain_count" => {} })
+      @bot.read_response = Read::Types::Response.new(1, { "exceeded_domain_count" => {} }, "date")
 
       expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
     it "returns a success hash with the list of formatted exceeded domain count" do
-      @bot.read_response = Read::Types::Response.new({ "exceeded_domain_count" => exceedded_wip_limit })
+      @bot.read_response = Read::Types::Response.new(1, { "exceeded_domain_count" => exceedded_wip_limit }, "date")
       processed = @bot.process
 
       expect(processed).to eq({ success: { notification: formatted_exceedded_wip_limit } })

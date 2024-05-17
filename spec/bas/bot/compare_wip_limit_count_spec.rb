@@ -58,7 +58,7 @@ RSpec.describe Bot::CompareWipLimitCount do
 
       allow(PG::Connection).to receive(:new).and_return(pg_conn)
       allow(pg_conn).to receive(:exec_params).and_return(@pg_result)
-      allow(@pg_result).to receive(:values).and_return([[domains_wip_limit_counts_results]])
+      allow(@pg_result).to receive(:values).and_return([[1, domains_wip_limit_counts_results, "date"]])
     end
 
     it "read the wip's count and limits by domain from the postgres database" do
@@ -105,7 +105,7 @@ RSpec.describe Bot::CompareWipLimitCount do
     end
 
     it "returns a success hash with the hash of wip limits counts" do
-      @bot.read_response = Read::Types::Response.new(formatted_domains_wip_limit_counts)
+      @bot.read_response = Read::Types::Response.new(1, formatted_domains_wip_limit_counts, "date")
       processed = @bot.process
 
       expect(processed).to eq({ success: { exceeded_domain_count: } })

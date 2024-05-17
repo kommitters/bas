@@ -59,7 +59,7 @@ RSpec.describe Bot::HumanizePto do
 
       allow(PG::Connection).to receive(:new).and_return(pg_conn)
       allow(pg_conn).to receive(:exec_params).and_return(@pg_result)
-      allow(@pg_result).to receive(:values).and_return([[pto_results]])
+      allow(@pg_result).to receive(:values).and_return([[1, pto_results, "date"]])
     end
 
     it "read the notification from the postgres database" do
@@ -90,20 +90,20 @@ RSpec.describe Bot::HumanizePto do
     let(:error_response) { { "code": 50_027, "message": "Invalid Webhook Token" } }
 
     before do
-      @bot.read_response = Read::Types::Response.new({ "ptos" => [pto] })
+      @bot.read_response = Read::Types::Response.new(1, { "ptos" => [pto] }, "date")
 
       allow(HTTParty).to receive(:post).and_return(run)
       allow(HTTParty).to receive(:get).and_return(pol, list)
     end
 
     it "returns an empty success hash when the ptos list is empty" do
-      @bot.read_response = Read::Types::Response.new({ "ptos" => [] })
+      @bot.read_response = Read::Types::Response.new(1, { "ptos" => [] }, "date")
 
       expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
     it "returns an empty success hash when the record was not found" do
-      @bot.read_response = Read::Types::Response.new(nil)
+      @bot.read_response = Read::Types::Response.new(1, nil, "date")
 
       expect(@bot.process).to eq({ success: { notification: "" } })
     end

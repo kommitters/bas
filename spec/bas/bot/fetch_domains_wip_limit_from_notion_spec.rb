@@ -61,7 +61,7 @@ RSpec.describe Bot::FetchDomainsWipLimitFromNotion do
 
       allow(PG::Connection).to receive(:new).and_return(pg_conn)
       allow(pg_conn).to receive(:exec_params).and_return(@pg_result)
-      allow(@pg_result).to receive(:values).and_return([[wip_count_results]])
+      allow(@pg_result).to receive(:values).and_return([[1, wip_count_results, "date"]])
     end
 
     it "read the domains wip counts from the postgres database" do
@@ -94,7 +94,7 @@ RSpec.describe Bot::FetchDomainsWipLimitFromNotion do
     let(:response) { double("http_response") }
 
     before do
-      @bot.read_response = Read::Types::Response.new(domains_wip_count)
+      @bot.read_response = Read::Types::Response.new(1, domains_wip_count, "date")
 
       allow(HTTParty).to receive(:send).and_return(response)
     end

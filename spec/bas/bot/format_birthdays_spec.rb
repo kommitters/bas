@@ -63,7 +63,7 @@ RSpec.describe Bot::FormatBirthdays do
 
       allow(PG::Connection).to receive(:new).and_return(pg_conn)
       allow(pg_conn).to receive(:exec_params).and_return(@pg_result)
-      allow(@pg_result).to receive(:values).and_return([[birthdays_results]])
+      allow(@pg_result).to receive(:values).and_return([[1, birthdays_results, "date"]])
     end
 
     it "read the notification from the postgres database" do
@@ -93,19 +93,19 @@ RSpec.describe Bot::FormatBirthdays do
     end
 
     it "returns an empty success hash when the birthdays list is empty" do
-      @bot.read_response = Read::Types::Response.new({ "birthdays" => [] })
+      @bot.read_response = Read::Types::Response.new(1, { "birthdays" => [] }, "date")
 
       expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
     it "returns an empty success hash when the record was not found" do
-      @bot.read_response = Read::Types::Response.new(nil)
+      @bot.read_response = Read::Types::Response.new(1, nil, "date")
 
       expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
     it "returns a success hash with the list of formatted birthdays" do
-      @bot.read_response = Read::Types::Response.new({ "birthdays" => birthdays })
+      @bot.read_response = Read::Types::Response.new(1, { "birthdays" => birthdays }, "date")
       processed = @bot.process
 
       expect(processed).to eq({ success: { notification: formatted_birthday } })

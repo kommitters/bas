@@ -53,7 +53,7 @@ RSpec.describe Bot::NotifyDiscord do
 
       allow(PG::Connection).to receive(:new).and_return(pg_conn)
       allow(pg_conn).to receive(:exec_params).and_return(@pg_result)
-      allow(@pg_result).to receive(:values).and_return([["{\"notification\": \"John Doe is on PTO\"}"]])
+      allow(@pg_result).to receive(:values).and_return([[1, "{\"notification\": \"John Doe is on PTO\"}", "date"]])
     end
 
     it "read the notification from the postgres database" do
@@ -70,19 +70,19 @@ RSpec.describe Bot::NotifyDiscord do
     let(:error_response) { { "code": 50_027, "message": "Invalid Webhook Token" } }
 
     before do
-      @bot.read_response = Read::Types::Response.new({ notification: "John Doe is on PTO" })
+      @bot.read_response = Read::Types::Response.new(1, { notification: "John Doe is on PTO" }, "date")
 
       allow(HTTParty).to receive(:post).and_return(response)
     end
 
     it "returns an empty success hash when the notification is empty" do
-      @bot.read_response = Read::Types::Response.new({ "notification" => "" })
+      @bot.read_response = Read::Types::Response.new(1, { "notification" => "" }, "date")
 
       expect(@bot.process).to eq({ success: {} })
     end
 
     it "returns an empty success hash when the record was not found" do
-      @bot.read_response = Read::Types::Response.new(nil)
+      @bot.read_response = Read::Types::Response.new(1, nil, "date")
 
       expect(@bot.process).to eq({ success: {} })
     end
