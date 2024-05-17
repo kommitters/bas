@@ -1,5 +1,17 @@
 # Changelog
 
+# 1.0.0 (17.05.2024)
+- [Refactor Project Architecture](https://github.com/kommitters/bas/issues/35)
+- [Refactor PTO today Use Case](https://github.com/kommitters/bas/issues/29)
+- [Refactor PTO next week Use Case](https://github.com/kommitters/bas/issues/30)
+- [Refactor Birthday today Use Case](https://github.com/kommitters/bas/issues/31)
+- [Refactor Birthday next week Use Case](https://github.com/kommitters/bas/issues/32)
+- [Refactor WIP limit Use Case](https://github.com/kommitters/bas/issues/33)
+- [Refactor support email Use Case](https://github.com/kommitters/bas/issues/34)
+- [Add a garbage collector](https://github.com/kommitters/bas/issues/42)
+- [Update read Postgres component](https://github.com/kommitters/bas/issues/45)
+- [Update new table structure](https://github.com/kommitters/bas/issues/46)
+
 # 0.4.0 (19.04.2024)
 - [[BAS] Add process for OpenAI](https://github.com/kommitters/bas/issues/25)
 
