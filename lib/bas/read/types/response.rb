@@ -8,7 +8,7 @@ module Read
     class Response
       attr_reader :id, :data, :inserted_at
 
-      def initialize(id, response = {}, inserted_at = nil)
+      def initialize(id = nil, response = {}, inserted_at = nil)
         @id = id
         @data = response
         @inserted_at = inserted_at

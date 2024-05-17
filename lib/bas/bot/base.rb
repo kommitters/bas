@@ -15,9 +15,9 @@ module Bot
     attr_accessor :read_response, :process_response, :write_response
 
     def initialize(config)
-      @read_options = config[:read_options]
-      @process_options = config[:process_options]
-      @write_options = config[:write_options]
+      @read_options = config[:read_options] || {}
+      @process_options = config[:process_options] || {}
+      @write_options = config[:write_options] || {}
     end
 
     def execute
@@ -50,12 +50,16 @@ module Bot
     private
 
     def write_read_response_in_process
+      return if read_options[:avoid_process].eql?(true) || read_response.id.nil?
+
       options = { params: { stage: "in process" }, conditions: "id=#{read_response.id}" }
 
       Write::PostgresUpdate.new(read_options.merge(options)).execute
     end
 
     def write_read_response_processed
+      return if read_options[:avoid_process].eql?(true) || read_response.id.nil?
+
       options = { params: { stage: "processed" }, conditions: "id=#{read_response.id}" }
 
       Write::PostgresUpdate.new(read_options.merge(options)).execute

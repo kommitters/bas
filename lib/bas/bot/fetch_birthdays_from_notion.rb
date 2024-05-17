@@ -38,7 +38,7 @@ module Bot
     # read function to execute the PostgresDB Read component
     #
     def read
-      reader = Read::Postgres.new(read_options)
+      reader = Read::Postgres.new(read_options.merge(conditions))
 
       reader.execute
     end
@@ -66,6 +66,13 @@ module Bot
     end
 
     private
+
+    def conditions
+      {
+        where: "archived=$1 AND tag=$2 ORDER BY inserted_at DESC",
+        params: [false, read_options[:tag]]
+      }
+    end
 
     def params
       {

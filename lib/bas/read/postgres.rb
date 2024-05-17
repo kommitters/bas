@@ -36,11 +36,9 @@ module Read
     end
 
     def build_query
-      where = "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC"
-      params = [false, config[:tag], "unprocessed"]
-      query = "SELECT id, data, inserted_at FROM #{config[:db_table]} WHERE #{where}"
+      query = "SELECT id, data, inserted_at FROM #{config[:db_table]} WHERE status='success' AND #{config[:where]}"
 
-      [query, params]
+      [query, config[:params]]
     end
   end
 end

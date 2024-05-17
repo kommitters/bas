@@ -10,7 +10,7 @@ module Write
   # to wtite to a PostgresDB used as <b>common storage</b>.
   #
   class Postgres < Write::Base
-    PTO_PARAMS = "data, tag, archived, stage, status, version"
+    PTO_PARAMS = "data, tag, archived, stage, status, error_message, version"
 
     # Execute the Postgres utility to write data in the <b>common storage</b>
     #
@@ -28,7 +28,7 @@ module Write
     end
 
     def build_query
-      query = "INSERT INTO #{config[:db_table]} (#{PTO_PARAMS}) VALUES ($1, $2, $3, $4, $5, $6);"
+      query = "INSERT INTO #{config[:db_table]} (#{PTO_PARAMS}) VALUES ($1, $2, $3, $4, $5, $6, $7);"
       params = build_params
 
       [query, params]
@@ -36,14 +36,10 @@ module Write
 
     def build_params
       if process_response[:success]
-        [process_response[:success].to_json, config[:tag], false, "unprocessed", success_status, Bas::VERSION]
+        [process_response[:success].to_json, config[:tag], false, "unprocessed", "success", nil, Bas::VERSION]
       else
-        [nil, config[:tag], false, "unprocessed", process_response[:error].to_json, Bas::VERSION]
+        [nil, config[:tag], false, "unprocessed", "failed", process_response[:error].to_json, Bas::VERSION]
       end
-    end
-
-    def success_status
-      { status: "success" }.to_json
     end
   end
 end
