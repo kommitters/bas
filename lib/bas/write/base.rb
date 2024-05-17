@@ -13,7 +13,7 @@ module Write
 
     # Initializes the write with essential configuration parameters.
     #
-    def initialize(config, process_response)
+    def initialize(config, process_response = nil)
       @config = config
       @process_response = process_response
     end

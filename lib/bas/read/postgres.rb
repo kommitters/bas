@@ -18,11 +18,12 @@ module Read
       response = Utils::Postgres::Request.execute(params)
 
       unless response.values == []
-        data = JSON.parse(response.values.first.first)
-        inserted_at = response.values.first.last
+        id = response.values.first[0]
+        data = JSON.parse(response.values.first[1])
+        inserted_at = response.values.first[2]
       end
 
-      Read::Types::Response.new(data, inserted_at)
+      Read::Types::Response.new(id, data, inserted_at)
     end
 
     private
@@ -35,10 +36,9 @@ module Read
     end
 
     def build_query
-      where = "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at DESC"
+      where = "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC"
       params = [false, config[:tag], "unprocessed"]
-
-      query = "SELECT data, inserted_at FROM #{config[:db_table]} WHERE #{where}"
+      query = "SELECT id, data, inserted_at FROM #{config[:db_table]} WHERE #{where}"
 
       [query, params]
     end

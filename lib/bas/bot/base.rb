@@ -2,6 +2,7 @@
 
 require_relative "../utils/exceptions/function_not_implemented"
 require_relative "../utils/exceptions/invalid_process_response"
+require_relative "../write/postgres_update"
 
 module Bot
   ##
@@ -22,8 +23,12 @@ module Bot
     def execute
       @read_response = read
 
+      write_read_response_in_process
+
       @process_response = process
       raise Utils::Exceptions::InvalidProcessResponse unless process_response.is_a?(Hash)
+
+      write_read_response_processed
 
       @write_response = write
     end
@@ -40,6 +45,20 @@ module Bot
 
     def write
       raise Utils::Exceptions::FunctionNotImplemented
+    end
+
+    private
+
+    def write_read_response_in_process
+      options = { params: { stage: "in process" }, conditions: "id=#{read_response.id}" }
+
+      Write::PostgresUpdate.new(read_options.merge(options)).execute
+    end
+
+    def write_read_response_processed
+      options = { params: { stage: "processed" }, conditions: "id=#{read_response.id}" }
+
+      Write::PostgresUpdate.new(read_options.merge(options)).execute
     end
   end
 end
