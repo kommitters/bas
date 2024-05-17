@@ -47,6 +47,12 @@ module Bot
       raise Utils::Exceptions::FunctionNotImplemented
     end
 
+    def unprocessable_response
+      read_data = read_response.data
+
+      read_data.nil? || read_data == {} || read_data.any? { |_key, value| [[], ""].include?(value) }
+    end
+
     private
 
     def write_read_response_in_process

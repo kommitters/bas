@@ -86,10 +86,6 @@ module Bot
       }
     end
 
-    def unprocessable_response
-      read_response.data.nil? || read_response.data["exceeded_domain_count"] == {}
-    end
-
     def build_template(attributes, instance)
       template = process_options[:template]
 

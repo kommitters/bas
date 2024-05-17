@@ -80,12 +80,6 @@ module Bot
       }
     end
 
-    def unprocessable_response
-      read_data = read_response.data
-
-      read_data.nil? || read_data == {} || read_data["domains_limits"] == [] || read_data["domain_wip_count"] == []
-    end
-
     def exceedded_counts(limits, counts)
       counts.to_a.map do |domain_wip_count|
         domain, count = domain_wip_count

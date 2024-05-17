@@ -59,7 +59,7 @@ module Bot
     # Process function to format the notification using a template
     #
     def process
-      return { success: { notification: "" } } if read_response.data.nil? || read_response.data["emails"] == []
+      return { success: { notification: "" } } if unprocessable_response
 
       emails_list = read_response.data["emails"]
 

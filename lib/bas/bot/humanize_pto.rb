@@ -89,10 +89,6 @@ module Bot
       }
     end
 
-    def unprocessable_response
-      read_response.data.nil? || read_response.data["ptos"] == []
-    end
-
     def params
       {
         assistant_id: process_options[:assistant_id],

@@ -57,7 +57,7 @@ module Bot
     # process function to execute the Discord utility to send the PTO's notification
     #
     def process
-      return { success: {} } if read_response.data.nil? || read_response.data["notification"] == ""
+      return { success: {} } if unprocessable_response
 
       response = Utils::Discord::Integration.execute(params)
 
