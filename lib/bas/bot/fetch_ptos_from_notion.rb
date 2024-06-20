@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "date"
+
 require_relative "./base"
 require_relative "../read/default"
 require_relative "../utils/notion/request"
@@ -106,12 +108,45 @@ module Bot
       results.map do |pto|
         pto_fields = pto["properties"]
 
-        {
-          "Name" => extract_description_field_value(pto_fields["Description"]),
-          "StartDateTime" => extract_date_field_value(pto_fields["StartDateTime"]),
-          "EndDateTime" => extract_date_field_value(pto_fields["EndDateTime"])
-        }
+        name = extract_description_field_value(pto_fields["Description"])
+        start_date = extract_date_field_value(pto_fields["StartDateTime"])
+        end_date = extract_date_field_value(pto_fields["EndDateTime"])
+
+        description(name, start_date, end_date)
       end
+    end
+
+    def description(name, start_date, end_date)
+      start = start_description(start_date)
+      finish = end_description(end_date)
+
+      "#{name} will not be working between #{start} and #{finish}. And returns the #{returns(finish)}"
+    end
+
+    def start_description(date)
+      date[:from]
+    end
+
+    def end_description(date)
+      return date[:from] if date[:to].nil?
+
+      date[:to]
+    end
+
+    def returns(date)
+      date.include?("T") ? "#{date} in the afternoon" : next_work_day(date)
+    end
+
+    def next_work_day(date)
+      datetime = DateTime.parse(date)
+
+      return_day = case datetime.wday
+                   when 5 then datetime + 3
+                   when 6 then datetime + 2
+                   else datetime + 1
+                   end
+
+      return_day.strftime("%A %B %d of %Y").to_s
     end
 
     def extract_description_field_value(data)
