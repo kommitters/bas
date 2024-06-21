@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.0.1 (21.06.2024)
+- Refactor pto notification format for improving OpenAI response.
+
 # 1.0.0 (17.05.2024)
 - [Refactor Project Architecture](https://github.com/kommitters/bas/issues/35)
 - [Refactor PTO today Use Case](https://github.com/kommitters/bas/issues/29)
