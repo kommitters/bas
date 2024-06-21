@@ -101,9 +101,7 @@ module Bot
       prompt = process_options[:prompt] || DEFAULT_PROMPT
       ptos_list = read_response.data["ptos"]
 
-      ptos_list_formatted_string = ptos_list.map do |pto|
-        "#{pto["Name"]} is PTO from StartDateTime: #{pto["StartDateTime"]} to EndDateTime: #{pto["EndDateTime"]}"
-      end.join("\n")
+      ptos_list_formatted_string = ptos_list.join("\n")
 
       prompt.gsub("{data}", ptos_list_formatted_string)
     end
