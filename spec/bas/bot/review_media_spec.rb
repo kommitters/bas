@@ -61,7 +61,7 @@ RSpec.describe Bot::ReviewMedia do
       allow(@pg_result).to receive(:values).and_return([[1, review_request_results, "date"]])
     end
 
-    it "read the notification from the postgres database" do
+    it "read the review request from the postgres database" do
       read = @bot.read
 
       expect(read).to be_a Read::Types::Response
@@ -135,7 +135,7 @@ RSpec.describe Bot::ReviewMedia do
                                         status_code: 500 } })
     end
 
-    it "returns an success when the openai assistant returns reponse" do
+    it "returns a success when the openai assistant returns response" do
       allow(run).to receive(:code).and_return(200)
       allow(pol).to receive(:[]).and_return("completed")
       allow(pol).to receive(:code).and_return(200)
