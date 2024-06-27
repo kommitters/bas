@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "./base"
-require_relative "../read/default"
+require_relative "../read/postgres"
 require_relative "../utils/notion/request"
 require_relative "../write/postgres"
 
@@ -35,13 +35,13 @@ module Bot
   #   bot = Bot::FetchMediaFromNotion.new(options)
   #   bot.execute
   #
-  class FetchMediaFromNotion < Bot::Base
+  class FetchMediaFromNotion < Bot::Base # rubocop:disable Metrics/ClassLength
     CONTENT_STATUS = "review"
 
     # read function to execute the PostgresDB Read component
     #
     def read
-      reader = Read::Default.new
+      reader = Read::Postgres.new(read_options.merge(conditions))
 
       reader.execute
     end
@@ -65,6 +65,13 @@ module Bot
     end
 
     private
+
+    def conditions
+      {
+        where: "archived=$1 AND tag=$2 ORDER BY inserted_at DESC",
+        params: [false, read_options[:tag]]
+      }
+    end
 
     def fetch_media
       request_ids_response = fetch_requests_ids
@@ -148,14 +155,17 @@ module Bot
     end
 
     def body_database
-      {
-        filter: {
-          property: process_options[:property],
-          select: {
-            equals: CONTENT_STATUS
-          }
-        }
-      }
+      { filter: { and: [] + property_condition + time_condition } }
+    end
+
+    def property_condition
+      [{ property: process_options[:property], select: { equals: CONTENT_STATUS } }]
+    end
+
+    def time_condition
+      return [] if read_response.inserted_at.nil?
+
+      [{ property: "Last edited time", last_edited_time: { on_or_after: read_response.inserted_at } }]
     end
 
     def fetch_block(block_id)

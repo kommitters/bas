@@ -40,7 +40,34 @@ RSpec.describe Bot::FetchMediaFromNotion do
   end
 
   describe ".read" do
-    it { expect(@bot.read).to be_a Read::Types::Response }
+    let(:pg_conn) { instance_double(PG::Connection) }
+    let(:review_request_results) do
+      "[{ \"created_by\": \"1234567\", \"media\": \"simple text\",
+      \"page_id\": \"review_table_request\", \"property\": \"paragraph\" }]"
+    end
+
+    let(:formatted_review_request) do
+      [{ "created_by" => "1234567", "media" => "simple text",
+         "page_id" => "review_table_request", "property" => "paragraph" }]
+    end
+
+    before do
+      @pg_result = double
+
+      allow(PG::Connection).to receive(:new).and_return(pg_conn)
+      allow(pg_conn).to receive(:exec_params).and_return(@pg_result)
+      allow(@pg_result).to receive(:values).and_return([[1, review_request_results, "date"]])
+    end
+
+    it "read the review requests from the postgres database" do
+      read = @bot.read
+
+      expect(read).to be_a Read::Types::Response
+      expect(read.data).to be_a Array
+      expect(read.data.first).to be_a Hash
+      expect(read.data).to_not be_nil
+      expect(read.data).to eq(formatted_review_request)
+    end
   end
 
   describe ".process paragraph" do
@@ -59,7 +86,7 @@ RSpec.describe Bot::FetchMediaFromNotion do
       allow(HTTParty).to receive(:send).and_return(response)
     end
 
-    it "returns a success hash with the wip's count by domain" do
+    it "returns a success hash with the media review requests" do
       allow(response).to receive(:code).and_return(200)
       allow(response).to receive(:[]).and_return(request_page_ids, content_page)
 
