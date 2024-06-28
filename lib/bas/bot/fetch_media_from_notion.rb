@@ -125,11 +125,11 @@ module Bot
 
     def process_text(texts)
       texts.reduce("") do |paragraph, text|
-        rich_text = text["paragraph"]["rich_text"].first
+        rich_text = text["paragraph"]["rich_text"].map { |plain_text| plain_text["plain_text"] }
 
-        content = rich_text.nil? ? "" : rich_text["plain_text"]
+        content = rich_text.empty? ? "" : rich_text.join(" ")
 
-        paragraph + content
+        "#{paragraph}\n#{content}"
       end
     end
 

@@ -92,7 +92,7 @@ RSpec.describe Bot::FetchMediaFromNotion do
 
       processed = @bot.process
 
-      expect(processed).to eq({ success: [{ created_by: "1234567", media: "simple text",
+      expect(processed).to eq({ success: [{ created_by: "1234567", media: "\nsimple text",
                                             page_id: "review_table_request", property: "paragraph" }] })
     end
 
