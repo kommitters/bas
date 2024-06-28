@@ -28,3 +28,5 @@ gem "httparty"
 gem "pg", "~> 1.5", ">= 1.5.4"
 
 gem "gmail_xoauth"
+
+gem "md_to_notion", "~> 0.1.4"
