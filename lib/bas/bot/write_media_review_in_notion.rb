@@ -109,9 +109,7 @@ module Bot
     end
 
     def toggle_childrens
-      childrens = JSON.parse(read_response.data["review"])
-
-      childrens["children"]
+      JSON.parse(read_response.data["review"])
     end
 
     def mention
@@ -126,7 +124,7 @@ module Bot
 
     def toggle_title
       case read_response.data["media_type"]
-      when "image" then "Image review results/"
+      when "images" then "Image review results/"
       when "paragraph" then "Text review results/"
       end
     end
