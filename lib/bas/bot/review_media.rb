@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require "md_to_notion"
+require "json"
+
 require_relative "./base"
 require_relative "../read/postgres"
 require_relative "../write/postgres"
@@ -49,7 +52,6 @@ module Bot
   #
   class ReviewMedia < Bot::Base
     DETAIL = "low"
-    MEDIA_TYPE = "image_url"
 
     # read function to execute the PostgresDB Read component
     #
@@ -113,12 +115,14 @@ module Bot
       read_response.data["media"]
     end
 
-    def response_data(response)
-      response.parsed_response["data"].first["content"].first["text"]["value"]
+    def notion_format(response)
+      md_response = response.parsed_response["data"].first["content"].first["text"]["value"]
+
+      MdToNotion::Parser.markdown_to_notion_blocks(md_response).to_json
     end
 
     def sucess_response(response)
-      review = response_data(response)
+      review = notion_format(response)
       page_id = read_response.data["page_id"]
       created_by = read_response.data["created_by"]
       property = read_response.data["property"]
