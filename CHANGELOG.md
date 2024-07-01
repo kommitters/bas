@@ -1,5 +1,12 @@
 # Changelog
 
+# 1.1.0 (01.07.2024)
+- [Add write media review requests bot](https://github.com/kommitters/bas/issues/51)
+- [Add write media review in notion bot](https://github.com/kommitters/bas/issues/54)
+- [Add update review media state bot](https://github.com/kommitters/bas/issues/55)
+- [Add Media review process bot](https://github.com/kommitters/bas/issues/52)
+- [Media review notion fetch bot](https://github.com/kommitters/bas/issues/50)
+
 # 1.0.1 (21.06.2024)
 - Refactor pto notification format for improving OpenAI response.
 
