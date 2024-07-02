@@ -92,8 +92,8 @@ RSpec.describe Bot::FetchMediaFromNotion do
 
       processed = @bot.process
 
-      expect(processed).to eq({ success: [{ created_by: "1234567", media: "\nsimple text",
-                                            page_id: "review_table_request", property: "paragraph" }] })
+      expect(processed).to eq({ success: { results: [{ created_by: "1234567", media: "\nsimple text",
+                                                       page_id: "review_table_request", property: "paragraph" }] } })
     end
 
     it "returns an error hash with the error message when request id failed" do
@@ -112,10 +112,10 @@ RSpec.describe Bot::FetchMediaFromNotion do
 
       processed = @bot.process
 
-      expect(processed).to eq({ success: [{ error: {
+      expect(processed).to eq({ success: { results: [{ error: {
                                 message: { "message" => "not found", "object" => "error",
                                            "status" => 404 }, status_code: 404
-                              } }] })
+                              } }] } })
     end
   end
 
