@@ -53,7 +53,7 @@ module Bot
 
       return media_response unless media_response[:error].nil?
 
-      { success: media_response[:results] }
+      { success: media_response }
     end
 
     # Write function to execute the PostgresDB write component

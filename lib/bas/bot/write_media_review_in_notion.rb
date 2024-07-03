@@ -3,7 +3,7 @@
 require "json"
 
 require_relative "./base"
-require_relative "../read/default"
+require_relative "../read/postgres"
 require_relative "../utils/notion/request"
 require_relative "../write/postgres"
 

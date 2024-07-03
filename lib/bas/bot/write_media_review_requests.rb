@@ -66,7 +66,7 @@ module Bot
     def process
       return { success: { created: nil } } if unprocessable_response
 
-      read_response.data.each { |request| create_request(request) }
+      read_response.data["results"].each { |request| create_request(request) }
 
       { success: { created: true } }
     end

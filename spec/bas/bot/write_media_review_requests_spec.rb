@@ -81,8 +81,8 @@ RSpec.describe Bot::WriteMediaReviewRequests do
     let(:pg_conn) { instance_double(PG::Connection) }
 
     let(:review_request) do
-      [{ "created_by" => "1234567", "media" => "simple text",
-         "page_id" => "review_table_request", "property" => "paragraph" }]
+      { "results" => [{ "created_by" => "1234567", "media" => "simple text", "page_id" => "review_table_request",
+                        "property" => "paragraph" }] }
     end
 
     before do

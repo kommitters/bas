@@ -10,7 +10,7 @@ require_relative "../utils/openai/run_assistant"
 
 module Bot
   ##
-  # The Bot::WriteMediaReviewRequests class serves as a bot implementation to read from a postgres
+  # The Bot::ReviewMedia class serves as a bot implementation to read from a postgres
   # shared storage a set of review media requests and create single request on the shared storage to
   # be processed one by one.
   #

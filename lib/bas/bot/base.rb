@@ -50,7 +50,7 @@ module Bot
     def unprocessable_response
       read_data = read_response.data
 
-      read_data.nil? || read_data == {} || read_data.any? { |_key, value| [[], ""].include?(value) }
+      read_data.nil? || read_data == {} || read_data.any? { |_key, value| [[], "", nil].include?(value) }
     end
 
     private
