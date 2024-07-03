@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.1.1 (02.07.2024)
+- [Fix format for error responses](https://github.com/kommitters/bas/issues/70)
+
 # 1.1.0 (01.07.2024)
 - [Add write media review requests bot](https://github.com/kommitters/bas/issues/51)
 - [Add write media review in notion bot](https://github.com/kommitters/bas/issues/54)
