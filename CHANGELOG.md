@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.1.2 (03.07.2024)
+- [Add gem dependencies to the specification file](https://github.com/kommitters/bas/issues/72)
+
 # 1.1.1 (02.07.2024)
 - [Fix format for error responses](https://github.com/kommitters/bas/issues/70)
 
