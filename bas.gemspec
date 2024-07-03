@@ -2,7 +2,7 @@
 
 require_relative "lib/bas/version"
 
-Gem::Specification.new do |spec|
+Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.name = "bas"
   spec.version = Bas::VERSION
   spec.authors = ["kommitters Open Source"]
@@ -31,7 +31,15 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Uncomment to register a new dependency of your gem
-  # spec.add_dependency "example-gem", "~> 1.0"
+  spec.add_dependency "gmail_xoauth", "~> 0.4.2"
+  spec.add_dependency "httparty", "~> 0.22.0"
+  spec.add_dependency "jwt", "~> 2.8.1"
+  spec.add_dependency "md_to_notion", "~> 0.1.4"
+  spec.add_dependency "net-imap", "~> 0.4.10"
+  spec.add_dependency "net-smtp", "~> 0.4.0.1"
+  spec.add_dependency "octokit", "~> 8.1.0"
+  spec.add_dependency "openssl", "~> 3.2"
+  spec.add_dependency "pg", "~> 1.5"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
