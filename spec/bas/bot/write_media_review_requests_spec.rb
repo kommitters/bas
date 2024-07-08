@@ -85,11 +85,17 @@ RSpec.describe Bot::WriteMediaReviewRequests do
                         "property" => "paragraph" }] }
     end
 
+    let(:response) { double("http_response") }
+
     before do
       pg_result = instance_double(PG::Result)
 
       allow(PG::Connection).to receive(:new).and_return(pg_conn)
       allow(pg_conn).to receive(:exec_params).and_return(pg_result)
+
+      @bot.read_response = Read::Types::Response.new
+
+      allow(HTTParty).to receive(:send).and_return(response)
     end
 
     it "returns an empty success hash when the media list is empty" do
