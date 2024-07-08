@@ -5,6 +5,7 @@ require "json"
 require_relative "./base"
 require_relative "../read/postgres"
 require_relative "../utils/notion/request"
+require_relative "../utils/notion/update_db_state"
 require_relative "../write/postgres"
 
 module Bot
@@ -47,7 +48,7 @@ module Bot
   #   bot.execute
   #
   class WriteMediaReviewInNotion < Bot::Base
-    CHUNK_SIZE = "1000"
+    READY_STATE = "ready"
 
     # read function to execute the PostgresDB Read component
     #
@@ -65,6 +66,8 @@ module Bot
       response = Utils::Notion::Request.execute(params)
 
       if response.code == 200
+        update_state
+
         { success: { page_id: read_response.data["page_id"], property: read_response.data["property"] } }
       else
         { error: { message: response.parsed_response, status_code: response.code } }
@@ -127,6 +130,17 @@ module Bot
       when "images" then "Image review results/"
       when "paragraph" then "Text review results/"
       end
+    end
+
+    def update_state
+      data = {
+        property: read_response.data["property"],
+        page_id: read_response.data["page_id"],
+        state: READY_STATE,
+        secret: process_options[:secret]
+      }
+
+      Utils::Notion::UpdateDbState.execute(data)
     end
   end
 end
