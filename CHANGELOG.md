@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.1.3 (08.07.2024)
+- [Update write media request to set in process](https://github.com/kommitters/bas/issues/76)
+
 # 1.1.2 (03.07.2024)
 - [Add gem dependencies to the specification file](https://github.com/kommitters/bas/issues/72)
 
