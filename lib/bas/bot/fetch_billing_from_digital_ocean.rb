@@ -15,8 +15,7 @@ module Bot
   #
   #   options = {
   #     process_options: {
-  #       database_id: "notion database id",
-  #       secret: "notion secret"
+  #       secret: "digital_ocean_secret_key"
   #     },
   #     write_options: {
   #       connection: {

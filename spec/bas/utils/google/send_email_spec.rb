@@ -26,7 +26,7 @@ RSpec.describe Utils::GoogleService::SendEmail do
       allow(Google::Apis::GmailV1::GmailService).to receive(:new).and_return(gmail_service)
     end
 
-    it "should return an error message when an error is throw" do
+    it "should return an error message when an error is thrown" do
       allow(gmail_service).to receive(:authorization=).and_raise(StandardError)
 
       expect(@service.execute).to eq({ error: "StandardError" })
