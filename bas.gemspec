@@ -31,7 +31,7 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.require_paths = ["lib"]
 
   # Uncomment to register a new dependency of your gem
-  spec.add_dependency "gmail_xoauth", "~> 0.4.2"
+  spec.add_dependency "gmail_xoauth", "~> 0.4.1"
   spec.add_dependency "httparty", "~> 0.22.0"
   spec.add_dependency "jwt", "~> 2.8.1"
   spec.add_dependency "md_to_notion", "~> 0.1.4"
