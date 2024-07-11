@@ -7,8 +7,8 @@ require_relative "../write/postgres"
 
 module Bot
   ##
-  # The Bot::FetchBillingFromDigitalOcean class serves as a bot implementation to read birthdays from a
-  # notion database and write them on a PostgresDB table with a specific format.
+  # The Bot::FetchBillingFromDigitalOcean class serves as a bot implementation to read digital
+  # ocean current billing using the DigitalOcean API
   #
   # <br>
   # <b>Example</b>
@@ -43,7 +43,7 @@ module Bot
       reader.execute
     end
 
-    # Process function to execute the Notion utility to fetch birthdays from a notion database
+    # Process function to execute the DigitalOcean utility to fetch bills
     #
     def process
       response = Utils::DigitalOcean::Request.execute(params)
