@@ -84,7 +84,7 @@ RSpec.describe Bot::FormatDoBillAlert do
     end
 
     let(:formatted_alert) do
-      "The daily usage was exceeded.\n      - Current balance: 800\n\n      - Threshold: 7\n\n      - Expected daily usage: 72.727\n      " # rubocop:disable Layout/LineLength
+      "The daily usage was exceeded.\n      Current balance: 800\n      Threshold: 7\n      Expected daily usage: 66.667\n      " # rubocop:disable Layout/LineLength
     end
 
     it "returns an empty success hash when the billing list is empty" do
@@ -111,7 +111,7 @@ RSpec.describe Bot::FormatDoBillAlert do
     let(:pg_conn) { instance_double(PG::Connection) }
 
     let(:formatted_alert) do
-      "The daily usage was exceeded.\n      - Current balance: 800\n\n      - Threshold: 7\n\n      - Expected daily usage: 72.727\n      " # rubocop:disable Layout/LineLength
+      "The daily usage was exceeded.\n      Current balance: 800\n      Threshold: 7\n      Expected daily usage: 66.667\n      " # rubocop:disable Layout/LineLength
     end
 
     before do

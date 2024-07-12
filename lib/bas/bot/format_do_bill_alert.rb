@@ -94,9 +94,9 @@ module Bot
       threshold = process_options[:threshold]
 
       """The daily usage was exceeded.
-      - Current balance: #{balance}\n
-      - Threshold: #{threshold}\n
-      - Expected daily usage: #{daily_usage.round(3)}
+      Current balance: #{balance}
+      Threshold: #{threshold}
+      Expected daily usage: #{daily_usage.round(3)}
       """
     end
   end
