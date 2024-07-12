@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.2.0 (12.07.2024)
+- [Add bots to process digital ocean billing checker](https://github.com/kommitters/bas/issues/78)
+
 # 1.1.3 (08.07.2024)
 - [Update write media request to set in process](https://github.com/kommitters/bas/issues/76)
 
