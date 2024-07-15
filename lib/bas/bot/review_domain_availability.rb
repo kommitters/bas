@@ -1,0 +1,66 @@
+# frozen_string_literal: true
+
+require "httparty"
+
+require_relative "./base"
+require_relative "../read/postgres"
+require_relative "../write/postgres"
+require_relative "../utils/openai/run_assistant"
+
+module Bot
+  class ReviewDomainAvailability < Bot::Base
+    # read function to execute the PostgresDB Read component
+    #
+    def read
+      reader = Read::Postgres.new(read_options.merge(conditions))
+
+      reader.execute
+    end
+
+    # process function to execute the OpenaAI utility to process the media reviews
+    #
+    def process
+      return { success: { review: nil } } if unprocessable_response
+
+      response = availability
+
+      if response.code == 200
+        { success: { review: nil } }
+      else
+        { success: { notification: notification(response) } }
+      end
+    end
+
+    # write function to execute the PostgresDB write component
+    #
+    def write
+      write = Write::Postgres.new(write_options, process_response)
+
+      write.execute
+    end
+
+    private
+
+    def conditions
+      {
+        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
+        params: [false, read_options[:tag], "unprocessed"]
+      }
+    end
+
+    def availability
+      url = read_response.data["url"]
+
+      HTTParty.get(url, {})
+    end
+
+    def notification(response)
+      data = {
+        domain: read_response.data["url"],
+        status_code: response.code
+      }
+
+      ":warning: Domain is down: #{data}"
+    end
+  end
+end
