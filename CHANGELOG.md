@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.2.1 (16.07.2024)
+- [Update format message for the digital ocean alert bots use case](https://github.com/kommitters/bas/pull/84)
+
 # 1.2.0 (12.07.2024)
 - [Add bots to process digital ocean billing checker](https://github.com/kommitters/bas/issues/78)
 
