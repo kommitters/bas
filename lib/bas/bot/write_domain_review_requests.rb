@@ -6,6 +6,53 @@ require_relative "../utils/notion/update_db_state"
 require_relative "../write/postgres"
 
 module Bot
+  ##
+  # The Bot::WriteDomainReviewRequests class serves as a bot implementation to read from a postgres
+  # shared storage a set of review domain requests and create single request on the shared storage to
+  # be processed one by one.
+  #
+  # <br>
+  # <b>Example</b>
+  #
+  #   options = {
+  #     read_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "web_availability",
+  #       tag: "FetchDomainServicesFromNotion"
+  #     },
+  #     process_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "web_availability",
+  #       tag: "ReviewDomainRequest"
+  #     },
+  #     write_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "web_availability",
+  #       tag: "WriteDomainReviewRequests"
+  #     }
+  #   }
+  #
+  #   bot = Bot::WriteDomainReviewRequests.new(options)
+  #   bot.execute
+  #
   class WriteDomainReviewRequests < Bot::Base
     # read function to execute the PostgresDB Read component
     #

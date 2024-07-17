@@ -8,6 +8,41 @@ require_relative "../write/postgres"
 require_relative "../utils/openai/run_assistant"
 
 module Bot
+  ##
+  # The Bot::ReviewDomainAvailability class serves as a bot implementation to read from a postgres
+  # shared storage a domain requests and review its availability.
+  #
+  # <br>
+  # <b>Example</b>
+  #
+  #   options = {
+  #     read_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "web_availability",
+  #       tag: "ReviewDomainRequest"
+  #     },
+  #     write_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "web_availability",
+  #       tag: "ReviewDomainAvailability"
+  #     }
+  #   }
+  #
+  #   bot = Bot::ReviewDomainAvailability.new(options)
+  #   bot.execute
+  #
   class ReviewDomainAvailability < Bot::Base
     # read function to execute the PostgresDB Read component
     #
@@ -17,7 +52,7 @@ module Bot
       reader.execute
     end
 
-    # process function to execute the OpenaAI utility to process the media reviews
+    # process function to make a http request to the domain and check the status
     #
     def process
       return { success: { review: nil } } if unprocessable_response
