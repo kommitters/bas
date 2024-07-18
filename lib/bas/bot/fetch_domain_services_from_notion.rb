@@ -8,7 +8,7 @@ require_relative "../write/postgres"
 module Bot
   ##
   # The Bot::FetchDomainServicesFromNotion class serves as a bot implementation to read
-  # domains from a notion database and write them on a PostgresDB table with a specific format.
+  # web domains from a notion database and write them on a PostgresDB table with a specific format.
   #
   # <br>
   # <b>Example</b>
@@ -41,7 +41,7 @@ module Bot
       reader.execute
     end
 
-    # Process function to execute the Notion utility to fetch domains from a notion database
+    # Process function to execute the Notion utility to fetch web domains from a notion database
     #
     def process
       response = Utils::Notion::Request.execute(params)

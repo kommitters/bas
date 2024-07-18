@@ -63,7 +63,7 @@ RSpec.describe Bot::FetchDomainServicesFromNotion do
       allow(HTTParty).to receive(:send).and_return(response)
     end
 
-    it "returns a success hash with the list of formatted ptos" do
+    it "returns a success hash with the list of domains to review" do
       allow(response).to receive(:code).and_return(200)
       allow(response).to receive(:parsed_response).and_return({ "results" => [domains] })
 
