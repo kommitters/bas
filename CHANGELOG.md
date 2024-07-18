@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.3.0 (18.07.2024)
+- [Add bots to check webs availability](https://github.com/kommitters/bas/issues/83)
+
 # 1.2.1 (16.07.2024)
 - [Update format message for the digital ocean alert bots use case](https://github.com/kommitters/bas/pull/84)
 
