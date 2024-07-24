@@ -7,13 +7,13 @@ require_relative "../write/postgres"
 
 module Bot
   class FetchGithubIssues < Bot::Base
-    ISSUE_PARAMS = %i[id url title body labels state created_at updated_at].freeze
+    ISSUE_PARAMS = %i[id html_url title body labels state created_at updated_at].freeze
     PER_PAGE = 100
 
-    # Read function to execute the default Read component
+    # read function to execute the PostgresDB Read component
     #
     def read
-      reader = Read::Default.new
+      reader = Read::Postgres.new(read_options.merge(conditions))
 
       reader.execute
     end
@@ -25,6 +25,7 @@ module Bot
 
       if octokit[:client]
         repo_issues = octokit[:client].issues(@process_options[:repo], filters)
+
         issues = normalize_response(repo_issues)
 
         { success: { issues: } }
@@ -43,6 +44,13 @@ module Bot
 
     private
 
+    def conditions
+      {
+        where: "tag=$1 ORDER BY inserted_at DESC",
+        params: [read_options[:tag]]
+      }
+    end
+
     def params
       {
         private_pem: process_options[:private_pem],
@@ -54,14 +62,19 @@ module Bot
 
     def filters
       default_filter = { per_page: PER_PAGE }
+
       filters = @process_options[:filters]
+      filters = filters.merge({ since: read_response.inserted_at }) unless read_response.nil?
 
       filters.is_a?(Hash) ? default_filter.merge(filters) : default_filter
     end
 
     def normalize_response(issues)
       issues.map do |issue|
-        ISSUE_PARAMS.reduce({}) { |hash, param| hash.merge({ param => issue.send(param) }) }
+        ISSUE_PARAMS.reduce({}) do |hash, param|
+          hash.merge({ param => issue.send(param) })
+              .merge({ assignees: issue.assignees.map(&:login) })
+        end
       end
     end
   end

@@ -10,6 +10,8 @@ require_relative "../write/postgres"
 
 module Bot
   class VerifyIssueExistanceInNotion < Bot::Base
+    NOT_FOUND = "not found"
+
     # read function to execute the PostgresDB Read component
     #
     def read
@@ -72,7 +74,7 @@ module Bot
     end
 
     def notion_wi_id(result)
-      return if result.nil?
+      return NOT_FOUND if result.nil?
 
       result["id"]
     end
@@ -80,7 +82,9 @@ module Bot
     def tag
       issue = process_response[:success]
 
-      issue[:notion_wi].nil? ? "CreateWorkItemRequest" : "UpdateWorkItemRequest"
+      return write_options[:tag] if issue[:notion_wi].nil?
+
+      issue[:notion_wi].eql?(NOT_FOUND) ? "CreateWorkItemRequest" : "UpdateWorkItemRequest"
     end
   end
 end

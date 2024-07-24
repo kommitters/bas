@@ -39,7 +39,7 @@ module Bot
     # write function to execute the PostgresDB write component
     #
     def write
-      options = write_options.merge({ tag: UPDATE_REQUEST })
+      options = write_options.merge({ tag: })
 
       write = Write::Postgres.new(options, process_response)
 
@@ -86,6 +86,12 @@ module Bot
       when "project" then { "Project": relation(process_options[:project]) }
       else {}
       end
+    end
+
+    def tag
+      return write_options[:tag] if process_response[:success][:notion_wi].nil?
+
+      UPDATE_REQUEST
     end
   end
 end

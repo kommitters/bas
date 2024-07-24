@@ -31,7 +31,7 @@ module Bot
       response = Utils::Notion::Request.execute(params)
 
       if response.code == 200
-        { success: { updated: true } }
+        { success: { issue: read_response.data["issue"] } }
       else
         { error: { message: response.parsed_response, status_code: response.code } }
       end
@@ -70,7 +70,7 @@ module Bot
           {
             object: "block",
             type: "paragraph",
-            paragraph: rich_text("issue", read_response.data["issue"]["url"])
+            paragraph: rich_text("issue", read_response.data["issue"]["html_url"])
           }
         ]
       }
