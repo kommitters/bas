@@ -15,8 +15,12 @@ module Utils
         { select: { name: } }
       end
 
-      def rich_text(content)
-        { rich_text: [{ text: { content: } }] }
+      def rich_text(content, url = nil)
+        text = { content: }
+
+        text = text.merge({ link: { url: } }) unless url.nil?
+
+        { rich_text: [{ text: }] }
       end
 
       def status(name)
