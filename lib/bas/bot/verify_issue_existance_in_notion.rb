@@ -122,7 +122,7 @@ module Bot
     def tag
       issue = process_response[:success]
 
-      return write_options[:tag] if issue[:notion_wi].nil?
+      return write_options[:tag] if issue.nil? || issue[:notion_wi].nil?
 
       issue[:notion_wi].eql?(NOT_FOUND) ? "CreateWorkItemRequest" : "UpdateWorkItemRequest"
     end

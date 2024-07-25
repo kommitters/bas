@@ -115,7 +115,7 @@ module Bot
       }
     end
 
-    def properties
+    def properties # rubocop:disable Metrics/AbcSize
       {
         "Responsible domain": select(process_options[:domain]),
         "Github Issue id": rich_text(read_response.data["issue"]["id"].to_s),
@@ -133,7 +133,7 @@ module Bot
     end
 
     def tag
-      return write_options[:tag] if process_response[:success][:notion_wi].nil?
+      return write_options[:tag] if process_response[:success].nil? || process_response[:success][:notion_wi].nil?
 
       UPDATE_REQUEST
     end

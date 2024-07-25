@@ -2,6 +2,10 @@
 
 module Utils
   module Notion
+    ##
+    # This module is a Notion utility for formating standard notion types to
+    # filter or create.
+    #
     module Types
       def multi_select(name)
         { "multi_select" => [{ "name" => name }] }
