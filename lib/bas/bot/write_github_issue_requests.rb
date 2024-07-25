@@ -5,6 +5,52 @@ require_relative "../read/postgres"
 require_relative "../write/postgres"
 
 module Bot
+  ##
+  # The Bot::WriteGithubIssueRequests class serves as a bot implementation to write GitHub issues
+  # request to be sent indiviadualy.
+  #
+  # <br>
+  # <b>Example</b>
+  #
+  #   options = {
+  #     read_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "github_issues",
+  #       tag: "FetchGithubIssues"
+  #     },
+  #     process_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "github_issues",
+  #       tag: "GithubIssueRequest"
+  #     },
+  #     write_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "github_issues",
+  #       tag: "WriteGithubIssueRequests"
+  #     }
+  #   }
+  #
+  #   bot = Bot::WriteGithubIssueRequests.new(options)
+  #   bot.execute
+  #
   class WriteGithubIssueRequests < Bot::Base
     # read function to execute the PostgresDB Read component
     #
@@ -14,7 +60,7 @@ module Bot
       reader.execute
     end
 
-    # Process function to execute the Notion utility create single review requests
+    # Process function to write GitHub issues requests.
     #
     def process
       return { success: { created: nil } } if unprocessable_response

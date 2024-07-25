@@ -9,6 +9,49 @@ require_relative "../utils/notion/types"
 require_relative "../write/postgres"
 
 module Bot
+  ##
+  # The Bot::CreateWorkItem class serves as a bot implementation to create "work items" on a
+  # notion database using information of a GitHub issue.
+  #
+  # <br>
+  # <b>Example</b>
+  #
+  #   options = {
+  #     read_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "github_issues",
+  #       tag: "CreateWorkItemRequest"
+  #     },
+  #     process_options: {
+  #       database_id: "notion database id",
+  #       secret: "notion secret",
+  #       domain: "domain association",
+  #       status: "default status",
+  #       work_item_type: "work_item_type",
+  #       project: "project id"
+  #     },
+  #     write_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "github_issues",
+  #       tag: "CreateWorkItem"
+  #     }
+  #   }
+  #
+  #   bot = Bot::VerifyIssueExistanceInNotion.new(options)
+  #   bot.execute
+  #
   class CreateWorkItem < Bot::Base
     include Utils::Notion::Types
 
@@ -22,7 +65,8 @@ module Bot
       reader.execute
     end
 
-    # process function to execute the Notion utility to send formated blocks to a page
+    # process function to execute the Notion utility to create work items on a notion
+    # database
     #
     def process
       return { success: { created: nil } } if unprocessable_response

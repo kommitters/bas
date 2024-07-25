@@ -9,6 +9,45 @@ require_relative "../utils/notion/update_db_state"
 require_relative "../write/postgres"
 
 module Bot
+  ##
+  # The Bot::VerifyIssueExistanceInNotion class serves as a bot implementation to verify if a
+  # GitHub issue was already created on a notion database base on a column with the issue id.
+  #
+  # <br>
+  # <b>Example</b>
+  #
+  #   options = {
+  #     read_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "github_issues",
+  #       tag: "GithubIssueRequest"
+  #     },
+  #     process_options: {
+  #       database_id: "notion database id",
+  #       secret: "notion secret"
+  #     },
+  #     write_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "github_issues",
+  #       tag: "VerifyIssueExistanceInNotio"
+  #     }
+  #   }
+  #
+  #   bot = Bot::VerifyIssueExistanceInNotion.new(options)
+  #   bot.execute
+  #
   class VerifyIssueExistanceInNotion < Bot::Base
     NOT_FOUND = "not found"
 
@@ -20,7 +59,8 @@ module Bot
       reader.execute
     end
 
-    # process function to execute the Notion utility to send formated blocks to a page
+    # process function to execute the Notion utility to verify GitHub issues existance
+    # on a notion database
     #
     def process
       return { success: { issue: nil } } if unprocessable_response

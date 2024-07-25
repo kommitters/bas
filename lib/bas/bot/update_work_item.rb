@@ -11,6 +11,44 @@ require_relative "../utils/notion/delete_page_blocks"
 require_relative "../write/postgres"
 
 module Bot
+  ##
+  # The Bot::UpdateWorkItem class serves as a bot implementation to update "work items" on a
+  # notion database using information of a GitHub issue.
+  #
+  # <br>
+  # <b>Example</b>
+  #
+  #   options = {
+  #     read_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "github_issues",
+  #       tag: "UpdateWorkItemRequest"
+  #     },
+  #     process_options: {
+  #       secret: "notion secret"
+  #     },
+  #     write_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "github_issues",
+  #       tag: "UpdateWorkItem"
+  #     }
+  #   }
+  #
+  #   bot = Bot::UpdateWorkItem.new(options)
+  #   bot.execute
+  #
   class UpdateWorkItem < Bot::Base
     include Utils::Notion::Types
 
@@ -24,8 +62,8 @@ module Bot
       reader.execute
     end
 
-    # process function to execute the Notion utility to send formated blocks to a page
-    #
+    # process function to execute the Notion utility to update work items on a notion
+    # database
     def process
       return { success: { updated: nil } } if unprocessable_response
 

@@ -6,6 +6,49 @@ require_relative "../utils/github/octokit_client"
 require_relative "../write/postgres"
 
 module Bot
+  ##
+  # The Bot::FetchGithubIssues class serves as a bot implementation to fetch GitHub issues from a
+  # repository and write them on a PostgresDB table with a specific format.
+  #
+  # <br>
+  # <b>Example</b>
+  #
+  #   options = {
+  #     read_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "github_issues",
+  #       tag: "FetchGithubIssues",
+  #       avoid_process: true
+  #     },
+  #     process_options: {
+  #       private_pem: "Github App private token",
+  #       app_id: "Github App id",
+  #       repo: "repository name",
+  #       filters: "hash with filters",
+  #       organization: "GitHub organization name"
+  #     },
+  #     write_options: {
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "github_issues",
+  #       tag: "FetchGithubIssues"
+  #     }
+  #   }
+  #
+  #   bot = Bot::FetchGithubIssues.new(options)
+  #   bot.execute
+  #
   class FetchGithubIssues < Bot::Base
     ISSUE_PARAMS = %i[id html_url title body labels state created_at updated_at].freeze
     PER_PAGE = 100
@@ -18,7 +61,7 @@ module Bot
       reader.execute
     end
 
-    # Process function to request email from an imap server using the imap utility
+    # Process function to request GitHub issues using the octokit utility
     #
     def process
       octokit = Utils::Github::OctokitClient.new(params).execute
@@ -56,7 +99,8 @@ module Bot
         private_pem: process_options[:private_pem],
         app_id: process_options[:app_id],
         method: process_options[:method],
-        method_params: process_options[:method_params]
+        method_params: process_options[:method_params],
+        organization: process_options[:organization]
       }
     end
 

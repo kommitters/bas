@@ -31,7 +31,7 @@ module Utils
       def access_token
         app = Octokit::Client.new(client_id: @params[:app_id], bearer_token: jwt)
 
-        installation_id = app.find_organization_installation("FGSoffice").id
+        installation_id = app.find_organization_installation(@params[:organization]).id
 
         app.create_app_installation_access_token(installation_id)[:token]
       end
