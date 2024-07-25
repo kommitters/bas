@@ -7,6 +7,7 @@ require_relative "./base"
 require_relative "../read/postgres"
 require_relative "../utils/notion/request"
 require_relative "../utils/notion/types"
+require_relative "../utils/notion/delete_page_blocks"
 require_relative "../write/postgres"
 
 module Bot
@@ -27,6 +28,8 @@ module Bot
     #
     def process
       return { success: { updated: nil } } if unprocessable_response
+
+      delete_wi
 
       response = Utils::Notion::Request.execute(params)
 
@@ -64,30 +67,28 @@ module Bot
     end
 
     def body
-      {
-        children: [
-          { object: "block", type: "toggle", toggle: },
-          {
-            object: "block",
-            type: "paragraph",
-            paragraph: rich_text("issue", read_response.data["issue"]["html_url"])
-          }
-        ]
-      }
-    end
-
-    def toggle
-      rich_text(description).merge({ children: toggle_childrens })
+      { children: description + [issue_reference] }
     end
 
     def description
-      date_time = Time.now.utc.strftime("%c")
-
-      "#{DESCRIPTION}/#{date_time}"
+      MdToNotion::Parser.markdown_to_notion_blocks(read_response.data["issue"]["body"])
     end
 
-    def toggle_childrens
-      MdToNotion::Parser.markdown_to_notion_blocks(read_response.data["issue"]["body"])
+    def issue_reference
+      {
+        object: "block",
+        type: "paragraph",
+        paragraph: rich_text("issue", read_response.data["issue"]["html_url"])
+      }
+    end
+
+    def delete_wi
+      params = {
+        page_id: read_response.data["notion_wi"],
+        secret: process_options[:secret]
+      }
+
+      Utils::Notion::DeletePageBlocks.new(params).execute
     end
   end
 end
