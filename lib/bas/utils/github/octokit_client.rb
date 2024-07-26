@@ -7,14 +7,14 @@ require "jwt"
 module Utils
   module Github
     ##
-    # This module is a Imap utility for request emails from an Imap server
+    # This module is a Github utility for making requests to the Github API using the octokit module
     #
     class OctokitClient
       def initialize(params)
         @params = params
       end
 
-      # Execute the imap requets after authenticate the email with the credentials
+      # Build the octokit client using a Github app access token
       #
       def execute
         { client: octokit }

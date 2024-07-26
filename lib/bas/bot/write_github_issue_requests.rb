@@ -7,7 +7,7 @@ require_relative "../write/postgres"
 module Bot
   ##
   # The Bot::WriteGithubIssueRequests class serves as a bot implementation to write GitHub issues
-  # request to be sent indiviadualy.
+  # request to be sent individually.
   #
   # <br>
   # <b>Example</b>
