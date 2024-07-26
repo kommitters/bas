@@ -1,5 +1,9 @@
 # Changelog
 
+# 1.4.0 (26.07.2024)
+- [Add bots to synchronize issues with notion work items](https://github.com/kommitters/bas/issues/87)
+- [Update fetch pto from notion bot](https://github.com/kommitters/bas/issues/75)
+
 # 1.3.0 (18.07.2024)
 - [Add bots to check webs availability](https://github.com/kommitters/bas/issues/83)
 
