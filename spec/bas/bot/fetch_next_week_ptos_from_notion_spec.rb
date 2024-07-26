@@ -47,18 +47,14 @@ RSpec.describe Bot::FetchNextWeekPtosFromNotion do
       {
         "properties" => {
           "Description" => { "title" => [{ "plain_text" => "John Doe" }] },
-          "StartDateTime" => { "date" => { "start" => "2024-05-01", "end" => "" } },
-          "EndDateTime" => { "date" => { "start" => "2024-05-02", "end" => "" } }
+          "StartDateTime" => { "date" => { "start" => "2024-05-01", "end" => nil } },
+          "EndDateTime" => { "date" => { "start" => "2024-05-02", "end" => nil } }
         }
       }
     end
 
     let(:formatted_pto) do
-      {
-        "Name" => "John Doe",
-        "StartDateTime" => { from: "2024-05-01", to: "" },
-        "EndDateTime" => { from: "2024-05-02", to: "" }
-      }
+      "John Doe will not be working between 2024-05-01 and 2024-05-02. And returns the Friday May 03 of 2024"
     end
 
     let(:error_response) { { "object" => "error", "status" => 404, "message" => "not found" } }
