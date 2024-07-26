@@ -74,26 +74,13 @@ module Bot
         endpoint: "databases/#{process_options[:database_id]}/query",
         secret: process_options[:secret],
         method: "post",
-        body:
+        body: { filter: today_condition }
       }
-    end
-
-    def body
-      { filter: { "or": conditions } }
-    end
-
-    def conditions
-      [
-        today_condition,
-        { property: "StartDateTime", date: { this_week: {} } },
-        { property: "EndDateTime", date: { this_week: {} } },
-        { property: "StartDateTime", date: { next_week: {} } },
-        { property: "EndDateTime", date: { next_week: {} } }
-      ]
     end
 
     def today_condition
       today = Time.now.utc.strftime("%F").to_s
+
       {
         "and": [
           { property: "StartDateTime", date: { on_or_before: today } },
@@ -134,7 +121,7 @@ module Bot
     end
 
     def returns(date)
-      date.include?("T") ? "#{date} in the afternoon" : next_work_day(date)
+      date.include?("T12") ? "#{date} in the afternoon" : next_work_day(date)
     end
 
     def next_work_day(date)
