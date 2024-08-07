@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "./base"
-require_relative "../read/default"
+require_relative "../read/postgres"
 require_relative "../utils/github/octokit_client"
 require_relative "../write/postgres"
 
@@ -32,6 +32,15 @@ module Bot
   #       repo: "repository name",
   #       filters: "hash with filters",
   #       organization: "GitHub organization name"
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "github_issues",
+  #       tag: "GithubIssueRequest"
   #     },
   #     write_options: {
   #       connection: {
@@ -69,9 +78,9 @@ module Bot
       if octokit[:client]
         repo_issues = octokit[:client].issues(@process_options[:repo], filters)
 
-        issues = normalize_response(repo_issues)
+        normalize_response(repo_issues).each { |issue| create_request(issue) }
 
-        { success: { issues: } }
+        { success: { created: true } }
       else
         { error: octokit[:error] }
       end
@@ -120,6 +129,12 @@ module Bot
               .merge({ assignees: issue.assignees.map(&:login) })
         end
       end
+    end
+
+    def create_request(request)
+      write_data = { success: { request: } }
+
+      Write::Postgres.new(process_options, write_data).execute
     end
   end
 end
