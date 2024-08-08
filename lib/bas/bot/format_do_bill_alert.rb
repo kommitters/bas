@@ -93,11 +93,9 @@ module Bot
       balance = read_response.data["billing"]["month_to_date_balance"]
       threshold = process_options[:threshold]
 
-      """:warning: The **DigitalOcean** daily usage was exceeded.
-      Current balance: #{balance}
-      Threshold: #{threshold}
-      Current daily usage: #{daily_usage.round(3)}
-      """
+      ":warning: The **DigitalOcean** daily usage was exceeded. \
+      Current balance: #{balance}, Threshold: #{threshold}, \
+      Current daily usage: #{daily_usage.round(3)}"
     end
   end
 end
