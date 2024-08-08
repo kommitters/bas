@@ -115,25 +115,17 @@ RSpec.describe Bot::FetchGithubIssues do
       ]}"
     end
 
-    let(:formatted_issues) do
-      {
-        id: "12345",
-        assignees: [],
-        html_url: "https://github.com/repo/issues",
-        title: "Issue",
-        body: "simple description",
-        labels: [],
-        state: "open",
-        created_at: "2024-07-24 20:13:18 UTC",
-        updated_at: "2024-07-24 20:13:18 UTC"
-      }
-    end
-
     let(:error_response) { { "object" => "error", "status" => 404, "message" => "not found" } }
 
+    let(:pg_conn) { instance_double(PG::Connection) }
     let(:octokit) { double("octokit") }
 
     before do
+      pg_result = instance_double(PG::Result)
+
+      allow(PG::Connection).to receive(:new).and_return(pg_conn)
+      allow(pg_conn).to receive(:exec_params).and_return(pg_result)
+
       @bot.read_response = Read::Types::Response.new
 
       allow(OpenSSL::PKey::RSA).to receive(:new).and_return("private key")
@@ -149,7 +141,7 @@ RSpec.describe Bot::FetchGithubIssues do
 
       processed = @bot.process
 
-      expect(processed).to eq({ success: { issues: [formatted_issues] } })
+      expect(processed).to eq({ success: { created: true } })
     end
 
     it "returns a success hash with the list of formatted birthdays" do
@@ -159,7 +151,7 @@ RSpec.describe Bot::FetchGithubIssues do
 
       processed = @bot.process
 
-      expect(processed).to eq({ success: { issues: [formatted_issues] } })
+      expect(processed).to eq({ success: { created: true } })
     end
 
     it "returns an error hash with the error message" do

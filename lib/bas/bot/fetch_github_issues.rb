@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "./base"
-require_relative "../read/default"
+require_relative "../read/postgres"
 require_relative "../utils/github/octokit_client"
 require_relative "../write/postgres"
 
@@ -32,6 +32,15 @@ module Bot
   #       repo: "repository name",
   #       filters: "hash with filters",
   #       organization: "GitHub organization name"
+  #       connection: {
+  #         host: "localhost",
+  #         port: 5432,
+  #         dbname: "bas",
+  #         user: "postgres",
+  #         password: "postgres"
+  #       },
+  #       db_table: "github_issues",
+  #       tag: "GithubIssueRequest"
   #     },
   #     write_options: {
   #       connection: {
@@ -50,7 +59,7 @@ module Bot
   #   bot.execute
   #
   class FetchGithubIssues < Bot::Base
-    ISSUE_PARAMS = %i[id html_url title body labels state created_at updated_at].freeze
+    ISSUE_PARAMS = %i[id html_url title body labels state created_at updated_at state].freeze
     PER_PAGE = 100
 
     # read function to execute the PostgresDB Read component
@@ -69,9 +78,9 @@ module Bot
       if octokit[:client]
         repo_issues = octokit[:client].issues(@process_options[:repo], filters)
 
-        issues = normalize_response(repo_issues)
+        normalize_response(repo_issues).each { |issue| create_request(issue) }
 
-        { success: { issues: } }
+        { success: { created: true } }
       else
         { error: octokit[:error] }
       end
@@ -107,7 +116,7 @@ module Bot
     def filters
       default_filter = { per_page: PER_PAGE }
 
-      filters = @process_options[:filters]
+      filters = process_options[:filters]
       filters = filters.merge({ since: read_response.inserted_at }) unless read_response.nil?
 
       filters.is_a?(Hash) ? default_filter.merge(filters) : default_filter
@@ -120,6 +129,19 @@ module Bot
               .merge({ assignees: issue.assignees.map(&:login) })
         end
       end
+    end
+
+    def create_request(issue)
+      write_data = {
+        success: {
+          issue:,
+          work_item_type: process_options[:work_item_type],
+          type_id: process_options[:type_id],
+          domain: process_options[:domain]
+        }
+      }
+
+      Write::Postgres.new(process_options, write_data).execute
     end
   end
 end
