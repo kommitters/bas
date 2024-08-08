@@ -111,18 +111,29 @@ RSpec.describe Bot::CreateWorkItem do
     end
 
     let(:issue_request) { { "issue" => issue } }
+    let(:issue_request_activity) { { "issue" => issue, "work_item_type" => "activity", "type_id": "id" } }
+    let(:issue_request_project) { { "issue" => issue, "work_item_type" => "project", "type_id": "id" } }
 
     let(:error_response) { { "object" => "error", "status" => 404, "message" => "not found" } }
 
     let(:response) { double("http_response") }
 
     before do
-      @bot.read_response = Read::Types::Response.new(1, issue_request, "date")
-
       allow(HTTParty).to receive(:send).and_return(response)
     end
 
-    it "creates a work item on notion and returns its notion id" do
+    it "creates a work item on notion and returns its notion id for an activity" do
+      @bot.read_response = Read::Types::Response.new(1, issue_request_activity, "date")
+      allow(response).to receive(:code).and_return(200)
+      allow(response).to receive(:[]).and_return("123456789")
+
+      processed = @bot.process
+
+      expect(processed).to eq({ success: { issue:, notion_wi: "123456789" } })
+    end
+
+    it "creates a work item on notion and returns its notion id for a project" do
+      @bot.read_response = Read::Types::Response.new(1, issue_request_project, "date")
       allow(response).to receive(:code).and_return(200)
       allow(response).to receive(:[]).and_return("123456789")
 
@@ -132,6 +143,7 @@ RSpec.describe Bot::CreateWorkItem do
     end
 
     it "returns an error hash with the error message" do
+      @bot.read_response = Read::Types::Response.new(1, issue_request, "date")
       allow(response).to receive(:code).and_return(404)
       allow(response).to receive(:parsed_response).and_return(error_response)
 

@@ -115,20 +115,6 @@ RSpec.describe Bot::FetchGithubIssues do
       ]}"
     end
 
-    let(:formatted_issues) do
-      {
-        id: "12345",
-        assignees: [],
-        html_url: "https://github.com/repo/issues",
-        title: "Issue",
-        body: "simple description",
-        labels: [],
-        state: "open",
-        created_at: "2024-07-24 20:13:18 UTC",
-        updated_at: "2024-07-24 20:13:18 UTC"
-      }
-    end
-
     let(:error_response) { { "object" => "error", "status" => 404, "message" => "not found" } }
 
     let(:pg_conn) { instance_double(PG::Connection) }

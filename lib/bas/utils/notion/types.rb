@@ -7,10 +7,6 @@ module Utils
     # filter or create.
     #
     module Types
-      def multi_select(name)
-        { "multi_select" => [{ "name" => name }] }
-      end
-
       def relation(id)
         { relation: [{ id: }] }
       end
