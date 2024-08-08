@@ -59,7 +59,7 @@ module Bot
   #   bot.execute
   #
   class FetchGithubIssues < Bot::Base
-    ISSUE_PARAMS = %i[id html_url title body labels state created_at updated_at].freeze
+    ISSUE_PARAMS = %i[id html_url title body labels state created_at updated_at state].freeze
     PER_PAGE = 100
 
     # read function to execute the PostgresDB Read component
@@ -116,7 +116,7 @@ module Bot
     def filters
       default_filter = { per_page: PER_PAGE }
 
-      filters = @process_options[:filters]
+      filters = process_options[:filters]
       filters = filters.merge({ since: read_response.inserted_at }) unless read_response.nil?
 
       filters.is_a?(Hash) ? default_filter.merge(filters) : default_filter
@@ -137,8 +137,7 @@ module Bot
           issue:,
           work_item_type: process_options[:work_item_type],
           type_id: process_options[:type_id],
-          domain: process_options[:domain],
-          status: process_options[:status]
+          domain: process_options[:domain]
         }
       }
 

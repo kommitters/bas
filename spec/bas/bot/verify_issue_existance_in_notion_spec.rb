@@ -106,7 +106,7 @@ RSpec.describe Bot::VerifyIssueExistanceInNotion do
       }
     end
 
-    let(:issue_request) { { "request" => issue } }
+    let(:issue_request) { { "issue" => issue } }
 
     let(:error_response) { { "object" => "error", "status" => 404, "message" => "not found" } }
 
@@ -124,7 +124,7 @@ RSpec.describe Bot::VerifyIssueExistanceInNotion do
 
       processed = @bot.process
 
-      expect(processed).to eq({ success: { issue:, notion_wi: "123456789" } })
+      expect(processed).to eq({ success: { "issue" => issue, notion_wi: "123456789" } })
     end
 
     it "set the work item id as 'not found' when it doesn't exist on notion" do
@@ -133,7 +133,7 @@ RSpec.describe Bot::VerifyIssueExistanceInNotion do
 
       processed = @bot.process
 
-      expect(processed).to eq({ success: { issue:, notion_wi: "not found" } })
+      expect(processed).to eq({ success: { "issue" => issue, notion_wi: "not found" } })
     end
 
     it "returns an error hash with the error message" do

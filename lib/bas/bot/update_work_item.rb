@@ -144,7 +144,7 @@ module Bot
       options = {
         page_id: read_response.data["notion_wi"],
         secret: process_options[:secret],
-        body: { properties: { People: { relation: } } }
+        body: { properties: { People: { relation: } }.merge(status) }
       }
 
       Utils::Notion::UpdateDatabasePage.new(options).execute
@@ -170,6 +170,12 @@ module Bot
       relation = user.dig("properties", "People", "relation")
 
       relation.nil? ? {} : relation.first
+    end
+
+    def status
+      return {} unless read_response.data["issue"]["state"] == "closed"
+
+      { Status: { status: { name: "Done" } } }
     end
   end
 end

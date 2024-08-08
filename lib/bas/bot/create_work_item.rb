@@ -56,6 +56,7 @@ module Bot
     include Utils::Notion::Types
 
     UPDATE_REQUEST = "UpdateWorkItemRequest"
+    STATUS = "Backlog"
 
     # read function to execute the PostgresDB Read component
     #
@@ -119,7 +120,7 @@ module Bot
       {
         "Responsible domain": select(read_response.data["domain"]),
         "Github Issue Id": rich_text(read_response.data["issue"]["id"].to_s),
-        "Status": status(read_response.data["status"]),
+        "Status": status(STATUS),
         "Detail": title(read_response.data["issue"]["title"])
       }.merge(work_item_type)
     end
