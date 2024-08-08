@@ -8,6 +8,8 @@ require_relative "../read/postgres"
 require_relative "../utils/notion/request"
 require_relative "../utils/notion/types"
 require_relative "../utils/notion/delete_page_blocks"
+require_relative "../utils/notion/fetch_database_record"
+require_relative "../utils/notion/update_db_page"
 require_relative "../write/postgres"
 
 module Bot
@@ -53,6 +55,7 @@ module Bot
     include Utils::Notion::Types
 
     DESCRIPTION = "Issue Description"
+    GITHUB_COLUMN = "Username"
 
     # read function to execute the PostgresDB Read component
     #
@@ -67,11 +70,11 @@ module Bot
     def process
       return { success: { updated: nil } } if unprocessable_response
 
-      delete_wi
-
-      response = Utils::Notion::Request.execute(params)
+      response = process_wi
 
       if response.code == 200
+        update_assigness
+
         { success: { issue: read_response.data["issue"] } }
       else
         { error: { message: response.parsed_response, status_code: response.code } }
@@ -93,6 +96,12 @@ module Bot
         where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
         params: [false, read_options[:tag], "unprocessed"]
       }
+    end
+
+    def process_wi
+      delete_wi
+
+      Utils::Notion::Request.execute(params)
     end
 
     def params
@@ -121,12 +130,46 @@ module Bot
     end
 
     def delete_wi
-      params = {
+      options = {
         page_id: read_response.data["notion_wi"],
         secret: process_options[:secret]
       }
 
-      Utils::Notion::DeletePageBlocks.new(params).execute
+      Utils::Notion::DeletePageBlocks.new(options).execute
+    end
+
+    def update_assigness
+      relation = users.map { |user| user_id(user) }
+
+      options = {
+        page_id: read_response.data["notion_wi"],
+        secret: process_options[:secret],
+        body: { properties: { People: { relation: } } }
+      }
+
+      Utils::Notion::UpdateDatabasePage.new(options).execute
+    end
+
+    def users
+      options = {
+        database_id: process_options[:users_database_id],
+        secret: process_options[:secret],
+        body: { filter: { or: github_usernames } }
+      }
+
+      Utils::Notion::FetchDatabaseRecord.new(options).execute
+    end
+
+    def github_usernames
+      read_response.data["issue"]["assignees"].map do |username|
+        { property: GITHUB_COLUMN, rich_text: { equals: username } }
+      end
+    end
+
+    def user_id(user)
+      relation = user.dig("properties", "People", "relation")
+
+      relation.nil? ? {} : relation.first
     end
   end
 end

@@ -131,8 +131,16 @@ module Bot
       end
     end
 
-    def create_request(request)
-      write_data = { success: { request: } }
+    def create_request(issue)
+      write_data = {
+        success: {
+          issue:,
+          work_item_type: process_options[:work_item_type],
+          type_id: process_options[:type_id],
+          domain: process_options[:domain],
+          status: process_options[:status]
+        }
+      }
 
       Write::Postgres.new(process_options, write_data).execute
     end

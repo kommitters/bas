@@ -50,6 +50,7 @@ module Bot
   #
   class VerifyIssueExistanceInNotion < Bot::Base
     NOT_FOUND = "not found"
+    NOTION_PROPERTY = "Github Issue Id"
 
     # read function to execute the PostgresDB Read component
     #
@@ -70,7 +71,7 @@ module Bot
       if response.code == 200
         result = response.parsed_response["results"].first
 
-        { success: { issue: read_response.data["request"], notion_wi: notion_wi_id(result) } }
+        { success: read_response.data.merge({ notion_wi: notion_wi_id(result) }) }
       else
         { error: { message: response.parsed_response, status_code: response.code } }
       end
@@ -107,8 +108,8 @@ module Bot
     def body
       {
         filter: {
-          property: "Github Issue id",
-          rich_text: { equals: read_response.data["request"]["id"].to_s }
+          property: NOTION_PROPERTY,
+          rich_text: { equals: read_response.data["issue"]["id"].to_s }
         }
       }
     end
