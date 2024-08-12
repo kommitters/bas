@@ -95,11 +95,11 @@ RSpec.describe Bot::UpdateWorkItem do
       {
         "id" => "12345",
         "body" => "simple description",
-        "state" => "open",
+        "state" => "closed",
         "title" => "Issue",
         "labels" => [],
         "html_url" => "https://github.com/repo/issues",
-        "assignees" => [],
+        "assignees" => ["GithubUsername"],
         "created_at" => "2024-07-24 20:13:18 UTC",
         "updated_at" => "2024-07-24 20:36:57 UTC"
       }

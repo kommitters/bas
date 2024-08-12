@@ -56,6 +56,7 @@ module Bot
     include Utils::Notion::Types
 
     UPDATE_REQUEST = "UpdateWorkItemRequest"
+    STATUS = "Backlog"
 
     # read function to execute the PostgresDB Read component
     #
@@ -117,17 +118,17 @@ module Bot
 
     def properties # rubocop:disable Metrics/AbcSize
       {
-        "Responsible domain": select(process_options[:domain]),
-        "Github Issue id": rich_text(read_response.data["issue"]["id"].to_s),
-        "Status": status(process_options[:status]),
+        "Responsible domain": select(read_response.data["domain"]),
+        "Github Issue Id": rich_text(read_response.data["issue"]["id"].to_s),
+        "Status": status(STATUS),
         "Detail": title(read_response.data["issue"]["title"])
       }.merge(work_item_type)
     end
 
     def work_item_type
-      case process_options[:work_item_type]
-      when "activity" then { "Activity": relation(process_options[:activity]) }
-      when "project" then { "Project": relation(process_options[:project]) }
+      case read_response.data["work_item_type"]
+      when "activity" then { "Activity": relation(read_response.data["type_id"]) }
+      when "project" then { "Project": relation(read_response.data["type_id"]) }
       else {}
       end
     end
