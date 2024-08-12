@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.4.1 (12.08.2024)
+- [Add github issues assignees to work items](https://github.com/kommitters/bas/issues/92)
+
 # 1.4.0 (26.07.2024)
 - [Add bots to synchronize issues with notion work items](https://github.com/kommitters/bas/issues/87)
 - [Update fetch pto from notion bot](https://github.com/kommitters/bas/issues/75)
