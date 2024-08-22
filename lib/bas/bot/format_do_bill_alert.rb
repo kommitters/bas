@@ -57,7 +57,7 @@ module Bot
     # Process function to format the notification using a template
     #
     def process
-      return { success: { notification: message } } if skip_processing?
+      return { success: { notification: message } } if balance_alert?
 
       { success: { notification: "" } }
     end
@@ -84,7 +84,7 @@ module Bot
       }
     end
 
-    def skip_processing?
+    def balance_alert?
       unprocessable_response || significant_change? || threshold_exceeded
     end
 
