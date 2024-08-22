@@ -50,15 +50,16 @@ module Bot
     def read
       reader = Read::Postgres.new(read_options.merge(conditions))
 
-      reader.execute
+      @previous_billing_data = fetch_previous_billing_data
+      @current_billing_data = reader.execute
     end
 
     # Process function to format the notification using a template
     #
     def process
-      return { success: { notification: "" } } if unprocessable_response || !threshold_exceeded
+      return { success: { notification: message } } if skip_processing?
 
-      { success: { notification: message } }
+      { success: { notification: "" } }
     end
 
     # Write function to execute the PostgresDB write component
@@ -70,6 +71,29 @@ module Bot
     end
 
     private
+
+    def fetch_previous_billing_data
+      previous_reader = Read::Postgres.new(read_options.merge(previous_conditions))
+      previous_reader.execute
+    end
+
+    def previous_conditions
+      {
+        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at DESC LIMIT 1",
+        params: [false, read_options[:tag], "processed"]
+      }
+    end
+
+    def skip_processing?
+      unprocessable_response || significant_change? || threshold_exceeded
+    end
+
+    def significant_change?
+      previous_balance = @previous_billing_data["billing"]["month_to_date_balance"].to_f
+      current_balance = @current_billing_data["billing"]["month_to_date_balance"].to_f
+
+      (current_balance - previous_balance) > process_options[:threshold]
+    end
 
     def conditions
       {
@@ -90,7 +114,7 @@ module Bot
     end
 
     def message
-      balance = read_response.data["billing"]["month_to_date_balance"]
+      balance = read_response.data["billing"]["month_to_date_balance"].to_f
       threshold = process_options[:threshold]
 
       ":warning: The **DigitalOcean** daily usage was exceeded. \
