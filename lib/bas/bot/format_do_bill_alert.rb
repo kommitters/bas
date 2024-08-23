@@ -106,9 +106,17 @@ module Bot
       daily_usage > process_options[:threshold]
     end
 
-    def daily_usage
+    def daily_usage # rubocop:disable Metrics/AbcSize
       balance = read_response.data["billing"]["month_to_date_balance"].to_f
-      day_of_month = Time.now.utc.mday
+      current_time = Time.now.utc
+      day_of_month = current_time.mday
+
+      reset_period_start = Time.utc(current_time.year, current_time.month, current_time.day, 0, 0, 0)
+      reset_period_end = reset_period_start + (3 * 3600)
+
+      return 0 if day_of_month == 1 && (current_time >= reset_period_start && current_time <= reset_period_end)
+
+      return balance / (current_time.hour + 1) if day_of_month == 1
 
       balance / day_of_month
     end
