@@ -112,11 +112,14 @@ module Bot
       day_of_month = current_time.mday
 
       reset_period_start = Time.utc(current_time.year, current_time.month, current_time.day, 0, 0, 0)
-      reset_period_end = reset_period_start + (3 * 3600)
+      reset_period_end = reset_period_start + (3.5 * 3600)
 
-      return 0 if day_of_month == 1 && (current_time >= reset_period_start && current_time <= reset_period_end)
+      in_grace_period = current_time >= reset_period_start && current_time <= reset_period_end
 
-      return balance / (current_time.hour + 1) if day_of_month == 1
+      previous_balance = @previous_billing_data["billing"]["month_to_date_balance"].to_f
+      current_balance = @current_billing_data["billing"]["month_to_date_balance"].to_f
+
+      return current_balance - previous_balance if day_of_month == 1 && in_grace_period
 
       balance / day_of_month
     end
