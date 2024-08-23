@@ -126,21 +126,21 @@ RSpec.describe Bot::FormatDoBillAlert do
     it "skips processing when unprocessable_response is true" do
       allow(@bot).to receive(:unprocessable_response).and_return(true)
 
-      expect(@bot.send(:skip_processing?)).to be true
+      expect(@bot.send(:balance_alert?)).to be true
     end
 
     it "skips processing when conditions are not met" do
       allow(@bot).to receive(:significant_change?).and_return(true)
       allow(@bot).to receive(:threshold_exceeded).and_return(false)
 
-      expect(@bot.send(:skip_processing?)).to be true
+      expect(@bot.send(:balance_alert?)).to be true
     end
 
     it "does not skip processing when conditions are met" do
       allow(@bot).to receive(:significant_change?).and_return(false)
       allow(@bot).to receive(:threshold_exceeded).and_return(false)
 
-      expect(@bot.send(:skip_processing?)).to be false
+      expect(@bot.send(:balance_alert?)).to be false
     end
   end
 
