@@ -123,13 +123,13 @@ RSpec.describe Bot::FormatDoBillAlert do
       expect(processed[:success][:notification].squish).to eq(formatted_alert.squish)
     end
 
-    it "skips processing when unprocessable_response is true" do
+    it "it triggers the alert when unprocessable_response is true" do
       allow(@bot).to receive(:unprocessable_response).and_return(true)
 
       expect(@bot.send(:balance_alert?)).to be true
     end
 
-    it "skips processing when conditions are not met" do
+    it "it triggers the alert when conditions are not met" do
       allow(@bot).to receive(:significant_change?).and_return(true)
       allow(@bot).to receive(:threshold_exceeded).and_return(false)
 
