@@ -48,10 +48,9 @@ module Bot
     # read function to execute the PostgresDB Read component
     #
     def read
-      reader = Read::Postgres.new(read_options.merge(conditions))
+      reader = Read::Postgres.new(read_options.merge(combined_conditions))
 
-      @previous_billing_data = fetch_previous_billing_data
-      @current_billing_data = reader.execute
+      @previous_billing_data, @current_billing_data = split_billing_data(reader.execute)
     end
 
     # Process function to format the notification using a template
@@ -59,7 +58,7 @@ module Bot
     def process
       return { success: { notification: message } } if balance_alert?
 
-      { success: { notification: "" } }
+      { success: { notification: "" } } unless unprocessable_response
     end
 
     # Write function to execute the PostgresDB write component
@@ -71,6 +70,20 @@ module Bot
     end
 
     private
+
+    def combined_conditions
+      {
+        where: "archived=$1 AND tag=$2 AND (stage=$3 OR stage=$4) ORDER BY inserted_at ASC",
+        params: [false, read_options[:tag], "unprocessed", "processed"]
+      }
+    end
+
+    def split_billing_data(billing_data)
+      processed = billing_data.select { |record| record["stage"] == "processed" }.last
+      unprocessed = billing_data.select { |record| record["stage"] == "unprocessed" }.first
+
+      [processed, unprocessed]
+    end
 
     def fetch_previous_billing_data
       previous_reader = Read::Postgres.new(read_options.merge(previous_conditions))
@@ -85,7 +98,7 @@ module Bot
     end
 
     def balance_alert?
-      unprocessable_response || significant_change? || threshold_exceeded
+      significant_change? || threshold_exceeded
     end
 
     def significant_change?
@@ -93,13 +106,6 @@ module Bot
       current_balance = @current_billing_data["billing"]["month_to_date_balance"].to_f
 
       (current_balance - previous_balance) > process_options[:threshold]
-    end
-
-    def conditions
-      {
-        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
-        params: [false, read_options[:tag], "unprocessed"]
-      }
     end
 
     def threshold_exceeded

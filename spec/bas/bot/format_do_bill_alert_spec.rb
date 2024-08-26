@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "bas/bot/format_do_bill_alert"
-require "active_support/core_ext/string"
 
 RSpec.describe Bot::FormatDoBillAlert do
   before do
@@ -68,12 +67,13 @@ RSpec.describe Bot::FormatDoBillAlert do
     end
 
     it "read the notification from the postgres database" do
+      allow(@bot).to receive(:split_billing_data).and_return([formatted_bill_alert, formatted_bill_alert])
       read = @bot.read
 
-      expect(read).to be_a Read::Types::Response
-      expect(read.data).to be_a Hash
-      expect(read.data).to_not be_nil
-      expect(read.data).to eq(formatted_bill_alert)
+      expect(read).to eq([formatted_bill_alert, formatted_bill_alert])
+      expect(read.first).to be_a Hash
+      expect(read.first).to_not be_nil
+      expect(read.first).to eq(formatted_bill_alert)
     end
   end
 
@@ -120,7 +120,7 @@ RSpec.describe Bot::FormatDoBillAlert do
 
       processed = @bot.process
 
-      expect(processed[:success][:notification].squish).to eq(formatted_alert.squish)
+      expect(processed[:success][:notification].gsub(/\s+/, " ").strip).to eq(formatted_alert.gsub(/\s+/, " ").strip)
     end
 
     it "it triggers the alert when unprocessable_response is true" do
