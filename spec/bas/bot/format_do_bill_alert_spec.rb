@@ -148,7 +148,7 @@ RSpec.describe Bot::FormatDoBillAlert do
     let(:pg_conn) { instance_double(PG::Connection) }
 
     let(:formatted_alert) do
-      ":warning: The **DigitalOcean** daily usage was exceeded.\n Current balance: 800.0\n Threshold: 7\n Current daily usage: 50.0\n"
+      ":warning: The **DigitalOcean** daily usage was exceeded.\n Current balance: 800.0\n Threshold: 7\n Current daily usage: 50.0\n" # rubocop:disable Layout/LineLength
     end
 
     before do
