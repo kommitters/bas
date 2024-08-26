@@ -87,7 +87,7 @@ RSpec.describe Bot::FormatDoBillAlert do
     let(:formatted_alert) do
       daily_usage = 800.0 / Time.now.utc.mday
 
-      ":warning: The **DigitalOcean** daily usage was exceeded. Current balance: #{balance}, Threshold: #{threshold}, Current daily usage: #{daily_usage.round(3)}" # rubocop:disable Layout/LineLength
+      ":warning: The **DigitalOcean** daily usage was exceeded. Current balance: 800.0, Threshold: 7, Current daily usage: #{daily_usage.round(3)}" # rubocop:disable Layout/LineLength
     end
 
     let(:previous_bill_alert) do
