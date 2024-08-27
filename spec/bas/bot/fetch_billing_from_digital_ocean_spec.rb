@@ -41,7 +41,38 @@ RSpec.describe Bot::FetchBillingFromDigitalOcean do
   end
 
   describe ".read" do
-    it { expect(@bot.read).to be_a Read::Types::Response }
+    let(:pg_conn) { instance_double(PG::Connection) }
+    let(:billing_results) do
+      "{\"billing\": {\"generated_at\": \"2024-08-27T05:09:37Z\",
+        \"account_balance\": \"0.00\",
+        \"month_to_date_usage\": \"0\",
+        \"month_to_date_balance\": \"0\"}
+      }"
+    end
+
+    let(:formatted_billing) do
+      { "billing" => {
+        "generated_at" => "2024-08-27T05:09:37Z", "account_balance" => "0.00",
+        "month_to_date_usage" => "0", "month_to_date_balance" => "0"
+      } }
+    end
+
+    before do
+      @pg_result = double
+
+      allow(PG::Connection).to receive(:new).and_return(pg_conn)
+      allow(pg_conn).to receive(:exec_params).and_return(@pg_result)
+      allow(@pg_result).to receive(:values).and_return([[1, billing_results, "date"]])
+    end
+
+    it "read the notification from the postgres database" do
+      read = @bot.read
+
+      expect(read).to be_a Read::Types::Response
+      expect(read.data).to be_a Hash
+      expect(read.data).to_not be_nil
+      expect(read.data).to eq(formatted_billing)
+    end
   end
 
   describe ".process" do
@@ -51,6 +82,13 @@ RSpec.describe Bot::FetchBillingFromDigitalOcean do
         "account_balance": "0.00",
         "month_to_date_usage": "1",
         "month_to_date_balance": "1"
+      }
+    end
+
+    let(:last_billing) do
+      {
+        "generated_at" => "2024-08-27T05:09:37Z", "account_balance" => "0.00",
+        "month_to_date_usage" => "1", "month_to_date_balance" => "1"
       }
     end
 
@@ -64,13 +102,26 @@ RSpec.describe Bot::FetchBillingFromDigitalOcean do
       allow(HTTParty).to receive(:send).and_return(response)
     end
 
-    it "returns a success hash with the digital ocean bill" do
+    it "returns a success hash with the digital ocean bill when a last billing was found" do
       allow(response).to receive(:code).and_return(200)
       allow(response).to receive(:parsed_response).and_return(do_bill)
 
+      @bot.read_response = Read::Types::Response.new(1, nil, "date")
+
       processed = @bot.process
 
-      expect(processed).to eq({ success: { billing: do_bill } })
+      expect(processed).to eq({ success: { billing: do_bill, last_billing: { month_to_date_balance: 0 } } })
+    end
+
+    it "returns a success hash with the digital ocean bill when a last billing was not found" do
+      allow(response).to receive(:code).and_return(200)
+      allow(response).to receive(:parsed_response).and_return(do_bill)
+
+      @bot.read_response = Read::Types::Response.new(1, { "billing" => last_billing }, "date")
+
+      processed = @bot.process
+
+      expect(processed).to eq({ success: { billing: do_bill, last_billing: } })
     end
 
     it "returns an error hash with the error message" do
