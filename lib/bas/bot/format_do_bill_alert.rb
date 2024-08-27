@@ -48,17 +48,17 @@ module Bot
     # read function to execute the PostgresDB Read component
     #
     def read
-      reader = Read::Postgres.new(read_options.merge(combined_conditions))
+      reader = Read::Postgres.new(read_options.merge(conditions))
 
-      @previous_billing_data, @current_billing_data = split_billing_data(reader.execute)
+      reader.execute
     end
 
     # Process function to format the notification using a template
     #
     def process
-      return { success: { notification: message } } if balance_alert?
+      return { success: { notification: "" } } if unprocessable_response || !threshold_exceeded
 
-      { success: { notification: "" } } unless unprocessable_response
+      { success: { notification: message } }
     end
 
     # Write function to execute the PostgresDB write component
@@ -71,72 +71,38 @@ module Bot
 
     private
 
-    def combined_conditions
+    def conditions
       {
-        where: "archived=$1 AND tag=$2 AND (stage=$3 OR stage=$4) ORDER BY inserted_at ASC",
-        params: [false, read_options[:tag], "unprocessed", "processed"]
+        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
+        params: [false, read_options[:tag], "unprocessed"]
       }
-    end
-
-    def split_billing_data(billing_data)
-      processed = billing_data.select { |record| record["stage"] == "processed" }.last
-      unprocessed = billing_data.select { |record| record["stage"] == "unprocessed" }.first
-
-      [processed, unprocessed]
-    end
-
-    def fetch_previous_billing_data
-      previous_reader = Read::Postgres.new(read_options.merge(previous_conditions))
-      previous_reader.execute
-    end
-
-    def previous_conditions
-      {
-        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at DESC LIMIT 1",
-        params: [false, read_options[:tag], "processed"]
-      }
-    end
-
-    def balance_alert?
-      significant_change? || threshold_exceeded
-    end
-
-    def significant_change?
-      previous_balance = @previous_billing_data["billing"]["month_to_date_balance"].to_f
-      current_balance = @current_billing_data["billing"]["month_to_date_balance"].to_f
-
-      (current_balance - previous_balance) > process_options[:threshold]
     end
 
     def threshold_exceeded
-      daily_usage > process_options[:threshold]
+      return false if billing.zero?
+
+      usage > process_options[:threshold]
     end
 
-    def daily_usage # rubocop:disable Metrics/AbcSize
-      balance = read_response.data["billing"]["month_to_date_balance"].to_f
-      current_time = Time.now.utc
-      day_of_month = current_time.mday
+    def usage
+      billing - last_billing
+    end
 
-      reset_period_start = Time.utc(current_time.year, current_time.month, current_time.day, 0, 0, 0)
-      reset_period_end = reset_period_start + (3.5 * 3600)
+    def billing
+      read_response.data["billing"]["month_to_date_balance"].to_f
+    end
 
-      in_grace_period = current_time >= reset_period_start && current_time <= reset_period_end
-
-      previous_balance = @previous_billing_data["billing"]["month_to_date_balance"].to_f
-      current_balance = @current_billing_data["billing"]["month_to_date_balance"].to_f
-
-      return current_balance - previous_balance if day_of_month == 1 && in_grace_period
-
-      balance / day_of_month
+    def last_billing
+      read_response.data["last_billing"]["month_to_date_balance"].to_f
     end
 
     def message
-      balance = read_response.data["billing"]["month_to_date_balance"].to_f
+      balance = billing
       threshold = process_options[:threshold]
 
       ":warning: The **DigitalOcean** daily usage was exceeded. \
       Current balance: #{balance}, Threshold: #{threshold}, \
-      Current daily usage: #{daily_usage.round(3)}"
+      Current daily usage: #{usage.round(3)}"
     end
   end
 end

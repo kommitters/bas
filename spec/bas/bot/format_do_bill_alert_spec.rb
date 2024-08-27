@@ -67,80 +67,73 @@ RSpec.describe Bot::FormatDoBillAlert do
     end
 
     it "read the notification from the postgres database" do
-      allow(@bot).to receive(:split_billing_data).and_return([formatted_bill_alert, formatted_bill_alert])
       read = @bot.read
 
-      expect(read).to eq([formatted_bill_alert, formatted_bill_alert])
-      expect(read.first).to be_a Hash
-      expect(read.first).to_not be_nil
-      expect(read.first).to eq(formatted_bill_alert)
+      expect(read).to be_a Read::Types::Response
+      expect(read.data).to be_a Hash
+      expect(read.data).to_not be_nil
+      expect(read.data).to eq(formatted_bill_alert)
     end
   end
 
   describe ".process" do
-    let(:bill_alert) do
-      { "billing" => { "account_balance" => "0", "generated_at" => "2024-07-11T06:35:00Z",
-                       "month_to_date_balance" => "800",
-                       "month_to_date_usage" => "800" } }
+    let(:bill900) do
+      { "account_balance" => "0", "generated_at" => "2024-07-11T06:35:00Z",
+        "month_to_date_balance" => "900",
+        "month_to_date_usage" => "900" }
     end
+
+    let(:bill800) do
+      { "account_balance" => "0", "generated_at" => "2024-07-11T06:35:00Z",
+        "month_to_date_balance" => "800",
+        "month_to_date_usage" => "800" }
+    end
+
+    let(:bill0) do
+      { "account_balance" => "0", "generated_at" => "2024-07-11T06:35:00Z",
+        "month_to_date_balance" => "0",
+        "month_to_date_usage" => "0" }
+    end
+
+    let(:bill_alert_exceeded) { { "billing" => bill900, "last_billing" => bill800 } }
+    let(:bill_alert) { { "billing" => bill800, "last_billing" => bill800 } }
+    let(:paid_bill) { { "billing" => bill0, "last_billing" => bill800 } }
 
     let(:formatted_alert) do
-      daily_usage = 800.0 / Time.now.utc.mday
-
-      ":warning: The **DigitalOcean** daily usage was exceeded. Current balance: 800.0, Threshold: 7, Current daily usage: #{daily_usage.round(3)}" # rubocop:disable Layout/LineLength
+      ":warning: The **DigitalOcean** daily usage was exceeded.       Current balance: 900.0, Threshold: 7,       Current daily usage: 100.0" # rubocop:disable Layout/LineLength
     end
 
-    let(:previous_bill_alert) do
-      { "billing" => { "account_balance" => "0", "generated_at" => "2024-07-10T06:35:00Z",
-                       "month_to_date_balance" => "750",
-                       "month_to_date_usage" => "750" } }
+    it "returns an empty success hash when the billing list is empty" do
+      @bot.read_response = Read::Types::Response.new(1, { "billing" => [] }, "date")
+
+      expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
-    before do
-      pg_result = double("PG::Result")
-      allow(pg_result).to receive(:values).and_return([[1, previous_bill_alert.to_json, "date"]])
+    it "returns an empty success hash when the record was not found" do
+      @bot.read_response = Read::Types::Response.new(1, nil, "date")
 
-      pg_conn = instance_double(PG::Connection)
-      allow(PG::Connection).to receive(:new).and_return(pg_conn)
-      allow(pg_conn).to receive(:exec_params).and_return(pg_result)
+      expect(@bot.process).to eq({ success: { notification: "" } })
+    end
 
-      mock_data = { "billing" => { "account_balance" => "0", "generated_at" => "2024-07-11T06:35:00Z",
-                                   "month_to_date_balance" => "800",
-                                   "month_to_date_usage" => "800" } }
+    it "returns an empty success hash when the threshold was not exceeded" do
+      @bot.read_response = Read::Types::Response.new(1, bill_alert, "date")
+      processed = @bot.process
 
-      @mock_read_response = instance_double("Read::Types::Response", data: mock_data)
+      expect(processed).to eq({ success: { notification: "" } })
+    end
 
-      @bot.instance_variable_set(:@read_response, @mock_read_response)
-      @bot.instance_variable_set(:@previous_billing_data, previous_bill_alert)
-      @bot.instance_variable_set(:@current_billing_data, bill_alert)
+    it "returns an empty success hash when the bill was paied" do
+      @bot.read_response = Read::Types::Response.new(1, paid_bill, "date")
+      processed = @bot.process
+
+      expect(processed).to eq({ success: { notification: "" } })
     end
 
     it "returns a success hash with the list of formatted bill alerts" do
-      allow(@bot).to receive(:read_response).and_return(@mock_read_response)
-
+      @bot.read_response = Read::Types::Response.new(1, bill_alert_exceeded, "date")
       processed = @bot.process
 
-      expect(processed[:success][:notification].gsub(/\s+/, " ").strip).to eq(formatted_alert.gsub(/\s+/, " ").strip)
-    end
-
-    it "it triggers the alert when unprocessable_response is true" do
-      allow(@bot).to receive(:unprocessable_response).and_return(true)
-
-      expect(@bot.send(:balance_alert?)).to be true
-    end
-
-    it "it triggers the alert when conditions are not met" do
-      allow(@bot).to receive(:significant_change?).and_return(true)
-      allow(@bot).to receive(:threshold_exceeded).and_return(false)
-
-      expect(@bot.send(:balance_alert?)).to be true
-    end
-
-    it "does not skip processing when conditions are met" do
-      allow(@bot).to receive(:significant_change?).and_return(false)
-      allow(@bot).to receive(:threshold_exceeded).and_return(false)
-
-      expect(@bot.send(:balance_alert?)).to be false
+      expect(processed).to eq({ success: { notification: formatted_alert } })
     end
   end
 
@@ -148,7 +141,7 @@ RSpec.describe Bot::FormatDoBillAlert do
     let(:pg_conn) { instance_double(PG::Connection) }
 
     let(:formatted_alert) do
-      ":warning: The **DigitalOcean** daily usage was exceeded.\n Current balance: 800.0\n Threshold: 7\n Current daily usage: 50.0\n" # rubocop:disable Layout/LineLength
+      ":warning: The **DigitalOcean** daily usage was exceeded.\n      Current balance: 800\n      Threshold: 7\n      Current daily usage: 50.0\n      " # rubocop:disable Layout/LineLength
     end
 
     before do
