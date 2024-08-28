@@ -79,23 +79,30 @@ module Bot
     end
 
     def threshold_exceeded
-      daily_usage > process_options[:threshold]
+      return false if billing.zero?
+
+      usage > process_options[:threshold]
     end
 
-    def daily_usage
-      balance = read_response.data["billing"]["month_to_date_balance"].to_f
-      day_of_month = Time.now.utc.mday
+    def usage
+      billing - last_billing
+    end
 
-      balance / day_of_month
+    def billing
+      read_response.data["billing"]["month_to_date_balance"].to_f
+    end
+
+    def last_billing
+      read_response.data["last_billing"]["month_to_date_balance"].to_f
     end
 
     def message
-      balance = read_response.data["billing"]["month_to_date_balance"]
+      balance = billing
       threshold = process_options[:threshold]
 
       ":warning: The **DigitalOcean** daily usage was exceeded. \
       Current balance: #{balance}, Threshold: #{threshold}, \
-      Current daily usage: #{daily_usage.round(3)}"
+      Current daily usage: #{usage.round(3)}"
     end
   end
 end

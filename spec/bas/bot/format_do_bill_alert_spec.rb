@@ -77,16 +77,30 @@ RSpec.describe Bot::FormatDoBillAlert do
   end
 
   describe ".process" do
-    let(:bill_alert) do
-      { "billing" => { "account_balance" => "0", "generated_at" => "2024-07-11T06:35:00Z",
-                       "month_to_date_balance" => "800",
-                       "month_to_date_usage" => "800" } }
+    let(:bill900) do
+      { "account_balance" => "0", "generated_at" => "2024-07-11T06:35:00Z",
+        "month_to_date_balance" => "900",
+        "month_to_date_usage" => "900" }
     end
 
-    let(:formatted_alert) do
-      daily_usage = 800.0 / Time.now.utc.mday
+    let(:bill800) do
+      { "account_balance" => "0", "generated_at" => "2024-07-11T06:35:00Z",
+        "month_to_date_balance" => "800",
+        "month_to_date_usage" => "800" }
+    end
 
-      ":warning: The **DigitalOcean** daily usage was exceeded.       Current balance: 800, Threshold: 7,       Current daily usage: #{daily_usage.round(3)}" # rubocop:disable Layout/LineLength
+    let(:bill0) do
+      { "account_balance" => "0", "generated_at" => "2024-07-11T06:35:00Z",
+        "month_to_date_balance" => "0",
+        "month_to_date_usage" => "0" }
+    end
+
+    let(:bill_alert_exceeded) { { "billing" => bill900, "last_billing" => bill800 } }
+    let(:bill_alert) { { "billing" => bill800, "last_billing" => bill800 } }
+    let(:paid_bill) { { "billing" => bill0, "last_billing" => bill800 } }
+
+    let(:formatted_alert) do
+      ":warning: The **DigitalOcean** daily usage was exceeded.       Current balance: 900.0, Threshold: 7,       Current daily usage: 100.0" # rubocop:disable Layout/LineLength
     end
 
     it "returns an empty success hash when the billing list is empty" do
@@ -101,8 +115,22 @@ RSpec.describe Bot::FormatDoBillAlert do
       expect(@bot.process).to eq({ success: { notification: "" } })
     end
 
-    it "returns a success hash with the list of formatted bill alerts" do
+    it "returns an empty success hash when the threshold was not exceeded" do
       @bot.read_response = Read::Types::Response.new(1, bill_alert, "date")
+      processed = @bot.process
+
+      expect(processed).to eq({ success: { notification: "" } })
+    end
+
+    it "returns an empty success hash when the bill was paied" do
+      @bot.read_response = Read::Types::Response.new(1, paid_bill, "date")
+      processed = @bot.process
+
+      expect(processed).to eq({ success: { notification: "" } })
+    end
+
+    it "returns a success hash with the list of formatted bill alerts" do
+      @bot.read_response = Read::Types::Response.new(1, bill_alert_exceeded, "date")
       processed = @bot.process
 
       expect(processed).to eq({ success: { notification: formatted_alert } })
