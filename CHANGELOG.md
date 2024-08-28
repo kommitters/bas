@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.4.2 (28.08.2024)
+- [Adjust digital ocean billing bots](https://github.com/kommitters/bas/issues/97)
+
 # 1.4.1 (12.08.2024)
 - [Add github issues assignees to work items](https://github.com/kommitters/bas/issues/92)
 
