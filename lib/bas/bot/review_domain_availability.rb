@@ -90,12 +90,7 @@ module Bot
     end
 
     def notification(response)
-      data = {
-        domain: read_response.data["url"],
-        status_code: response.code
-      }
-
-      ":warning: Domain is down: #{data}"
+      ":warning: The Domain #{read_response.data["url"]} is down with an error code of #{response.code}"
     end
   end
 end

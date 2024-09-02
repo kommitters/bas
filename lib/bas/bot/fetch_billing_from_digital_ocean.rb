@@ -81,9 +81,7 @@ module Bot
     end
 
     def last_billing
-      return read_response.data["billing"] unless read_response.data.nil?
-
-      { month_to_date_balance: 0 }
+      read_response.data.nil? ? nil : read_response.data["billing"]
     end
   end
 end
