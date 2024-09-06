@@ -110,7 +110,7 @@ RSpec.describe Bot::FetchBillingFromDigitalOcean do
 
       processed = @bot.process
 
-      expect(processed).to eq({ success: { billing: do_bill, last_billing: { month_to_date_balance: 0 } } })
+      expect(processed).to eq({ success: { billing: do_bill, last_billing: nil } })
     end
 
     it "returns a success hash with the digital ocean bill when a last billing was not found" do
