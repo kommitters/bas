@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.4.3 (06.09.2024)
+- [Adjust website monitoring use case notifications](https://github.com/kommitters/bas/issues/99)
+
 # 1.4.2 (28.08.2024)
 - [Adjust digital ocean billing bots](https://github.com/kommitters/bas/issues/97)
 
