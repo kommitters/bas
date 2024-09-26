@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 require_relative "./base"
-require_relative "../read/postgres"
+require_relative "../read/default"
 require_relative "../utils/discord/request"
+require_relative "../write/postgres"
 
 module Bot
   ##
-  # The Bot::FetchMediaFromNotion class serves as a bot implementation to read media (text or images)
-  # from a notion database and write them on a PostgresDB table with a specific format.
+  # The Bot::FetchImagesFromDiscord class serves as a bot implementation to read images
+  # from a any thread of Discord channel.
   #
   # <br>
   # <b>Example</b>
@@ -33,8 +34,7 @@ module Bot
   #   bot = Bot::FetchImagesFromDiscord.new(options)
   #   bot.execute
   #
-  class FetchImagesFromDiscord < Bot::Base # rubocop:disable Metrics/ClassLength
-
+  class FetchImagesFromDiscord < Bot::Base
     # read function to execute the PostgresDB Read component
     #
     def read
@@ -43,15 +43,15 @@ module Bot
       reader.execute
     end
 
-    # Process function to execute the Notion utility to fetch media from a notion database
+    # Process function to execute the Discord utility to fetch images from a discord channel threads
     #
     def process
-      response = Utils::Discord::Request.get_recent_thread_messages(recent_messages)
+      response = Utils::Discord::Request.get_thread_messages(params)
 
-      if response.code == 200
-        ## WIP: to verify
+      if !response.nil?
+        { success: { results: response } }
       else
-        { error: { message: response.parsed_response, status_code: response.code } }
+        { error: "response is empty" }
       end
     end
 
@@ -68,8 +68,9 @@ module Bot
     def params
       {
         endpoint: "channels/#{process_options[:discord_channel]}/messages",
-        channel_id: process_options[:secret_token]
+        channel_id: process_options[:discord_channel],
         secret_token: process_options[:secret_token],
+        method: "get",
         body: {}
       }
     end

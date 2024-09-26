@@ -23,8 +23,8 @@ module Bot
   #         user: "postgres",
   #         password: "postgres"
   #       },
-  #       db_table: "review_media",
-  #       tag: "FetchMediaFromNotion"
+  #       db_table: "review_images",
+  #       tag: "FetchMediaFromDiscord"
   #     },
   #     process_options: {
   #       connection: {
@@ -34,7 +34,7 @@ module Bot
   #         user: "postgres",
   #         password: "postgres"
   #       },
-  #       db_table: "review_media",
+  #       db_table: "review_images",
   #       tag: "ReviewMediaRequest"
   #     },
   #     write_options: {
@@ -45,7 +45,7 @@ module Bot
   #         user: "postgres",
   #         password: "postgres"
   #       },
-  #       db_table: "review_media",
+  #       db_table: "review_images",
   #       tag: "WriteMediaReviewRequests"
   #     }
   #   }
@@ -54,8 +54,6 @@ module Bot
   #   bot.execute
   #
   class WriteMediaReviewRequests < Bot::Base
-    IN_PROCESS_STATE = "in process"
-
     # read function to execute the PostgresDB Read component
     #
     def read
@@ -64,7 +62,7 @@ module Bot
       reader.execute
     end
 
-    # Process function to execute the Notion utility create single review requests
+    # Process function to execute the Discord utility create single review requests
     #
     def process
       return { success: { created: nil } } if unprocessable_response
@@ -100,20 +98,7 @@ module Bot
     def write_request(request)
       return { error: request } if request["media"].empty? || !request["error"].nil?
 
-      update_state(request)
-
       { success: request }
-    end
-
-    def update_state(request)
-      data = {
-        property: request["property"],
-        page_id: request["page_id"],
-        state: IN_PROCESS_STATE,
-        secret: process_options[:secret]
-      }
-
-      Utils::Notion::UpdateDbState.execute(data)
     end
   end
 end

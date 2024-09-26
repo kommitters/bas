@@ -32,7 +32,7 @@ module Bot
   #     process_options: {
   #       secret: "openai_secret",
   #       assistant_id: "openai_assistant_id",
-  #       media_type: "paragraph"
+  #       media_type: "images"
   #     },
   #     write_options: {
   #       connection: {
@@ -115,19 +115,13 @@ module Bot
       read_response.data["media"]
     end
 
-    def notion_format(response)
-      md_response = response.parsed_response["data"].first["content"].first["text"]["value"]
-
-      MdToNotion::Parser.markdown_to_notion_blocks(md_response).to_json
-    end
-
     def sucess_response(response)
-      review = notion_format(response)
-      page_id = read_response.data["page_id"]
-      created_by = read_response.data["created_by"]
+      review = response.parsed_response["data"].first["content"].first["text"]["value"]
+      thread_id = read_response.data["thread_id"]
       property = read_response.data["property"]
+      author = read_response.data["author"]
 
-      { success: { review:, page_id:, created_by:, property:, media_type: process_options[:media_type] } }
+      { success: { review:, thread_id:, property:, author:, media_type: process_options[:media_type] } }
     end
 
     def error_response(response)

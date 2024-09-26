@@ -4,14 +4,12 @@ require "json"
 
 require_relative "./base"
 require_relative "../read/postgres"
-require_relative "../utils/notion/request"
-require_relative "../utils/notion/update_db_state"
 require_relative "../write/postgres"
 
 module Bot
   ##
   # The Bot::WriteMediaReviewInNotion class serves as a bot implementation to read from a postgres
-  # shared storage formated notion blocks and send them to a Notion page
+  # shared storage images object blocks and send them to a thread of Discord channel
   #
   # <br>
   # <b>Example</b>
@@ -29,7 +27,7 @@ module Bot
   #       tag: "FormatMediaReview"
   #     },
   #     process_options: {
-  #       secret: "notion_secret"
+  #       secret_token: "discord_bot_token"
   #     },
   #     write_options: {
   #       connection: {
@@ -40,16 +38,14 @@ module Bot
   #         password: "postgres"
   #       },
   #       db_table: "review_media",
-  #       tag: "WriteMediaReviewInNotion"
+  #       tag: "WriteMediaReviewInDiscord"
   #     }
   #   }
   #
-  #   bot = Bot::WriteMediaReviewInNotion.new(options)
+  #   bot = Bot::WriteMediaReviewInDiscord.new(options)
   #   bot.execute
   #
-  class WriteMediaReviewInNotion < Bot::Base
-    READY_STATE = "ready"
-
+  class WriteMediaReviewInDiscord < Bot::Base
     # read function to execute the PostgresDB Read component
     #
     def read
@@ -58,17 +54,15 @@ module Bot
       reader.execute
     end
 
-    # process function to execute the Notion utility to send formated blocks to a page
+    # process function to execute the Discord utility to send image feedback to a thread of Discord channel
     #
     def process
       return { success: { review_added: nil } } if unprocessable_response
 
-      response = Utils::Notion::Request.execute(params)
+      response = Utils::Discord::Request.write_media_text(params)
 
-      if response.code == 200
-        update_state
-
-        { success: { page_id: read_response.data["page_id"], property: read_response.data["property"] } }
+      if !response.nil?
+        { success: { thread_id: read_response.data["thread_id"], property: read_response.data["property"] } }
       else
         { error: { message: response.parsed_response, status_code: response.code } }
       end
@@ -93,54 +87,27 @@ module Bot
 
     def params
       {
-        endpoint: "blocks/#{read_response.data["page_id"]}/children",
-        secret: process_options[:secret],
-        method: "patch",
+        endpoint: "channels/#{read_response.data["thread_id"]}/messages",
+        secret_token: process_options[:secret_token],
+        method: "post",
         body:
       }
     end
 
     def body
-      { children: [{ object: "block", type: "toggle", toggle: }] }
+      { content: "#{toggle_title}\n\n#{read_response.data["review"]}\n\n#{mention_content}" }
     end
 
-    def toggle
-      {
-        rich_text: [{ type: "text", text: { content: toggle_title } }, mention],
-        children: toggle_childrens
-      }
-    end
-
-    def toggle_childrens
-      JSON.parse(read_response.data["review"])
-    end
-
-    def mention
-      {
-        type: "mention",
-        mention: {
-          type: "user",
-          user: { id: read_response.data["created_by"] }
-        }
-      }
+    def mention_content
+      author_name = read_response.data["author"]
+      "<@#{author_name}>"
     end
 
     def toggle_title
       case read_response.data["media_type"]
-      when "images" then "Image review results/"
-      when "paragraph" then "Text review results/"
+      when "images" then "Image review results"
+      when "paragraph" then "Text review results"
       end
-    end
-
-    def update_state
-      data = {
-        property: read_response.data["property"],
-        page_id: read_response.data["page_id"],
-        state: READY_STATE,
-        secret: process_options[:secret]
-      }
-
-      Utils::Notion::UpdateDbState.execute(data)
     end
   end
 end
