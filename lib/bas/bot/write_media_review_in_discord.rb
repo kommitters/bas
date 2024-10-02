@@ -8,7 +8,7 @@ require_relative "../write/postgres"
 
 module Bot
   ##
-  # The Bot::WriteMediaReviewInNotion class serves as a bot implementation to read from a postgres
+  # The Bot::WriteMediaReviewInDiscord class serves as a bot implementation to read from a postgres
   # shared storage images object blocks and send them to a thread of Discord channel
   #
   # <br>
@@ -54,7 +54,7 @@ module Bot
       reader.execute
     end
 
-    # process function to execute the Discord utility to send image feedback to a thread of Discord channel
+    # process function to execute the Discord utility to send image feedback to a thread of a Discord channel
     #
     def process
       return { success: { review_added: nil } } if unprocessable_response
