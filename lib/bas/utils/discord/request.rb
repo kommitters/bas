@@ -3,7 +3,6 @@
 require "json"
 require "uri"
 require "httparty"
-require "time"
 
 module Utils
   module Discord
@@ -12,8 +11,6 @@ module Utils
     # Discord channel.
     #
     module Request
-      DISCORD_BASE_URL = "https://discord.com/api/v10"
-
       # Implements the request process logic to Discord.
       #
       # <br>
@@ -26,49 +23,17 @@ module Utils
       # <br>
       #
       #
-      def self.execute(params)
-        url = URI.parse("#{DISCORD_BASE_URL}/#{params[:endpoint]}")
-        headers = headers(params[:secret_token])
-        response = HTTParty.send(params[:method], url, { headers: })
-        JSON.parse(response.body)
-      end
 
-      def self.get_thread_messages(params)
-        recent_messages = []
-        current_time = Time.now
-        messages = execute(params)
-        thread_ids = messages.select { |msg| msg["type"] == 18 }.map { |msg| msg["id"] }
+      def self.get_discord_images(message)
+        images_urls = message.attachments.map(&:url)
 
-        return if thread_ids.empty?
-
-        thread_ids.each do |thread_id|
-          thread_messages = get_threads(thread_id, params)
-
-          thread_messages.each do |message|
-            message_time = Time.parse(message["timestamp"])
-
-            next unless (current_time - message_time) < 60 && message["attachments"]
-
-            images_urls = message["attachments"].map { |attachment| attachment["url"] }
-
-            next if images_urls.empty?
-
-            recent_messages << {
-              "media" => images_urls,
-              "thread_id" => thread_id,
-              "author" => message["author"]["username"],
-              "timestamp" => message["timestamp"],
-              "property" => "images"
-            }
-          end
-        end
-        recent_messages
-      end
-
-      def self.get_threads(thread_id, params)
-        url = URI.parse("#{DISCORD_BASE_URL}/channels/#{thread_id}/messages")
-        headers = headers(params[:secret_token])
-        HTTParty.get(url, { headers: })
+        {
+          "media" => images_urls,
+          "thread_id" => message.id,
+          "author" => message.author.username,
+          "timestamp" => message.timestamp.to_s,
+          "property" => "images"
+        }
       end
 
       def self.write_media_text(params)
