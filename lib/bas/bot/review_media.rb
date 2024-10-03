@@ -71,7 +71,7 @@ module Bot
         return error_response(response)
       end
 
-      sucess_response(response)
+      success_response(response)
     end
 
     # write function to execute the PostgresDB write component
@@ -114,13 +114,22 @@ module Bot
       read_response.data["media"]
     end
 
-    def sucess_response(response)
-      review = response.parsed_response["data"].first["content"].first["text"]["value"]
-      thread_id = read_response.data["thread_id"]
-      property = read_response.data["property"]
-      author = read_response.data["author"]
+    def success_response(response)
+      review = get_review(response)
+      { success: media_hash.merge({ review: }) }
+    end
 
-      { success: { review:, thread_id:, property:, author:, media_type: process_options[:media_type] } }
+    def get_review(response)
+      response.parsed_response["data"].first["content"].first["text"]["value"]
+    end
+
+    def media_hash
+      {
+        thread_id: read_response.data["thread_id"],
+        property: read_response.data["property"],
+        author: read_response.data["author"],
+        media_type: process_options[:media_type]
+      }
     end
 
     def error_response(response)
