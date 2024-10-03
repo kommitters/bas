@@ -11,6 +11,8 @@ module Utils
     # Discord channel.
     #
     module Request
+      DISCORD_BASE_URL = "https://discord.com/api/v10"
+
       # Implements the request process logic to Discord.
       #
       # <br>

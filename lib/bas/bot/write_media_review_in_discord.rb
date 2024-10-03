@@ -5,6 +5,7 @@ require "json"
 require_relative "./base"
 require_relative "../read/postgres"
 require_relative "../write/postgres"
+require_relative "../utils/discord/request"
 
 module Bot
   ##
@@ -61,7 +62,7 @@ module Bot
 
       response = Utils::Discord::Request.write_media_text(params)
 
-      if !response.nil?
+      if response.code == 200
         { success: { thread_id: read_response.data["thread_id"], property: read_response.data["property"] } }
       else
         { error: { message: response.parsed_response, status_code: response.code } }
