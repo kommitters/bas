@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.5.0 (03.10.2024)
+- [Add bots to fetch images from Discord](https://github.com/kommitters/bas/issues/103)
+
 # 1.4.3 (06.09.2024)
 - [Adjust website monitoring use case notifications](https://github.com/kommitters/bas/issues/99)
 
