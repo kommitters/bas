@@ -94,7 +94,8 @@ RSpec.describe Bot::WriteMediaReviewInDiscord do
 
       processed = @bot.process
 
-      expect(processed).to eq({ success: { thread_id: review_request["thread_id"], property: review_request["property"] } })
+      expect(processed).to eq({ success: { thread_id: review_request["thread_id"],
+                                           property: review_request["property"] } })
     end
 
     it "returns an error hash with the error message" do
