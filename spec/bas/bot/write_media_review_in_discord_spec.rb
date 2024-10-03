@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "bas/bot/write_media_review_in_notion"
+require "bas/bot/write_media_review_in_discord"
 
-RSpec.describe Bot::WriteMediaReviewInNotion do
+RSpec.describe Bot::WriteMediaReviewInDiscord do
   before do
     connection = {
       host: "localhost",
@@ -15,16 +15,16 @@ RSpec.describe Bot::WriteMediaReviewInNotion do
     config = {
       read_options: {
         connection:,
-        db_table: "use_cases",
+        db_table: "review_media",
         tag: "FormatMediaReview"
       },
       process_options: {
-        secret: "secret"
+        secret_token: "discord_bot_token"
       },
       write_options: {
         connection:,
-        db_table: "use_cases",
-        tag: "WriteMediaReviewInNotion"
+        db_table: "review_media",
+        tag: "WriteMediaReviewInDiscord"
       }
     }
 
@@ -47,13 +47,13 @@ RSpec.describe Bot::WriteMediaReviewInNotion do
   describe ".read" do
     let(:pg_conn) { instance_double(PG::Connection) }
     let(:review_request_results) do
-      "{ \"created_by\": \"1234567\", \"review\": \"simple text\",\"page_id\":
-      \"review_table_request\", \"property\": \"paragraph\", \"media_type\": \"paragraph\" }"
+      "{ \"author\": \"user\", \"review\": \"simple text\", \"property\": \"images\",
+        \"thread_id\": \"1285685692772646922\", \"media_type\": \"images\" }"
     end
 
     let(:review_request) do
-      { "created_by" => "1234567", "review" => "simple text",
-        "page_id" => "review_table_request", "property" => "paragraph", "media_type" => "paragraph" }
+      { "author" => "user", "review" => "simple text", "property" => "images",
+        "thread_id" => "1285685692772646922", "media_type" => "images" }
     end
 
     before do
@@ -76,30 +76,31 @@ RSpec.describe Bot::WriteMediaReviewInNotion do
 
   describe ".process" do
     let(:review_request) do
-      { "created_by" => "1234567", "review" => "{\"children\": \"simple text\"}",
-        "page_id" => "review_table_request", "property" => "paragraph", "media_type" => "paragraph" }
+      { "author" => "user", "review" => "simple text", "property" => "images",
+        "thread_id" => "1285685692772646922", "media_type" => "images" }
     end
 
     let(:error_response) { { "object" => "error", "status" => 404, "message" => "not found" } }
 
-    let(:response) { double("http_response") }
+    let(:response) { double("https_response") }
 
     before do
       @bot.read_response = Read::Types::Response.new(1, review_request, "date")
-
       allow(HTTParty).to receive(:send).and_return(response)
     end
 
-    it "returns a success hash with page and property to be updated" do
+    it "returns a success hash with thread_id and property to be updated" do
       allow(response).to receive(:code).and_return(200)
 
       processed = @bot.process
 
-      expect(processed).to eq({ success: { page_id: review_request["page_id"], property: review_request["property"] } })
+      expect(processed).to eq({ success: { thread_id: review_request["thread_id"],
+                                           property: review_request["property"] } })
     end
 
     it "returns an error hash with the error message" do
       allow(response).to receive(:code).and_return(404)
+
       allow(response).to receive(:parsed_response).and_return(error_response)
 
       processed = @bot.process

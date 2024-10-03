@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "md_to_notion"
 require "json"
 
 require_relative "./base"
@@ -11,8 +10,8 @@ require_relative "../utils/openai/run_assistant"
 module Bot
   ##
   # The Bot::ReviewMedia class serves as a bot implementation to read from a postgres
-  # shared storage a set of review media requests and create single request on the shared storage to
-  # be processed one by one.
+  # shared storage a images hash with a specific format and create single request
+  # on the shared storage to be processed one by one.
   #
   # <br>
   # <b>Example</b>
@@ -32,7 +31,7 @@ module Bot
   #     process_options: {
   #       secret: "openai_secret",
   #       assistant_id: "openai_assistant_id",
-  #       media_type: "paragraph"
+  #       media_type: "images"
   #     },
   #     write_options: {
   #       connection: {
@@ -72,7 +71,7 @@ module Bot
         return error_response(response)
       end
 
-      sucess_response(response)
+      success_response(response)
     end
 
     # write function to execute the PostgresDB write component
@@ -115,19 +114,22 @@ module Bot
       read_response.data["media"]
     end
 
-    def notion_format(response)
-      md_response = response.parsed_response["data"].first["content"].first["text"]["value"]
-
-      MdToNotion::Parser.markdown_to_notion_blocks(md_response).to_json
+    def success_response(response)
+      review = get_review(response)
+      { success: media_hash.merge({ review: }) }
     end
 
-    def sucess_response(response)
-      review = notion_format(response)
-      page_id = read_response.data["page_id"]
-      created_by = read_response.data["created_by"]
-      property = read_response.data["property"]
+    def get_review(response)
+      response.parsed_response["data"].first["content"].first["text"]["value"]
+    end
 
-      { success: { review:, page_id:, created_by:, property:, media_type: process_options[:media_type] } }
+    def media_hash
+      {
+        thread_id: read_response.data["thread_id"],
+        property: read_response.data["property"],
+        author: read_response.data["author"],
+        media_type: process_options[:media_type]
+      }
     end
 
     def error_response(response)
