@@ -26,7 +26,7 @@ module Bot
   #         user: "postgres",
   #         password: "postgres"
   #       },
-  #       db_table: "review_media",
+  #       db_table: "review_images",
   #       tag: "FetchImagesFromDiscord"
   #     }
   #   }
@@ -35,7 +35,7 @@ module Bot
   #   bot.execute
   #
   class FetchImagesFromDiscord < Bot::Base
-    # read function to execute the PostgresDB Read component
+    # read function to execute the Default Read component
     #
     def read
       reader = Read::Default.new
