@@ -41,9 +41,8 @@ module Utils
 
       def self.write_media_text(params)
         url_message = URI.parse("#{DISCORD_BASE_URL}/channels/#{params[:channel_id]}/messages")
-        message_body = { content: params[:body] }
         headers = headers(params[:secret_token])
-        HTTParty.post(url_message, { body: message_body.to_json, headers: })
+        HTTParty.post(url_message, { body: params[:body].to_json, headers: })
       end
 
       def self.headers(secret_token)
