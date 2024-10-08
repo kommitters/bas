@@ -48,12 +48,12 @@ RSpec.describe Bot::WriteMediaReviewInDiscord do
     let(:pg_conn) { instance_double(PG::Connection) }
     let(:review_request_results) do
       "{ \"author\": \"user\", \"review\": \"simple text\", \"property\": \"images\",
-        \"thread_id\": \"1285685692772646922\", \"media_type\": \"images\" }"
+        \"message_id\": \"1285685692772646922\", \"channel_id\": \"1285685692772646933\", \"media_type\": \"images\"  }"
     end
 
     let(:review_request) do
       { "author" => "user", "review" => "simple text", "property" => "images",
-        "thread_id" => "1285685692772646922", "media_type" => "images" }
+        "message_id" => "1285685692772646922", "channel_id" => "1285685692772646933", "media_type" => "images" }
     end
 
     before do
@@ -77,7 +77,7 @@ RSpec.describe Bot::WriteMediaReviewInDiscord do
   describe ".process" do
     let(:review_request) do
       { "author" => "user", "review" => "simple text", "property" => "images",
-        "thread_id" => "1285685692772646922", "media_type" => "images" }
+        "message_id" => "1285685692772646922", "channel_id" => "1285685692772646933", "media_type" => "images" }
     end
 
     let(:error_response) { { "object" => "error", "status" => 404, "message" => "not found" } }
@@ -86,15 +86,15 @@ RSpec.describe Bot::WriteMediaReviewInDiscord do
 
     before do
       @bot.read_response = Read::Types::Response.new(1, review_request, "date")
-      allow(HTTParty).to receive(:send).and_return(response)
+      allow(HTTParty).to receive(:post).and_return(response)
     end
 
-    it "returns a success hash with thread_id and property to be updated" do
+    it "returns a success hash with message_id and property to be updated" do
       allow(response).to receive(:code).and_return(200)
 
       processed = @bot.process
 
-      expect(processed).to eq({ success: { thread_id: review_request["thread_id"],
+      expect(processed).to eq({ success: { message_id: review_request["message_id"],
                                            property: review_request["property"] } })
     end
 
