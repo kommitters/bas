@@ -31,7 +31,8 @@ module Utils
 
         {
           "media" => images_urls,
-          "thread_id" => message.id,
+          "message_id" => message.id,
+          "channel_id" => message.channel.id,
           "author" => message.author.username,
           "timestamp" => message.timestamp.to_s,
           "property" => "images"
@@ -39,9 +40,10 @@ module Utils
       end
 
       def self.write_media_text(params)
-        url = URI.parse("#{DISCORD_BASE_URL}/#{params[:endpoint]}")
+        url_message = URI.parse("#{DISCORD_BASE_URL}/channels/#{params[:channel_id]}/messages")
+        message_body = { content: params[:body] }
         headers = headers(params[:secret_token])
-        HTTParty.send(params[:method], url, { body: params[:body].to_json, headers: })
+        HTTParty.post(url_message, { body: message_body.to_json, headers: })
       end
 
       def self.headers(secret_token)

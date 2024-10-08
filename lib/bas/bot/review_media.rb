@@ -50,8 +50,6 @@ module Bot
   #   bot.execute
   #
   class ReviewMedia < Bot::Base
-    DETAIL = "low"
-
     # read function to execute the PostgresDB Read component
     #
     def read
@@ -125,7 +123,8 @@ module Bot
 
     def media_hash
       {
-        thread_id: read_response.data["thread_id"],
+        message_id: read_response.data["message_id"],
+        channel_id: read_response.data["channel_id"],
         property: read_response.data["property"],
         author: read_response.data["author"],
         media_type: process_options[:media_type]

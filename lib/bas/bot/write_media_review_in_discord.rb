@@ -63,7 +63,7 @@ module Bot
       response = Utils::Discord::Request.write_media_text(params)
 
       if response.code == 200
-        { success: { thread_id: read_response.data["thread_id"], property: read_response.data["property"] } }
+        { success: { message_id: read_response.data["message_id"], property: read_response.data["property"] } }
       else
         { error: { message: response.parsed_response, status_code: response.code } }
       end
@@ -88,10 +88,10 @@ module Bot
 
     def params
       {
-        endpoint: "channels/#{read_response.data["thread_id"]}/messages",
+        body:,
         secret_token: process_options[:secret_token],
-        method: "post",
-        body:
+        message_id: read_response.data["message_id"],
+        channel_id: read_response.data["channel_id"]
       }
     end
 
