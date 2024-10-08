@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.5.2 (08.10.2024)
+- [Change some details in Discord utils and review media](https://github.com/kommitters/bas/issues/108)
+
 # 1.5.1 (08.10.2024)
 - [Refactor Discord Bots Logic to conform with discord_bot implementation](https://github.com/kommitters/bas/issues/105)
 
