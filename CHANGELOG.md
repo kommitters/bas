@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.5.1 (08.10.2024)
+- [Refactor Discord Bots Logic to conform with discord_bot implementation](https://github.com/kommitters/bas/issues/105)
+
 # 1.5.0 (03.10.2024)
 - [Add bots to fetch images from Discord](https://github.com/kommitters/bas/issues/103)
 
