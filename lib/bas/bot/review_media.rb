@@ -50,6 +50,7 @@ module Bot
   #   bot.execute
   #
   class ReviewMedia < Bot::Base
+    DETAIL = "low"
     # read function to execute the PostgresDB Read component
     #
     def read
