@@ -60,12 +60,12 @@ module Bot
     def process
       return { success: { review_added: nil } } if unprocessable_response
 
-      response = Utils::Discord::Request.write_media_text(params)
+      response = Utils::Discord::Request.split_paragraphs(params)
 
-      if response.code == 200
+      if !response.empty?
         { success: { message_id: read_response.data["message_id"], property: read_response.data["property"] } }
       else
-        { error: { message: response.parsed_response, status_code: response.code } }
+        { error: { message: "Response is empty" } }
       end
     end
 
@@ -88,27 +88,11 @@ module Bot
 
     def params
       {
-        body:,
+        body: read_response.data["review"],
         secret_token: process_options[:secret_token],
         message_id: read_response.data["message_id"],
         channel_id: read_response.data["channel_id"]
       }
-    end
-
-    def body
-      { content: "#{toggle_title}\n\n#{read_response.data["review"]}\n\n#{mention_content}" }
-    end
-
-    def mention_content
-      author_name = read_response.data["author"]
-      "<@#{author_name}>"
-    end
-
-    def toggle_title
-      case read_response.data["media_type"]
-      when "images" then "Image review results"
-      when "paragraph" then "Text review results"
-      end
     end
   end
 end
