@@ -48,7 +48,7 @@ module Utils
       end
 
       def self.split_paragraphs(params)
-        paragraphs = params[:body].split("--PARAGRAPH--").map(&:strip).reject(&:empty?)
+        paragraphs = params[:body].split("--DIVISION--").map(&:strip).reject(&:empty?)
 
         paragraphs.each_slice(2) do |paragraph|
           next if paragraph.empty?
