@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.5.3 (28.10.2024)
+- [Fix response length limitations](https://github.com/kommitters/bas/issues/112)
+
 # 1.5.2 (08.10.2024)
 - [Change some details in Discord utils and review media](https://github.com/kommitters/bas/issues/108)
 
