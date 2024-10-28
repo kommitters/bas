@@ -39,10 +39,23 @@ module Utils
         }
       end
 
-      def self.write_media_text(params)
+      def self.write_media_text(params, combined_paragraphs)
         url_message = URI.parse("#{DISCORD_BASE_URL}/channels/#{params[:channel_id]}/messages")
         headers = headers(params[:secret_token])
-        HTTParty.post(url_message, { body: params[:body].to_json, headers: })
+        body = { content: combined_paragraphs }.to_json
+
+        HTTParty.post(url_message, { body:, headers: })
+      end
+
+      def self.split_paragraphs(params)
+        paragraphs = params[:body].split("--DIVISION--").map(&:strip).reject(&:empty?)
+
+        paragraphs.each_slice(2) do |paragraph|
+          next if paragraph.empty?
+
+          combined_paragraphs = paragraph.join("\n\n")
+          write_media_text(params, combined_paragraphs)
+        end
       end
 
       def self.headers(secret_token)

@@ -80,7 +80,7 @@ RSpec.describe Bot::WriteMediaReviewInDiscord do
         "message_id" => "1285685692772646922", "channel_id" => "1285685692772646933", "media_type" => "images" }
     end
 
-    let(:error_response) { { "object" => "error", "status" => 404, "message" => "not found" } }
+    let(:error_response) { { "object" => "error", "message" => "Response is empty" } }
 
     let(:response) { double("https_response") }
 
@@ -99,13 +99,11 @@ RSpec.describe Bot::WriteMediaReviewInDiscord do
     end
 
     it "returns an error hash with the error message" do
-      allow(response).to receive(:code).and_return(404)
-
-      allow(response).to receive(:parsed_response).and_return(error_response)
+      allow(Utils::Discord::Request).to receive(:split_paragraphs).and_return([])
 
       processed = @bot.process
 
-      expect(processed).to eq({ error: { message: error_response, status_code: 404 } })
+      expect(processed).to eq({ error: { message: "Response is empty" } })
     end
   end
 
