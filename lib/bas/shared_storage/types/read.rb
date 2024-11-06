@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "json"
+
 module SharedStorage
   module Types
     ##
@@ -8,9 +10,9 @@ module SharedStorage
     class Read
       attr_reader :id, :data, :inserted_at
 
-      def initialize(id = nil, response = {}, inserted_at = nil)
+      def initialize(id = nil, response = nil, inserted_at = nil)
         @id = id
-        @data = response
+        @data = response.nil? ? {} : JSON.parse(response)
         @inserted_at = inserted_at
       end
     end

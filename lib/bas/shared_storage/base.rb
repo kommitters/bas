@@ -6,7 +6,8 @@ module SharedStorage
   # SharedStorage base interface
   #
   class Base
-    attr_reader :read_options, :write_options
+    attr_reader :read_options, :read_response, :write_response
+    attr_accessor :write_options
 
     # Initializes the read with essential configuration parameters.
     #
@@ -14,6 +15,10 @@ module SharedStorage
       @read_options = options[:read_options] || {}
       @write_options = options[:write_options] || {}
     end
+
+    def set_in_process; end
+
+    def set_processed; end
 
     protected
 
