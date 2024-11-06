@@ -10,7 +10,7 @@ module SharedStorage
 
     # Initializes the read with essential configuration parameters.
     #
-    def initialize(options)
+    def initialize(options = {})
       @read_options = options[:read_options] || {}
       @write_options = options[:write_options] || {}
     end
