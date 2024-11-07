@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "./base"
-require_relative "../read/postgres"
 require_relative "../utils/notion/request"
-require_relative "../write/postgres"
 
 module Bot
   ##
@@ -47,14 +45,6 @@ module Bot
   #   bot.execute
   #
   class FetchDomainsWipLimitFromNotion < Bot::Base
-    # read function to execute the PostgresDB Read component
-    #
-    def read
-      reader = Read::Postgres.new(read_options.merge(conditions))
-
-      reader.execute
-    end
-
     # Process function to execute the Notion utility to fetch domain wip limits from the notion database
     #
     def process
@@ -71,22 +61,7 @@ module Bot
       end
     end
 
-    # Write function to execute the PostgresDB write component
-    #
-    def write
-      write = Write::Postgres.new(write_options, process_response)
-
-      write.execute
-    end
-
     private
-
-    def conditions
-      {
-        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
-        params: [false, read_options[:tag], "unprocessed"]
-      }
-    end
 
     def params
       {

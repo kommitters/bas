@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "./base"
-require_relative "../read/default"
 require_relative "../utils/imap/request"
-require_relative "../write/postgres"
 
 module Bot
   ##
@@ -36,14 +34,6 @@ module Bot
   #   bot.execute
   #
   class FetchEmailsFromImap < Bot::Base
-    # Read function to execute the default Read component
-    #
-    def read
-      reader = Read::Default.new
-
-      reader.execute
-    end
-
     # Process function to request email from an imap server using the imap utility
     #
     def process
@@ -56,14 +46,6 @@ module Bot
 
         { success: { emails: } }
       end
-    end
-
-    # Write function to execute the PostgresDB write component
-    #
-    def write
-      write = Write::Postgres.new(write_options, process_response)
-
-      write.execute
     end
 
     private
