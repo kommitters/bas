@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require_relative "./base"
-require_relative "../read/postgres"
-require_relative "../write/postgres"
 require_relative "../utils/openai/run_assistant"
 
 module Bot
@@ -50,14 +48,6 @@ module Bot
   class HumanizePto < Bot::Base
     DEFAULT_PROMPT = "{data}"
 
-    # read function to execute the PostgresDB Read component
-    #
-    def read
-      reader = Read::Postgres.new(read_options.merge(conditions))
-
-      reader.execute
-    end
-
     # process function to execute the OpenaAI utility to process the PTO's
     #
     def process
@@ -69,15 +59,7 @@ module Bot
         return error_response(response)
       end
 
-      sucess_response(response)
-    end
-
-    # write function to execute the PostgresDB write component
-    #
-    def write
-      write = Write::Postgres.new(write_options, process_response)
-
-      write.execute
+      success_response(response)
     end
 
     private
@@ -106,7 +88,7 @@ module Bot
       prompt.gsub("{data}", ptos_list_formatted_string)
     end
 
-    def sucess_response(response)
+    def success_response(response)
       { success: { notification: response.parsed_response["data"].first["content"].first["text"]["value"] } }
     end
 

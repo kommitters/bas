@@ -18,7 +18,7 @@ module SharedStorage
     def read
       params = { connection: read_options[:connection], query: read_query }
 
-      first_result = Utils::Postgres::Request.execute(params).first
+      first_result = Utils::Postgres::Request.execute(params).first || {}
 
       @read_response = Types::Read.new(first_result[:id], first_result[:data], first_result[:inserted_at])
     end
