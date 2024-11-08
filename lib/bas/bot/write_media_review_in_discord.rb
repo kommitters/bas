@@ -47,14 +47,6 @@ module Bot
   #   bot.execute
   #
   class WriteMediaReviewInDiscord < Bot::Base
-    # read function to execute the PostgresDB Read component
-    #
-    def read
-      reader = Read::Postgres.new(read_options.merge(conditions))
-
-      reader.execute
-    end
-
     # process function to execute the Discord utility to send image feedback to a thread of a Discord channel
     #
     def process
@@ -69,22 +61,7 @@ module Bot
       end
     end
 
-    # write function to execute the PostgresDB write component
-    #
-    def write
-      write = Write::Postgres.new(write_options, process_response)
-
-      write.execute
-    end
-
     private
-
-    def conditions
-      {
-        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
-        params: [false, read_options[:tag], "unprocessed"]
-      }
-    end
 
     def params
       {

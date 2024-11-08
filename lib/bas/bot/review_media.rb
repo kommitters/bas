@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
-require "json"
-
 require_relative "./base"
-require_relative "../read/postgres"
-require_relative "../write/postgres"
 require_relative "../utils/openai/run_assistant"
 
 module Bot
@@ -51,13 +47,6 @@ module Bot
   #
   class ReviewMedia < Bot::Base
     DETAIL = "low"
-    # read function to execute the PostgresDB Read component
-    #
-    def read
-      reader = Read::Postgres.new(read_options.merge(conditions))
-
-      reader.execute
-    end
 
     # process function to execute the OpenaAI utility to process the media reviews
     #
@@ -73,22 +62,7 @@ module Bot
       success_response(response)
     end
 
-    # write function to execute the PostgresDB write component
-    #
-    def write
-      write = Write::Postgres.new(write_options, process_response)
-
-      write.execute
-    end
-
     private
-
-    def conditions
-      {
-        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
-        params: [false, read_options[:tag], "unprocessed"]
-      }
-    end
 
     def params
       {
