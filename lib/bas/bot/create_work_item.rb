@@ -58,14 +58,6 @@ module Bot
     UPDATE_REQUEST = "UpdateWorkItemRequest"
     STATUS = "Backlog"
 
-    # read function to execute the PostgresDB Read component
-    #
-    def read
-      reader = Read::Postgres.new(read_options.merge(conditions))
-
-      reader.execute
-    end
-
     # process function to execute the Notion utility to create work items on a notion
     # database
     #
@@ -84,21 +76,12 @@ module Bot
     # write function to execute the PostgresDB write component
     #
     def write
-      options = write_options.merge({ tag: })
+      @shared_storage_writer.write_options = @shared_storage_writer.write_options.merge({ tag: })
 
-      write = Write::Postgres.new(options, process_response)
-
-      write.execute
+      @shared_storage_writer.write(process_response)
     end
 
     private
-
-    def conditions
-      {
-        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
-        params: [false, read_options[:tag], "unprocessed"]
-      }
-    end
 
     def params
       {
@@ -134,7 +117,9 @@ module Bot
     end
 
     def tag
-      return write_options[:tag] if process_response[:success].nil? || process_response[:success][:notion_wi].nil?
+      if process_response[:success].nil? || process_response[:success][:notion_wi].nil?
+        return @shared_storage_writer.write_options[:tag]
+      end
 
       UPDATE_REQUEST
     end

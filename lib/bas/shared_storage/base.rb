@@ -6,7 +6,8 @@ module SharedStorage
   # SharedStorage base interface
   #
   class Base
-    attr_reader :read_options, :write_options, :read_response, :write_response
+    attr_reader :read_options, :read_response, :write_response
+    attr_accessor :write_options
 
     # Initializes the read with essential configuration parameters.
     #

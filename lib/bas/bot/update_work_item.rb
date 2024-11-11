@@ -57,14 +57,6 @@ module Bot
     DESCRIPTION = "Issue Description"
     GITHUB_COLUMN = "Username"
 
-    # read function to execute the PostgresDB Read component
-    #
-    def read
-      reader = Read::Postgres.new(read_options.merge(conditions))
-
-      reader.execute
-    end
-
     # process function to execute the Notion utility to update work items on a notion
     # database
     def process
@@ -81,22 +73,7 @@ module Bot
       end
     end
 
-    # write function to execute the PostgresDB write component
-    #
-    def write
-      write = Write::Postgres.new(write_options, process_response)
-
-      write.execute
-    end
-
     private
-
-    def conditions
-      {
-        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
-        params: [false, read_options[:tag], "unprocessed"]
-      }
-    end
 
     def process_wi
       delete_wi

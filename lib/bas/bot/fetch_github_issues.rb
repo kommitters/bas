@@ -62,14 +62,6 @@ module Bot
     ISSUE_PARAMS = %i[id html_url title body labels state created_at updated_at state].freeze
     PER_PAGE = 100
 
-    # read function to execute the PostgresDB Read component
-    #
-    def read
-      reader = Read::Postgres.new(read_options.merge(conditions))
-
-      reader.execute
-    end
-
     # Process function to request GitHub issues using the octokit utility
     #
     def process
@@ -86,22 +78,7 @@ module Bot
       end
     end
 
-    # Write function to execute the PostgresDB write component
-    #
-    def write
-      write = Write::Postgres.new(write_options, process_response)
-
-      write.execute
-    end
-
     private
-
-    def conditions
-      {
-        where: "tag=$1 ORDER BY inserted_at DESC",
-        params: [read_options[:tag]]
-      }
-    end
 
     def params
       {
