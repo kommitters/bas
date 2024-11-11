@@ -2,7 +2,6 @@
 
 require_relative "../utils/exceptions/function_not_implemented"
 require_relative "../utils/exceptions/invalid_process_response"
-require_relative "../write/postgres_update"
 
 module Bas
   module Bot
