@@ -12,38 +12,27 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "review_media",
-  #       tag: "ReviewMediaRequest"
-  #     },
-  #     process_options: {
-  #       secret: "openai_secret",
-  #       assistant_id: "openai_assistant_id",
-  #       media_type: "images"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "review_media",
-  #       tag: "ReviewText"
-  #     }
+  #   read_options = {
+  #     connection:,
+  #     db_table: "review_images",
+  #     tag: "ReviewMediaRequest"
   #   }
   #
-  #   bot = Bot::ReviewMedia.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "review_images",
+  #     tag: "ReviewImage"
+  #   }
+  #
+  #   options = {
+  #     secret: "open_ai_secret",
+  #     assistant_id: "open_ai_assistant",
+  #     media_type: "images"
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #   Bot::ReviewMedia.new(options, shared_storage).execute
   #
   class ReviewMedia < Bot::Base
     DETAIL = "low"

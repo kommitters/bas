@@ -15,36 +15,25 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "review_media",
-  #       tag: "FormatMediaReview"
-  #     },
-  #     process_options: {
-  #       secret_token: "discord_bot_token"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "review_media",
-  #       tag: "WriteMediaReviewInDiscord"
-  #     }
+  #   read_options = {
+  #     connection:,
+  #     db_table: "review_images",
+  #     tag: "ReviewImage"
   #   }
   #
-  #   bot = Bot::WriteMediaReviewInDiscord.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "review_images",
+  #     tag: "WriteMediaReviewInDiscord"
+  #   }
+  #
+  #   options = {
+  #     secret_token: "discord_secret"
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #   Bot::WriteMediaReviewInDiscord.new(options, shared_storage).execute
   #
   class WriteMediaReviewInDiscord < Bot::Base
     # process function to execute the Discord utility to send image feedback to a thread of a Discord channel

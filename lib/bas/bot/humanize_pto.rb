@@ -12,38 +12,27 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "host",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "pto",
-  #       tag: "FetchPtosFromNotion"
-  #     },
-  #     process_options: {
-  #       secret: "openai secret key",
-  #       assistant_id: "assistant_id",
-  #       prompt: "optional additional prompt"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "host",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "pto",
-  #       tag: "HumanizePto"
-  #     }
+  #   read_options = {
+  #     connection:,
+  #     db_table: "pto",
+  #     tag: "FetchPtosFromNotion"
   #   }
   #
-  #   bot = Bot::HumanizePto.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "pto",
+  #     tag: "HumanizePto"
+  #   }
+  #
+  #   options = {
+  #     secret: "open_ai_secret",
+  #     assistant_id: "open_ai_assistant",
+  #     prompt: "prompt"
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #   Bot::HumanizePto.new(options, shared_storage).execute
   #
   class HumanizePto < Bot::Base
     DEFAULT_PROMPT = "{data}"

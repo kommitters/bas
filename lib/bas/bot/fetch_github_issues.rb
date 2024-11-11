@@ -13,50 +13,38 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "github_issues",
-  #       tag: "FetchGithubIssues",
-  #       avoid_process: true
-  #     },
-  #     process_options: {
-  #       private_pem: "Github App private token",
-  #       app_id: "Github App id",
-  #       repo: "repository name",
-  #       filters: "hash with filters",
-  #       organization: "GitHub organization name"
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "github_issues",
-  #       tag: "GithubIssueRequest"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "github_issues",
-  #       tag: "FetchGithubIssues"
-  #     }
+  #   read_options = {
+  #     connection:,
+  #     db_table: "github_issues",
+  #     tag: repo_tag,
+  #     where: "tag=$1 ORDER BY inserted_at DESC",
+  #     params: [repo_tag]
   #   }
   #
-  #   bot = Bot::FetchGithubIssues.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "github_issues",
+  #     tag: repo_tag
+  #   }
+  #
+  #   options = {
+  #     private_pem: "Github App private token",
+  #     app_id: "Github App id",
+  #     repo: "repository name",
+  #     filters: "hash with filters",
+  #     organization: "GitHub organization name",
+  #     domain: "notion domain",
+  #     status: "notion status",
+  #     work_item_type: "notion work item type",
+  #     type_id: "work logs type id",
+  #     connection:,
+  #     db_table: "github_issues",
+  #     tag: "GithubIssueRequest"
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #   Bot::FetchGithubIssues.new(options, shared_storage).execute
   #
   class FetchGithubIssues < Bot::Base
     ISSUE_PARAMS = %i[id html_url title body labels state created_at updated_at state].freeze

@@ -16,37 +16,26 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "github_issues",
-  #       tag: "GithubIssueRequest"
-  #     },
-  #     process_options: {
-  #       database_id: "notion database id",
-  #       secret: "notion secret"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "github_issues",
-  #       tag: "VerifyIssueExistanceInNotio"
-  #     }
+  #   read_options = {
+  #     connection:,
+  #     db_table: "github_issues",
+  #     tag: "GithubIssueRequest"
   #   }
   #
-  #   bot = Bot::VerifyIssueExistanceInNotion.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "github_issues",
+  #     tag: "VerifyIssueExistanceInNotio"
+  #   }
+  #
+  #   options = {
+  #     database_id: "notion_database_id",
+  #     secret: "notion_secret"
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #   Bot::VerifyIssueExistanceInNotion.new(options, shared_storage).execute
   #
   class VerifyIssueExistanceInNotion < Bot::Base
     NOT_FOUND = "not found"

@@ -12,37 +12,26 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "host",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases",
-  #       tag: "FetchDomainsWipCountsFromNotion"
-  #     },
-  #     process_options: {
-  #       database_id: "notion database id",
-  #       secret: "notion secret"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "host",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases",
-  #       tag: "FetchDomainsWipLimitFromNotion"
-  #     }
+  #   read_options = {
+  #     connection:,
+  #     db_table: "wip_limits",
+  #     tag: "FetchDomainsWipCountsFromNotion"
   #   }
   #
-  #   bot = Bot::FetchDomainsWipLimitFromNotion.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "wip_limits",
+  #     tag: "FetchDomainsWipLimitFromNotion"
+  #   }
+  #
+  #   options = {
+  #     database_id: "notion_database_id",
+  #     secret: "notion_secret"
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #   Bot::FetchDomainsWipLimitFromNotion.new(options, shared_storage).execute
   #
   class FetchDomainsWipLimitFromNotion < Bot::Base
     # Process function to execute the Notion utility to fetch domain wip limits from the notion database

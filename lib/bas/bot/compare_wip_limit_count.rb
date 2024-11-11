@@ -11,33 +11,23 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases",
-  #       tag: "FetchDomainsWipLimitFromNotion"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases",
-  #       tag: "CompareWipLimitCount"
-  #     }
-  #   }
+  #  read_options = {
+  #    connection:,
+  #    db_table: "wip_limits",
+  #    tag: "FetchDomainsWipLimitFromNotion"
+  #  }
   #
-  #   bot = Bot::CompareWipLimitCount.new(options)
-  #   bot.execute
+  #  write_options = {
+  #    connection:,
+  #    db_table: "wip_limits",
+  #    tag: "CompareWipLimitCount"
+  #  }
+  #
+  #  options = {}
+  #
+  #  shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #  Bot::CompareWipLimitCount.new(options, shared_storage).execute
   #
   class CompareWipLimitCount < Bot::Base
     # Process function to compare the domains wip counts and limits

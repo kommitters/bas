@@ -11,25 +11,28 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     process_options: {
-  #       secret: "digital_ocean_secret_key"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "host",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases",
-  #       tag: "FetchBillingFromDigitalOcean"
-  #     }
-  #   }
+  #  read_options = {
+  #    connection:,
+  #    db_table: "do_billing",
+  #    tag: "FetchBillingFromDigitalOcean",
+  #    avoid_process: true,
+  #    where: "archived=$1 AND tag=$2 ORDER BY inserted_at DESC",
+  #    params: [false, "FetchBillingFromDigitalOcean"]
+  #  }
   #
-  #   bot = Bot::FetchBillingFromDigitalOcean.new(options)
-  #   bot.execute
+  #  write_options = {
+  #    connection:,
+  #    db_table: "do_billing",
+  #    tag: "FetchBillingFromDigitalOcean"
+  #  }
+  #
+  #  options = {
+  #    secret: "digital_ocean_api_token"
+  #  }
+  #
+  #  shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #  Bot::FetchBillingFromDigitalOcean.new(options, shared_storage).execute
   #
   class FetchBillingFromDigitalOcean < Bot::Base
     # Process function to execute the DigitalOcean utility to fetch bills

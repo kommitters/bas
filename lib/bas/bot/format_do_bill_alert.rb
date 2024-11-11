@@ -13,36 +13,25 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "do_billing",
-  #       tag: "FetchBillingFromDigitalOcean"
-  #     },
-  #     process_options: {
-  #       threshold: 7
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "do_billing",
-  #       tag: "FormatDoBillAlert"
-  #     }
+  #   read_options = {
+  #     connection:,
+  #     db_table: "do_billing",
+  #     tag: "FetchBillingFromDigitalOcean"
   #   }
   #
-  #   bot = Bot::FormatDoBillAlert.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "do_billing",
+  #     tag: "FormatDoBillAlert"
+  #   }
+  #
+  #   options = {
+  #     threshold: 7
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #   Bot::FormatDoBillAlert.new(options, shared_storage).execute
   #
   class FormatDoBillAlert < Bot::Base
     # Process function to format the notification using a template

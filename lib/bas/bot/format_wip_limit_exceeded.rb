@@ -11,36 +11,25 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases",
-  #       tag: "CompareWipLimitCount"
-  #     },
-  #     process_options: {
-  #       template: "exceeded wip limit template message"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases",
-  #       tag: "FormatWipLimitExceeded"
-  #     }
+  #   read_options = {
+  #     connection:,
+  #     db_table: "wip_limits",
+  #     tag: "CompareWipLimitCount"
   #   }
   #
-  #   bot = Bot::FormatWipLimitExceeded.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "wip_limits",
+  #     tag: "FormatWipLimitExceeded"
+  #   }
+  #
+  #   options = {
+  #     template: ":warning: The <domain> WIP limit was exceeded by <exceeded>"
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #   Bot::FormatWipLimitExceeded.new(options, shared_storage).execute
   #
   class FormatWipLimitExceeded < Bot::Base
     WIP_LIMIT_ATTRIBUTES = %w[domain exceeded].freeze

@@ -15,33 +15,27 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "web_availability",
-  #       tag: "ReviewDomainRequest"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "web_availability",
-  #       tag: "ReviewDomainAvailability"
-  #     }
+  #   read_options = {
+  #     connection:,
+  #     db_table: "web_availability",
+  #     tag: "FetchDomainServicesFromNotion"
   #   }
   #
-  #   bot = Bot::ReviewDomainAvailability.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "web_availability",
+  #     tag: "ReviewWebsiteAvailability"
+  #   }
+  #
+  #   options = {
+  #     connection:,
+  #     db_table: "web_availability",
+  #     tag: "ReviewDomainAvailability"
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #   Bot::ReviewDomainAvailability.new(options, shared_storage).execute
   #
   class ReviewDomainAvailability < Bot::Base
     # process function to make a http request to the domain and check the status

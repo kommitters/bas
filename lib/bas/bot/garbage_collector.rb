@@ -10,31 +10,19 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     process_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases"
-  #     }
+  #   write_options = {
+  #     connection:,
+  #     db_table: "review_images"
   #   }
   #
-  #   bot = Bot::GarbageCollector.new(options)
-  #   bot.execute
+  #   options = {
+  #     connection:,
+  #     db_table: "review_images"
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ write_options: })
+  #
+  #   Bot::GarbageCollector.new(options, shared_storage).execute
   #
   class GarbageCollector < Bot::Base
     SUCCESS_STATUS = "PGRES_COMMAND_OK"

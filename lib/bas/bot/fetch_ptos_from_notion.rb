@@ -14,25 +14,20 @@ module Bot
   # <b>Example</b>
   #
   #   options = {
-  #     process_options: {
-  #       database_id: "notion database id",
-  #       secret: "notion secret"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "host",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "pto",
-  #       tag: "FetchPtosFromNotion"
-  #     }
+  #     database_id: "notion_database_id",
+  #     secret: "notion_secret"
   #   }
   #
-  #   bot = Bot::FetchPtosFromNotion.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "pto",
+  #     tag: "FetchPtosFromNotion"
+  #   }
+  #
+  #   shared_storage_reader = SharedStorage::Default.new
+  #   shared_storage_writer = SharedStorage::Postgres.new({ write_options: })
+  #
+  #   Bot::FetchPtosFromNotion.new(options, shared_storage_reader, shared_storage_writer).execute
   #
   class FetchPtosFromNotion < Bot::Base
     # Process function to execute the Notion utility to fetch PTO's from the notion database

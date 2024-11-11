@@ -20,36 +20,26 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "github_issues",
-  #       tag: "UpdateWorkItemRequest"
-  #     },
-  #     process_options: {
-  #       secret: "notion secret"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "github_issues",
-  #       tag: "UpdateWorkItem"
-  #     }
+  #   read_options = {
+  #     connection:,
+  #     db_table: "github_issues",
+  #     tag: "UpdateWorkItemRequest"
   #   }
   #
-  #   bot = Bot::UpdateWorkItem.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "github_issues",
+  #     tag: "UpdateWorkItem"
+  #   }
+  #
+  #   options = {
+  #     users_database_id: "notion_database_id",
+  #     secret: "notion_secret"
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #   Bot::UpdateWorkItem.new(options, shared_storage).execute
   #
   class UpdateWorkItem < Bot::Base
     include Utils::Notion::Types

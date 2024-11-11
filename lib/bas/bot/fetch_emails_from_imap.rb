@@ -11,27 +11,28 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   params = {
-  #     process_options: {
-  #       refresh_token: "email server refresh token",
-  #       client_id: "email server client it",
-  #       client_secret: "email server client secret",
-  #       token_uri: "email server refresh token uri",
-  #       email_domain: "email server domain",
-  #       email_port: "email server port",
-  #       user_email: "email to be access",
-  #       search_email: "email to be search",
-  #       inbox: "inbox to be search"
-  #     },
-  #     write_options: {
-  #       connection:,
-  #       db_table: "use_cases",
-  #       tag: "FetchEmailsFromImap"
-  #     }
+  #   write_options = {
+  #     connection:,
+  #     db_table: "support_emails",
+  #     tag: "FetchEmailsFromImap"
   #   }
   #
-  #   bot = Bot::FetchEmailsFromImap.new(options)
-  #   bot.execute
+  #   params = {
+  #     refresh_token: "email server refresh token",
+  #     client_id: "email server client it",
+  #     client_secret: "email server client secret",
+  #     token_uri: "email server refresh token uri",
+  #     email_domain: "email server domain",
+  #     email_port: "email server port",
+  #     user_email: "email to be access",
+  #     search_email: "email to be search",
+  #     inbox: "inbox to be search"
+  #   }
+  #
+  #   shared_storage_reader = SharedStorage::Default.new
+  #   shared_storage_writer = SharedStorage::Postgres.new({ write_options: })
+  #
+  #   Bot::FetchEmailsFromImap.new(params, shared_storage_reader, shared_storage_writer).execute
   #
   class FetchEmailsFromImap < Bot::Base
     # Process function to request email from an imap server using the imap utility

@@ -16,41 +16,26 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "github_issues",
-  #       tag: "CreateWorkItemRequest"
-  #     },
-  #     process_options: {
-  #       database_id: "notion database id",
-  #       secret: "notion secret",
-  #       domain: "domain association",
-  #       status: "default status",
-  #       work_item_type: "work_item_type",
-  #       project: "project id"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "github_issues",
-  #       tag: "CreateWorkItem"
-  #     }
-  #   }
+  #  read_options = {
+  #    connection:,
+  #    db_table: "github_issues",
+  #    tag: "CreateWorkItemRequest"
+  #  }
   #
-  #   bot = Bot::VerifyIssueExistanceInNotion.new(options)
-  #   bot.execute
+  #  write_options = {
+  #    connection:,
+  #    db_table: "github_issues",
+  #    tag: "CreateWorkItem"
+  #  }
+  #
+  #  options = {
+  #    database_id: "notion_database_id",
+  #    secret: "notion_secret"
+  #  }
+  #
+  #  shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #  Bot::CreateWorkItem.new(options, shared_storage).execute
   #
   class CreateWorkItem < Bot::Base
     include Utils::Notion::Types

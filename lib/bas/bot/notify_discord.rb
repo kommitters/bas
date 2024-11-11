@@ -11,37 +11,26 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "host",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "pto",
-  #       tag: "HumanizePto"
-  #     },
-  #     process_options: {
-  #       name: "bot name to be shown on discord",
-  #       webhook: "discord webhook"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "host",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "pto",
-  #       tag: "NotifyDiscord"
-  #     }
+  #   read_options = {
+  #     connection:,
+  #     db_table: "birthday",
+  #     tag: "FormatBirthdays"
   #   }
   #
-  #   bot = Bot::NotifyDiscord.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "birthday",
+  #     tag: "NotifyDiscord"
+  #   }
+  #
+  #   options = {
+  #     name: "discord bot name",
+  #     webhook: "discord webhook"
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #   Bot::NotifyDiscord.new(options, shared_storage).execute
   #
   class NotifyDiscord < Bot::Base
     # process function to execute the Discord utility to send the PTO's notification

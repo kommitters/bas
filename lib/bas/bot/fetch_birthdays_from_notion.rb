@@ -11,26 +11,21 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     process_options: {
-  #       database_id: "notion database id",
-  #       secret: "notion secret"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "host",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases",
-  #       tag: "FetchBirthdaysFromNotion"
-  #     }
+  #   write_options = {
+  #     connection:,
+  #     db_table: "birthday",
+  #     tag: "FetchBirthdaysFromNotion"
   #   }
   #
-  #   bot = Bot::FetchBirthdaysFromNotion.new(options)
-  #   bot.execute
+  #   options = {
+  #     database_id: "notion_database_id",
+  #     secret: "notion_secret"
+  #   }
+  #
+  #   shared_storage_reader = SharedStorage::Default.new
+  #   shared_storage_writer = SharedStorage::Postgres.new({ write_options: })
+  #
+  #   Bot::FetchBirthdaysFromNotion.new(options, shared_storage_reader, shared_storage_writer).execute
   #
   class FetchBirthdaysFromNotion < Bot::Base
     # Process function to execute the Notion utility to fetch birthdays from a notion database

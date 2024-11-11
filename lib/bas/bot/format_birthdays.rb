@@ -11,36 +11,25 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases",
-  #       tag: "FetchBirthdaysFromNotion"
-  #     },
-  #     process_options: {
-  #       template: "birthday template message"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases",
-  #       tag: "FormatBirthdays"
-  #     }
+  #   read_options = {
+  #     connection:,
+  #     db_table: "birthday",
+  #     tag: "FetchBirthdaysFromNotion"
   #   }
   #
-  #   bot = Bot::FormatBirthdays.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "birthday",
+  #     tag: "FormatBirthdays"
+  #   }
+  #
+  #   options = {
+  #     template: "The Birthday of <name> is today! (<birthday_date>) :birthday: :gift:"
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #   Bot::FormatBirthdays.new(options, shared_storage).execute
   #
   class FormatBirthdays < Bot::Base
     BIRTHDAY_ATTRIBUTES = %w[name birthday_date].freeze

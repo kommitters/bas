@@ -11,36 +11,27 @@ module Bot
   # <br>
   # <b>Example</b>
   #
-  #   options = {
-  #     read_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases",
-  #       tag: "FetchEmailsFromImap"
-  #     },
-  #     process_options: {
-  #       template: "emails template message"
-  #     },
-  #     write_options: {
-  #       connection: {
-  #         host: "localhost",
-  #         port: 5432,
-  #         dbname: "bas",
-  #         user: "postgres",
-  #         password: "postgres"
-  #       },
-  #       db_table: "use_cases",
-  #       tag: "FormatEmails"
-  #     }
+  #   read_options = {
+  #     connection:,
+  #     db_table: "support_emails",
+  #     tag: "FetchEmailsFromImap"
   #   }
   #
-  #   bot = Bot::FormatEmails.new(options)
-  #   bot.execute
+  #   write_options = {
+  #     connection:,
+  #     db_table: "support_emails",
+  #     tag: "FormatEmails"
+  #   }
+  #
+  #   options = {
+  #     template: "The <sender> has requested support the <date>",
+  #     frequency: 5,
+  #     timezone: "-05:00"
+  #   }
+  #
+  #   shared_storage = SharedStorage::Postgres.new({ read_options:, write_options: })
+  #
+  #   Bot::FormatEmails.new(options, shared_storage).execute
   #
   class FormatEmails < Bot::Base
     EMAIL_ATTRIBUTES = %w[subject sender date].freeze
