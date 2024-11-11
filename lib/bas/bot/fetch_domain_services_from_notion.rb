@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "./base"
-require_relative "../read/default"
 require_relative "../utils/notion/request"
-require_relative "../write/postgres"
 
 module Bot
   ##
@@ -35,12 +33,6 @@ module Bot
   #   bot.execute
   #
   class FetchDomainServicesFromNotion < Bot::Base
-    def read
-      reader = Read::Default.new
-
-      reader.execute
-    end
-
     # Process function to execute the Notion utility to fetch web domains from a notion database
     #
     def process
@@ -53,14 +45,6 @@ module Bot
       else
         { error: { message: response.parsed_response, status_code: response.code } }
       end
-    end
-
-    # Write function to execute the PostgresDB write component
-    #
-    def write
-      write = Write::Postgres.new(write_options, process_response)
-
-      write.execute
     end
 
     private

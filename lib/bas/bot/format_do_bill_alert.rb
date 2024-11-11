@@ -45,14 +45,6 @@ module Bot
   #   bot.execute
   #
   class FormatDoBillAlert < Bot::Base
-    # read function to execute the PostgresDB Read component
-    #
-    def read
-      reader = Read::Postgres.new(read_options.merge(conditions))
-
-      reader.execute
-    end
-
     # Process function to format the notification using a template
     #
     def process
@@ -61,22 +53,7 @@ module Bot
       { success: { notification: message } }
     end
 
-    # Write function to execute the PostgresDB write component
-    #
-    def write
-      write = Write::Postgres.new(write_options, process_response)
-
-      write.execute
-    end
-
     private
-
-    def conditions
-      {
-        where: "archived=$1 AND tag=$2 AND stage=$3 ORDER BY inserted_at ASC",
-        params: [false, read_options[:tag], "unprocessed"]
-      }
-    end
 
     def threshold_exceeded
       return false if billing.zero?
@@ -100,9 +77,10 @@ module Bot
       balance = billing
       threshold = process_options[:threshold]
 
-      ":warning: The **DigitalOcean** daily usage was exceeded. \
-      Current balance: #{balance}, Threshold: #{threshold}, \
-      Current daily usage: #{usage.round(3)}"
+      ":warning: The **DigitalOcean** daily usage was exceeded. \n
+      -Current balance: #{balance}\n
+      -Threshold: #{threshold}\n
+      -Current daily usage: #{usage.round(3)}"
     end
   end
 end

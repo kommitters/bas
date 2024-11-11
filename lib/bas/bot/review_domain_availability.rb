@@ -44,34 +44,19 @@ module Bot
   #   bot.execute
   #
   class ReviewDomainAvailability < Bot::Base
-    # read function to execute the PostgresDB Read component
-    #
-    def read
-      reader = Read::Postgres.new(read_options.merge(conditions))
-
-      reader.execute
-    end
-
     # process function to make a http request to the domain and check the status
     #
     def process
       return { success: { review: nil } } if unprocessable_response
 
-      response = availability
+      read_response.data["urls"].each do |url_obj|
+        url = url_obj["url"]
+        response = availability(url)
 
-      if response.code == 200
-        { success: { review: nil } }
-      else
-        { success: { notification: notification(response) } }
+        response.is_a?(Hash) ? write_invalid_response(response, url) : manage_response(response)
       end
-    end
 
-    # write function to execute the PostgresDB write component
-    #
-    def write
-      write = Write::Postgres.new(write_options, process_response)
-
-      write.execute
+      { success: { review: :ok } }
     end
 
     private
@@ -83,14 +68,51 @@ module Bot
       }
     end
 
-    def availability
-      url = read_response.data["url"]
+    def availability(url)
+      HTTParty.get(url)
+    rescue StandardError => e
+      { error: e.message }
+    end
 
-      HTTParty.get(url, {})
+    def manage_response(response)
+      response.code == 200 ? write_ok_response(response) : write_error_response(response)
+    end
+
+    def write_ok_response(response)
+      logs = request_log(response)
+      write_data = { success: { notification: :ok, logs:, url: response.request.uri } }
+      Write::Postgres.new(process_options, write_data).execute
+    end
+
+    def write_error_response(response)
+      notification = notification(response)
+      logs = request_log(response)
+
+      write_data = { success: { notification:, logs:, url: response.request.uri } }
+
+      Write::Postgres.new(process_options, write_data).execute
+    end
+
+    def write_invalid_response(response, url)
+      notification = invalid_notifiction(url, response[:error])
+      write_data = { success: { notification:, logs: response[:error], url: } }
+      Write::Postgres.new(process_options, write_data).execute
+    end
+
+    def request_log(response)
+      {
+        headers: response.headers.inspect,
+        request: response.request.inspect,
+        response: response.response.inspect
+      }
     end
 
     def notification(response)
-      ":warning: The Domain #{read_response.data["url"]} is down with an error code of #{response.code}"
+      "⚠️ The Domain #{response.request.uri} is down with an error code of #{response.code}"
+    end
+
+    def invalid_notifiction(url, reason)
+      "⚠️ The Domain #{url} is down: #{reason}"
     end
   end
 end
