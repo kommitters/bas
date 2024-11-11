@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require_relative "./base"
-require_relative "../read/default"
-require_relative "../write/postgres"
 
 module Bot
   ##
@@ -41,14 +39,6 @@ module Bot
   class GarbageCollector < Bot::Base
     SUCCESS_STATUS = "PGRES_COMMAND_OK"
 
-    # Read function to execute the default Read component
-    #
-    def read
-      reader = Read::Default.new
-
-      reader.execute
-    end
-
     # Process function to update records in a PostgresDB database table
     #
     def process
@@ -59,14 +49,6 @@ module Bot
       else
         { error: { message: response.result_error_message, status_code: response.res_status } }
       end
-    end
-
-    # Write function to execute the PostgresDB write component
-    #
-    def write
-      write = Write::Postgres.new(write_options, process_response)
-
-      write.execute
     end
 
     private

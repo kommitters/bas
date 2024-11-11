@@ -50,10 +50,10 @@ module Bot
     def process
       return { success: { notification: "" } } if unprocessable_response
 
-      exceedded_limits_list = read_response.data["exceeded_domain_count"]
+      exceeded_limits_list = read_response.data["exceeded_domain_count"]
 
-      notification = exceedded_limits_list.reduce("") do |payload, exceedded_limit|
-        "#{payload} #{build_template(WIP_LIMIT_ATTRIBUTES, exceedded_limit)} \n"
+      notification = exceeded_limits_list.reduce("") do |payload, exceeded_limit|
+        "#{payload} #{build_template(WIP_LIMIT_ATTRIBUTES, exceeded_limit)} \n"
       end
 
       { success: { notification: } }
@@ -64,8 +64,8 @@ module Bot
     def build_template(attributes, instance)
       template = process_options[:template]
 
-      attributes.reduce(template) do |formated_template, attribute|
-        formated_template.gsub("<#{attribute}>", instance[attribute].to_s)
+      attributes.reduce(template) do |formatted_template, attribute|
+        formatted_template.gsub("<#{attribute}>", instance[attribute].to_s)
       end
     end
   end
