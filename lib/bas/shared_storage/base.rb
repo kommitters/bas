@@ -2,32 +2,34 @@
 
 require_relative "../utils/exceptions/function_not_implemented"
 
-module SharedStorage
-  # SharedStorage base interface
-  #
-  class Base
-    attr_reader :read_options, :read_response, :write_response
-    attr_accessor :write_options
-
-    # Initializes the read with essential configuration parameters.
+module Bas
+  module SharedStorage
+    # SharedStorage base interface
     #
-    def initialize(options = {})
-      @read_options = options[:read_options] || {}
-      @write_options = options[:write_options] || {}
-    end
+    class Base
+      attr_reader :read_options, :read_response, :write_response
+      attr_accessor :write_options
 
-    def set_in_process; end
+      # Initializes the read with essential configuration parameters.
+      #
+      def initialize(options = {})
+        @read_options = options[:read_options] || {}
+        @write_options = options[:write_options] || {}
+      end
 
-    def set_processed; end
+      def set_in_process; end
 
-    protected
+      def set_processed; end
 
-    def read
-      raise Utils::Exceptions::FunctionNotImplemented
-    end
+      protected
 
-    def write
-      raise Utils::Exceptions::FunctionNotImplemented
+      def read
+        raise Utils::Exceptions::FunctionNotImplemented
+      end
+
+      def write
+        raise Utils::Exceptions::FunctionNotImplemented
+      end
     end
   end
 end
