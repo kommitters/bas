@@ -30,4 +30,20 @@ RSpec.describe Bas::SharedStorage::Base do
       expect(shared_storage.write_options).to eql(write_options)
     end
   end
+
+  describe ".read" do
+    it "throw a function not implemented error" do
+      shared_storage = described_class.new
+
+      expect { shared_storage.send(:read) }.to raise_exception(Utils::Exceptions::FunctionNotImplemented)
+    end
+  end
+
+  describe ".write" do
+    it "throw a function not implemented error" do
+      shared_storage = described_class.new
+
+      expect { shared_storage.send(:write) }.to raise_exception(Utils::Exceptions::FunctionNotImplemented)
+    end
+  end
 end

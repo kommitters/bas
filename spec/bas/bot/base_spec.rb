@@ -49,28 +49,86 @@ RSpec.describe Bas::Bot::Base do
     let(:read_response) { Bas::SharedStorage::Types::Read.new }
 
     it "provides no implementation for the method process" do
-      allow_any_instance_of(described_class).to receive(:read).and_return(read_response)
+      allow(@shared_storage_reader).to receive(:read).and_return(read_response)
 
       expect { @bot.execute }.to raise_exception(Utils::Exceptions::FunctionNotImplemented)
     end
 
     it "provides invalid process response if process method not returns a hash" do
-      allow_any_instance_of(described_class).to receive(:read).and_return(read_response)
+      allow(@shared_storage_reader).to receive(:read).and_return(read_response)
       allow_any_instance_of(described_class).to receive(:process).and_return(true)
 
       expect { @bot.execute }.to raise_exception(Utils::Exceptions::InvalidProcessResponse)
     end
 
     it "execute successfully the bot" do
-      allow_any_instance_of(described_class).to receive(:read).and_return(read_response)
+      allow(@shared_storage_reader).to receive(:read).and_return(read_response)
       allow_any_instance_of(described_class).to receive(:process).and_return({})
-      allow_any_instance_of(described_class).to receive(:write).and_return({})
+      allow(@shared_storage_writer).to receive(:write).and_return({})
 
       @bot.execute
 
       expect(@bot.read_response).to eql(read_response)
       expect(@bot.process_response).to eql({})
       expect(@bot.write_response).to eql({})
+    end
+  end
+
+  describe ".unprocessable_response" do
+    let(:read_response) { double(:read_response) }
+
+    before do
+      allow(@shared_storage_reader).to receive(:read).and_return(read_response)
+      allow_any_instance_of(described_class).to receive(:process).and_return({})
+      allow(@shared_storage_writer).to receive(:write).and_return({})
+    end
+
+    it "return false when the response is processable" do
+      allow(read_response).to receive(:data).and_return({ data: "ok" })
+
+      @bot.execute
+
+      expect(@bot.send(:unprocessable_response)).to eql(false)
+    end
+
+    it "return true when the response nil" do
+      allow(read_response).to receive(:data).and_return(nil)
+
+      @bot.execute
+
+      expect(@bot.send(:unprocessable_response)).to eql(true)
+    end
+
+    it "return true when the response is an empty hash" do
+      allow(read_response).to receive(:data).and_return({})
+
+      @bot.execute
+
+      expect(@bot.send(:unprocessable_response)).to eql(true)
+    end
+
+    it "return true when a value of the hash is nil" do
+      allow(read_response).to receive(:data).and_return({ key: nil })
+
+      @bot.execute
+
+      expect(@bot.send(:unprocessable_response)).to eql(true)
+    end
+
+    it "return true when a value of the hash is an empty array" do
+      allow(read_response).to receive(:data).and_return({ key: [] })
+
+      @bot.execute
+
+      expect(@bot.send(:unprocessable_response)).to eql(true)
+    end
+
+    it "return true when a value of the hash is an empty string" do
+      allow(read_response).to receive(:data).and_return({ key: "" })
+
+      @bot.execute
+
+      expect(@bot.send(:unprocessable_response)).to eql(true)
     end
   end
 end
