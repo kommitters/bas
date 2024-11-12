@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.6.0 (12.11.2024)
+- [Add Shared Storage Abstraction](https://github.com/kommitters/bas/issues/115)
+
 # 1.5.3 (28.10.2024)
 - [Fix response length limitations](https://github.com/kommitters/bas/issues/112)
 
