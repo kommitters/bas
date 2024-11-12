@@ -24,7 +24,9 @@ module Utils
       def self.execute(params)
         pg_connection = PG::Connection.new(params[:connection])
 
-        execute_query(pg_connection, params[:query])
+        results = execute_query(pg_connection, params[:query])
+
+        results.map { |result| result.transform_keys(&:to_sym) }
       end
 
       # Execute the Postgres query
