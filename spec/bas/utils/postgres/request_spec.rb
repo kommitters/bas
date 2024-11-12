@@ -17,6 +17,8 @@ RSpec.describe Utils::Postgres::Request do
     allow(PG::Connection).to receive(:new).and_return(@pg_conn)
     allow(@pg_conn).to receive(:exec_params).and_return(pg_result)
     allow(@pg_conn).to receive(:exec).and_return(pg_result)
+    allow(pg_result).to receive(:map).and_return([{ id: 1, data: "{ \"success\": \"ok\" }",
+                                                    inserted_at: "2024-11-12T00:00:00" }])
   end
 
   describe ".execute" do
