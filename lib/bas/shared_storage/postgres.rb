@@ -27,7 +27,6 @@ module Bas
 
       def write(data)
         params = { connection: write_options[:connection], query: write_query(data) }
-
         @write_response = Utils::Postgres::Request.execute(params)
       end
 
