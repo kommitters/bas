@@ -59,6 +59,14 @@ RSpec.describe Bas::SharedStorage::Postgres do
 
       expect(@shared_storage.write_response).not_to be(nil)
     end
+
+    it "ignore execution if avoid_empty_data is set to true and empty_data? is true" do
+      options = write_options.merge({ avoid_empty_data: true })
+      data = { success: {} }
+      shared_storage = described_class.new(read_options:, write_options: options)
+
+      expect(shared_storage.write(data)).to eql(nil)
+    end
   end
 
   describe ".set_in_process" do

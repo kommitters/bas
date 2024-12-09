@@ -44,7 +44,11 @@ module Bas
       end
 
       def write
-        @shared_storage_writer.write(process_response)
+        if unprocessable_response
+          @shared_storage_writer.write({ success: {} })
+        else
+          @shared_storage_writer.write(process_response)
+        end
       end
 
       def unprocessable_response
