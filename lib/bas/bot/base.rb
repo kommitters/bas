@@ -44,7 +44,6 @@ module Bas
       end
 
       def write
-        puts "process_response: #{process_response}"
         return if @process_options[:avoid_empty_data] && empty_data?
 
         data = unprocessable_response ? { success: {} } : process_response

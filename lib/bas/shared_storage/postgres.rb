@@ -30,6 +30,10 @@ module Bas
         @write_response = Utils::Postgres::Request.execute(params)
       end
 
+      def empty_data?(data)
+        data.nil? || data == {} || data.any? { |_key, value| [[], "", nil, {}].include?(value) }
+      end
+
       def set_in_process
         return if read_options[:avoid_process].eql?(true) || read_response.id.nil?
 
