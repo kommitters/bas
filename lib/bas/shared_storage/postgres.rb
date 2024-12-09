@@ -27,8 +27,11 @@ module Bas
 
       def write(data)
         params = { connection: write_options[:connection], query: write_query(data) }
-
         @write_response = Utils::Postgres::Request.execute(params)
+      end
+
+      def empty_data?(data)
+        data.nil? || data == {} || data.any? { |_key, value| [[], "", nil, {}].include?(value) }
       end
 
       def set_in_process
