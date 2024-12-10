@@ -170,4 +170,45 @@ RSpec.describe Bas::Bot::Base do
       expect(@shared_storage_writer).not_to have_received(:write)
     end
   end
+
+  describe ".empty_data?" do
+    before do
+      allow(@bot).to receive(:process_response)
+    end
+
+    it "returns true when process_response is nil" do
+      allow(@bot).to receive(:process_response).and_return(nil)
+      expect(@bot.send(:empty_data?)).to eql(true)
+    end
+
+    it "returns true when process_response is an empty hash" do
+      allow(@bot).to receive(:process_response).and_return({})
+      expect(@bot.send(:empty_data?)).to eql(true)
+    end
+
+    it "returns true when process_response has a key with value nil" do
+      allow(@bot).to receive(:process_response).and_return({ key: nil })
+      expect(@bot.send(:empty_data?)).to eql(true)
+    end
+
+    it "returns true when process_response has a key with value empty array" do
+      allow(@bot).to receive(:process_response).and_return({ key: [] })
+      expect(@bot.send(:empty_data?)).to eql(true)
+    end
+
+    it "returns true when process_response has a key with value empty string" do
+      allow(@bot).to receive(:process_response).and_return({ key: "" })
+      expect(@bot.send(:empty_data?)).to eql(true)
+    end
+
+    it "returns true when process_response has a key with value empty hash" do
+      allow(@bot).to receive(:process_response).and_return({ key: {} })
+      expect(@bot.send(:empty_data?)).to eql(true)
+    end
+
+    it "returns false when process_response has valid values" do
+      allow(@bot).to receive(:process_response).and_return({ key: "valid_value" })
+      expect(@bot.send(:empty_data?)).to eql(false)
+    end
+  end
 end
