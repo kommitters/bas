@@ -131,4 +131,84 @@ RSpec.describe Bas::Bot::Base do
       expect(@bot.send(:unprocessable_response)).to eql(true)
     end
   end
+
+  describe ".write" do
+    let(:read_response) { double(:read_response) }
+
+    before do
+      allow(@shared_storage_reader).to receive(:read).and_return(read_response)
+      allow_any_instance_of(described_class).to receive(:process).and_return({})
+    end
+
+    it "write the process response when the response is processable" do
+      allow(read_response).to receive(:data).and_return({ data: "ok" })
+      allow(@shared_storage_writer).to receive(:write).and_return({})
+
+      @bot.execute
+
+      expect(@shared_storage_writer).to have_received(:write).with({})
+    end
+
+    it "write an { succes : {} } when the response is unprocessable" do
+      allow(read_response).to receive(:data).and_return({})
+      allow(@shared_storage_writer).to receive(:write).and_return({})
+
+      @bot.execute
+
+      expect(@shared_storage_writer).to have_received(:write).with({ success: {} })
+    end
+
+    it "ignore write if avoid_empty_data is set to true on options" do
+      options = { avoid_empty_data: true }
+      bot = described_class.new(options, @shared_storage_reader, @shared_storage_writer)
+
+      allow(read_response).to receive(:data).and_return({})
+      allow(@shared_storage_writer).to receive(:write).and_return({})
+
+      bot.execute
+
+      expect(@shared_storage_writer).not_to have_received(:write)
+    end
+  end
+
+  describe ".empty_data?" do
+    before do
+      allow(@bot).to receive(:process_response)
+    end
+
+    it "returns true when process_response is nil" do
+      allow(@bot).to receive(:process_response).and_return(nil)
+      expect(@bot.send(:empty_data?)).to eql(true)
+    end
+
+    it "returns true when process_response is an empty hash" do
+      allow(@bot).to receive(:process_response).and_return({})
+      expect(@bot.send(:empty_data?)).to eql(true)
+    end
+
+    it "returns true when process_response has a key with value nil" do
+      allow(@bot).to receive(:process_response).and_return({ key: nil })
+      expect(@bot.send(:empty_data?)).to eql(true)
+    end
+
+    it "returns true when process_response has a key with value empty array" do
+      allow(@bot).to receive(:process_response).and_return({ key: [] })
+      expect(@bot.send(:empty_data?)).to eql(true)
+    end
+
+    it "returns true when process_response has a key with value empty string" do
+      allow(@bot).to receive(:process_response).and_return({ key: "" })
+      expect(@bot.send(:empty_data?)).to eql(true)
+    end
+
+    it "returns true when process_response has a key with value empty hash" do
+      allow(@bot).to receive(:process_response).and_return({ key: {} })
+      expect(@bot.send(:empty_data?)).to eql(true)
+    end
+
+    it "returns false when process_response has valid values" do
+      allow(@bot).to receive(:process_response).and_return({ key: "valid_value" })
+      expect(@bot.send(:empty_data?)).to eql(false)
+    end
+  end
 end
