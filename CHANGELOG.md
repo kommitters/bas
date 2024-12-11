@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.6.1 (11.12.2024)
+- [Add config option to avoid writing empty data](https://github.com/kommitters/bas/issues/120)
+
 # 1.6.0 (12.11.2024)
 - [Add Shared Storage Abstraction](https://github.com/kommitters/bas/issues/115)
 
