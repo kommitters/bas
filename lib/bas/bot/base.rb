@@ -46,8 +46,7 @@ module Bas
       def write
         return if @process_options[:avoid_empty_data] && empty_data?
 
-        data = unprocessable_response ? { success: {} } : process_response
-        @shared_storage_writer.write(data)
+        @shared_storage_writer.write(process_response)
       end
 
       def empty_data?
