@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.6.2 (12.12.2024)
+- [Bots with default shared storage reader are not saving data](https://github.com/kommitters/bas/issues/122)
+
 # 1.6.1 (11.12.2024)
 - [Add config option to avoid writing empty data](https://github.com/kommitters/bas/issues/120)
 
