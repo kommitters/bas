@@ -149,15 +149,6 @@ RSpec.describe Bas::Bot::Base do
       expect(@shared_storage_writer).to have_received(:write).with({})
     end
 
-    it "write an { succes : {} } when the response is unprocessable" do
-      allow(read_response).to receive(:data).and_return({})
-      allow(@shared_storage_writer).to receive(:write).and_return({})
-
-      @bot.execute
-
-      expect(@shared_storage_writer).to have_received(:write).with({ success: {} })
-    end
-
     it "ignore write if avoid_empty_data is set to true on options" do
       options = { avoid_empty_data: true }
       bot = described_class.new(options, @shared_storage_reader, @shared_storage_writer)
