@@ -6,10 +6,11 @@ Gem::Specification.new do |spec| # rubocop:disable Metrics/BlockLength
   spec.name = "bas"
   spec.version = Bas::VERSION
   spec.authors = ["kommitters Open Source"]
-  spec.summary = "BAS - Business automation system"
+  spec.summary = "BAS - Business automation suite"
 
   spec.email = ["oss@kommit.co"]
-  spec.description = "A versatile business automation system offering key components for building various use cases. \
+  spec.description = "A versatile business automation suite offering key components for \
+    building and automating a wide variety of use cases. \
     It provides an easy-to-use tool for implementing automation workflows without excessive complexity. \
     Formerly known as 'bns'."
   spec.homepage = "https://github.com/kommitters/bas"

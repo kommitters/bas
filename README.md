@@ -1,4 +1,4 @@
-# BAS - Business Automation System
+# BAS - Business Automation Suite
 
 Many organizations and individuals rely on automation across various contexts in their daily operations. With BAS, we aim to provide an open-source platform that empowers users to create customized automation systems tailored to their unique requirements. BAS consists of a series of abstract components designed to facilitate the creation of diverse bots, regardless of context.
 
