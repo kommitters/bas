@@ -15,7 +15,7 @@ jobs:
     permissions:
       checks: write  # for coverallsapp/github-action to create new checks
       contents: read  # for actions/checkout to fetch code
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     name: Ruby ${{ matrix.ruby }}
     strategy:
       matrix:
