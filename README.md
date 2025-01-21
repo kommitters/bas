@@ -37,6 +37,75 @@ Shared storage is a central location where data can be read and written by multi
 ### Use case
 A use case refers to an automation problem larger than what a single bot can manage. It typically involves a set of bots, each solving a specific part of the overall problem independently. To enable these bots to interact, shared storage is used. This shared storage could be a PostgreSQL database, an S3 bucket, or another shared storage type, allowing bots to read and write data that other bots can access to complete their tasks.
 
+## Shared Storage implementation examples
+
+### Example 1: Using the Same Shared Storage for Reading and Writing
+
+In some cases, a bot may need to both read from and write to the same shared storage. Here is an example implementation using a PostgreSQL database as shared storage:
+
+```ruby
+connection = {
+  host: "localhost",
+  port: 5432,
+  dbname: "bas",
+  user: "postgres",
+  password: "postgres"
+}
+
+read_options = {
+  connection: connection,
+  db_table: "api_data",
+  tag: "AnotherBot"
+}
+
+write_options = {
+  connection: connection,
+  db_table: "api_data",
+  tag: "FetchFromAPi"
+}
+
+options = {
+  token: "api_token"
+}
+
+shared_storage = SharedStorage.new(read_options: read_options, write_options: write_options)
+
+bot = Bas::Bot::FetchFromAPi.new(options, shared_storage)
+bot.execute
+```
+
+### Example 2: Using Different Shared Storage Instances for Reading and Writing
+
+In some situations, it may be beneficial to use separate shared storage instances for reading and writing. For example, a bot might read from a default shared storage implementation and write to a PostgreSQL database:
+
+```ruby
+connection = {
+  host: "localhost",
+  port: 5432,
+  dbname: "bas",
+  user: "postgres",
+  password: "postgres"
+}
+
+write_options = {
+  connection: connection,
+  db_table: "api_data",
+  tag: "FetchFromAPi"
+}
+
+options = {
+  token: "api_token"
+}
+
+shared_storage_reader = Bas::SharedStorage::Default.new
+shared_storage_writer = Bas::SharedStorage::Postgres.new(write_options: write_options)
+
+bot = Bas::Bot::FetchFromAPi.new(options, shared_storage_reader, shared_storage_writer)
+bot.execute
+```
+
+In this example, the shared_storage_reader is a default implementation that does not perform actual reading operations, while shared_storage_writer writes to a PostgreSQL database.
+
 ## Building my own BOT
 
 The gem provides essential interfaces, types, and methods to help you easily create your own bot. For instance, two base classes are provided: one for handling shared storage read-write operations and another for defining the bot’s specific task logic.
