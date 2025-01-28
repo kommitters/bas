@@ -47,6 +47,31 @@ Currently, the gem supports: `PostgreSQL`.
 
 This configuration provides an example of the structure a PostgreSQL shared storage would require for this purpose. The exact structure should be tailored to the nature of the implemented use cases.
 
+### Optional Dependencies
+
+BAS supports integrations with various external services like GitHub, Notion, OpenAI, and more. To use these integrations, you need to install the required gems manually.
+
+**Installing Optional Dependencies**
+
+The following gems are needed to use the following optional dependencies, add to your Gemfile or install them individually:
+
+```ruby
+- GitHub Integration:   gem 'octokit', '~> 8.1.0'
+                        gem 'jwt", "~> 2.8.1'
+                        gem 'openssl', '~> 3.2'
+
+- Notion Integration:   gem 'md_to_notion', '~> 0.1.4'
+
+- Google Integration:   gem 'google-api-client', '~> 0.53'
+                        gem 'googleauth', '~> 1.11'
+
+- IMAP/SMTP Email:      gem 'net-imap', '~> 0.4.10'
+                        gem 'net-smtp', '~> 0.4.0.1'
+
+- Gmail OAuth:          gem 'gmail_xoauth', '~> 0.4.1'
+```
+
+
 ```sql
 CREATE TABLE api_data(
     id SERIAL NOT NULL,

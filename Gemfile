@@ -5,15 +5,7 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in bas.gemspec
 gemspec
 
-gem "jwt", "~> 2.8.1"
-
 gem "rake", "~> 13.0"
-
-gem "net-imap", "~> 0.4.10"
-gem "net-smtp", "~> 0.4.0.1"
-
-gem "octokit", "~> 8.1.0"
-gem "openssl", "~> 3.2"
 
 gem "rspec", "~> 3.0"
 gem "rubocop", "~> 1.21"
@@ -27,9 +19,6 @@ gem "httparty"
 
 gem "pg", "~> 1.5", ">= 1.5.4"
 
-gem "gmail_xoauth"
-
-gem "google-api-client"
-gem "googleauth"
-
-gem "md_to_notion", "~> 0.1.4"
+group :test do
+  gem "google-api-client", "~> 0.53.0"
+end
