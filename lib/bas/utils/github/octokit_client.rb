@@ -22,6 +22,12 @@ module Utils
         { error: e.to_s }
       end
 
+      def repository_info(repo)
+        octokit.repository(repo)
+      rescue StandardError => e
+        { error: e.to_s }
+      end
+
       private
 
       def octokit
