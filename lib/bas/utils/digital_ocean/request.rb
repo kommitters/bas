@@ -25,11 +25,13 @@ module Utils
       # <b>returns</b> <tt>HTTParty::Response</tt>
       #
       def self.execute(params)
+        validate_params(params)
+
         url = "#{DIGITAL_OCEAN_BASE_URL}/#{params[:endpoint]}"
+        headers = headers(params[:secret]) 
+        body = params[:body] ? params[:body].to_json : nil
 
-        headers = headers(params[:secret])
-
-        HTTParty.send(params[:method], url, { body: params[:body].to_json, headers: })
+        HTTParty.send(params[:method], url, { body: body, headers: headers })
       end
 
       def self.headers(secret)
@@ -37,6 +39,13 @@ module Utils
           "Authorization" => "Bearer #{secret}",
           "Content-Type" => "application/json"
         }
+      end
+
+      private
+
+      def self.validate_params(params)
+        raise ArgumentError, "Secret is required" unless params[:secret] 
+        raise ArgumentError, "Endpoint is required" unless params[:endpoint]
       end
     end
   end
