@@ -49,7 +49,8 @@ RSpec.describe Utils::Github::OctokitClient do
     installation = double("Sawyer::Resource", id: 123_456)
     allow(client).to receive(:find_organization_installation).with("test-org").and_return(installation)
 
-    allow(client).to receive(:create_app_installation_access_token).with(123_456).and_return({ token: "mock_access_token" })
+    mock_token_response = { token: "mock_access_token" }
+    allow(client).to receive(:create_app_installation_access_token).with(123_456).and_return(mock_token_response)
   end
 
   describe "#repository_info" do
