@@ -29,7 +29,7 @@ module Utils
 
         url = "#{DIGITAL_OCEAN_BASE_URL}/#{params[:endpoint]}"
         headers = headers(params[:secret])
-        body = params[:body] ? params[:body].to_json : nil
+        body = params[:body]&.to_json
 
         HTTParty.send(params[:method], url, { body: body, headers: headers })
       end
