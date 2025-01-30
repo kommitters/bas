@@ -48,7 +48,7 @@ RSpec.describe Utils::Discord::Request do
     it "sends a request to Discord API with the correct parameters" do
       combined_paragraphs = "Paragraph 1\n\nParagraph 2"
       described_class.write_media_text(params, combined_paragraphs)
-    
+
       expect(HTTParty).to have_received(:post).with(
         URI.parse("https://discord.com/api/v10/channels/12345/messages"), # Usar URI.parse
         body: { content: combined_paragraphs }.to_json,
