@@ -79,5 +79,34 @@ RSpec.describe Utils::Imap::Request do
         expect(result[:error].parsed_response).to eq({ "error" => "invalid_grant" })
       end
     end
+
+    context "when an exception is raised during IMAP operations" do
+      before do
+        stub_request(:post, params[:token_uri])
+          .with(body: {
+                  "grant_type" => "refresh_token",
+                  "refresh_token" => params[:refresh_token],
+                  "client_id" => params[:client_id],
+                  "client_secret" => params[:client_secret]
+                })
+          .to_return(
+            status: 200,
+            body: '{"access_token": "test_access_token"}',
+            headers: { 'Content-Type': "application/json" }
+          )
+
+        allow(Net::IMAP).to receive(:new).with(params[:email_domain], port: params[:email_port],
+                                                                      ssl: true).and_return(imap_client)
+        allow(imap_client).to receive(:authenticate).with("XOAUTH2", params[:user_email], "test_access_token")
+        allow(imap_client).to receive(:examine).with(params[:inbox]).and_raise(Net::IMAP::Error, "IMAP error")
+      end
+
+      it "returns an error when an exception is raised" do
+        imap_request = described_class.new(params, query)
+        result = imap_request.execute
+
+        expect(result[:error]).to eq("IMAP error")
+      end
+    end
   end
 end
