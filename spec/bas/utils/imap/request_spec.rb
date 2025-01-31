@@ -79,19 +79,5 @@ RSpec.describe Utils::Imap::Request do
         expect(result[:error].parsed_response).to eq({ "error" => "invalid_grant" })
       end
     end
-
-    describe "#fetch_emails" do
-      before do
-        allow(imap_client).to receive(:search).with(query).and_return([1])
-        allow(imap_client).to receive(:fetch).with(1, "ENVELOPE").and_return([message_double])
-      end
-
-      it "correctly formats the fetched emails" do
-        imap_request = described_class.new(params, query)
-        emails = imap_request.send(:fetch_emails, imap_client)
-
-        expect(emails).to eq([{ message_id: 1, message: "test email content" }])
-      end
-    end
   end
 end

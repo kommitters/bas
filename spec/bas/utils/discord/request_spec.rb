@@ -50,7 +50,7 @@ RSpec.describe Utils::Discord::Request do
       described_class.write_media_text(params, combined_paragraphs)
 
       expect(HTTParty).to have_received(:post).with(
-        URI.parse("https://discord.com/api/v10/channels/12345/messages"), # Usar URI.parse
+        URI.parse("https://discord.com/api/v10/channels/12345/messages"),
         body: { content: combined_paragraphs }.to_json,
         headers: described_class.headers(params[:secret_token])
       )
@@ -59,16 +59,16 @@ RSpec.describe Utils::Discord::Request do
 
   describe "#split_paragraphs" do
     it "splits the paragraphs and sends requests for each pair" do
-      expect(HTTParty).to receive(:post).twice.and_return(response)
-
       described_class.split_paragraphs(params)
+
+      expect(HTTParty).to have_received(:post).twice
     end
 
     it "does not send a request if paragraphs are empty" do
       empty_params = { channel_id: "12345", secret_token: "discord_bot_token", body: "" }
-      expect(HTTParty).not_to receive(:post)
-
       described_class.split_paragraphs(empty_params)
+
+      expect(HTTParty).not_to have_received(:post)
     end
   end
 
