@@ -1,110 +1,85 @@
 # frozen_string_literal: true
 
-# The Bas module serves as a namespace for business automation services.
-#
+require 'concurrent-ruby'
+
 module Bas
-  # The Orchestrator module is responsible for managing the scheduling and execution
-  # of scripts within the business automation services.
-  #
   module Orchestrator
-    # The Manager class handles the scheduling and execution of scripts.
     class Manager
-      # Initializes the Manager with a set of schedules.
-      #
-      # @param schedules [Array<Hash>] List of scripts with execution details.
       def initialize(schedules)
         @last_executions = Hash.new(0.0)
         @schedules = schedules
+        @pool = Concurrent::FixedThreadPool.new(@schedules.size)
       end
 
-      # Runs the execution loop, checking which scripts need to be executed.
       def run
-        loop do
-          @actual_time = Time.now
-
-          @schedules.each do |script|
-            execute(script) if should_execute?(script)
-          end
-
-          sleep 0.01
-        end
+        @schedules.each { |script| @pool.post { process_script(script) } }
+        
+        @pool.shutdown
+        @pool.wait_for_termination
       end
 
       private
 
-      # Determines whether a script should be executed.
-      #
-      # @param script [Hash] The script schedule details.
-      # @return [Boolean] True if the script should be executed, false otherwise.
-      def should_execute?(script)
-        return time_elapsed?(script) if script[:interval]
-        return day_match?(script) && time_match?(script) if script[:day]
+      def process_script(script)
+        loop do
+          @actual_time = Time.now
 
-        time_match?(script)
-      end
+          execute_interval(script) if interval?(script)
+          execute_day(script) if day?(script) && time?(script)
+          execute_time(script) if time?(script) && !day?(script)
 
-      # Executes a script and updates its last execution timestamp.
-      #
-      # @param script [Hash] The script schedule details.
-      def execute(script)
-        project_root = File.expand_path(File.join(__dir__, "..", "..", "..", ".."))
-        script_path = File.expand_path(File.join(project_root, "src", "use_cases_execution",
-                                                 script[:path].sub(%r{^src/use_cases_execution/}, "")))
-
-        puts "Executing #{script_path} at #{current_time}"
-
-        if system("ruby", script_path)
-          @last_executions[script[:path]] = time_in_milliseconds
-        else
-          puts "Failed to execute #{script_path}"
+          sleep 0.1
+        rescue StandardError => e
+          puts "Error in thread: #{e.message}"
         end
       end
 
-      # Checks if the required time has elapsed for a script to run.
-      #
-      # @param script [Hash] The script schedule details.
-      # @return [Boolean] True if the required interval has passed, false otherwise.
-      def time_elapsed?(script)
-        current_time_ms = time_in_milliseconds
-        last_execution_ms = @last_executions[script[:path]] || 0
-        current_time_ms - last_execution_ms >= script[:interval]
+      def execute_interval(script)
+        return unless time_in_milliseconds - @last_executions[script[:path]] >= script[:interval]
+
+        execute(script)
+        @last_executions[script[:path]] = time_in_milliseconds
       end
 
-      # Checks if the current time matches the script's scheduled time.
-      #
-      # @param script [Hash] The script schedule details.
-      # @return [Boolean] True if the script should run now, false otherwise.
-      def time_match?(script)
-        script[:time]&.include?(current_time)
+      def execute_day(script)
+        return unless script[:day].include?(current_day) && script[:time].include?(current_time)
+
+        execute(script) unless @last_executions[script[:path]].eql?(current_time)
+        @last_executions[script[:path]] = current_time
       end
 
-      # Checks if the current day matches the script's scheduled day.
-      #
-      # @param script [Hash] The script schedule details.
-      # @return [Boolean] True if today matches the scheduled day, false otherwise.
-      def day_match?(script)
-        script[:day]&.include?(current_day)
+      def execute_time(script)
+        execute(script) if script[:time].include?(current_time) && !@last_executions[script[:path]].eql?(current_time)
+        @last_executions[script[:path]] = current_time
       end
 
-      # Returns the current time in milliseconds.
-      #
-      # @return [Float] The current time in milliseconds.
+      def interval?(script)
+        script[:interval]
+      end
+
+      def time?(script)
+        script[:time]
+      end
+
+      def day?(script)
+        script[:day]
+      end
+
       def time_in_milliseconds
         @actual_time.to_f * 1000
       end
 
-      # Returns the current time in HH:MM format.
-      #
-      # @return [String] The current time as a string.
       def current_time
-        @actual_time.strftime("%H:%M")
+        @actual_time.strftime('%H:%M')
       end
 
-      # Returns the current day of the week.
-      #
-      # @return [String] The current day as a string.
       def current_day
-        @actual_time.strftime("%A")
+        @actual_time.strftime('%A')
+      end
+
+      def execute(script)
+        puts "Executing #{script[:path]} at #{current_time}"
+        system("ruby", File.expand_path(File.join(__dir__, script[:path])))
       end
     end
   end
