@@ -88,6 +88,57 @@ CREATE TABLE api_data(
 );
 ```
 
+## Orchestrator: Manager for Scheduling and Running Scripts ##
+
+This module manages the execution of scheduled bots based on time intervals, specific times, or days. It uses a **ThreadPool** to run the scripts concurrently, ensuring efficient execution.
+
+### Adding Schedules to Your Repository
+
+To use the Orchestrator for scheduling and executing your bots, you need to define a `schedules` array in your repository. This array should include the paths to your scripts and the schedules for execution.
+
+### Example of the `schedules` defintion
+
+```ruby
+BIRTHDAY_SCHEDULES = [
+  # Execute every 1000ms (1 second)
+  { path: '/birthday/fetch_birthday_from_notion.rb', interval: 1000 },
+  { path: '/birthday/format_birthday.rb', interval: 1000 },
+  { path: '/birthday/notify_birthday_in_discord.rb', interval: 1000 },
+  { path: '/birthday/garbage_collector.rb', interval: 1000 },
+  ].freeze
+
+  # With days and hours
+  # Execute at 08:00 AM on Mondays
+  { path: '/birthday/notify_birthday_in_email.rb', day: ['Monday'], time: ['08:00'] }
+
+```
+
+### How to Use the Orchestrator
+
+Once you've defined your schedules, you can initialize and run the Orchestrator to begin executing your scripts based on their schedules.
+
+
+```ruby
+
+# Initialize the orchestrator with the defined schedules
+manager = Bas::Orchestrator::Manager.new(BIRTHDAY_SCHEDULES)
+
+# Run the orchestrator
+manager.run
+
+```
+### Folder structure example:
+
+```bash
+src/use_cases_execution/
+├── birthday/
+│   ├── fetch_birthday_from_notion.rb
+│   ├── format_birthday.rb
+│   ├── notify_birthday_in_discord.rb
+│   └── garbage_collector.rb
+└── schedules.rb
+```
+
 ### Implementation examples
 
 #### Example 1: Using the Same Shared Storage for Reading and Writing
