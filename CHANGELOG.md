@@ -1,5 +1,11 @@
 # Changelog
 
+# 1.7.0 (10.02.2025)
+- [Add orchestrator logic into the gem](https://github.com/kommitters/bas/issues/130)
+- [Improve and update test suite](https://github.com/kommitters/bas/issues/129)
+- [Cleanup gem dependencies](https://github.com/kommitters/bas/pull/126)
+- [Update bas in terms of business automation suite](http://github.com/kommitters/bas/pull/125)
+
 # 1.6.2 (12.12.2024)
 - [Bots with default shared storage reader are not saving data](https://github.com/kommitters/bas/issues/122)
 
