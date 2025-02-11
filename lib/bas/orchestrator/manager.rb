@@ -85,7 +85,9 @@ module Bas
 
       def execute(script)
         puts "Executing #{script[:path]} at #{current_time}"
-        system("ruby ", script[:path])
+        absolute_path = File.expand_path(script[:path], __dir__)
+
+        system("ruby", absolute_path)
       end
     end
   end
