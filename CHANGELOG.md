@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.7.1 (11.02.2025)
+- [Fix absolute_path in order to execute the scripts](https://github.com/kommitters/bas/pull/133)
+
 # 1.7.0 (10.02.2025)
 - [Add orchestrator logic into the gem](https://github.com/kommitters/bas/issues/130)
 - [Improve and update test suite](https://github.com/kommitters/bas/issues/129)
