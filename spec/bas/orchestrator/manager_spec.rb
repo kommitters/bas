@@ -3,6 +3,7 @@
 require "spec_helper"
 require "bas/orchestrator/manager"
 require 'timecop'
+src/use_cases_execution/
 
 RSpec.describe Bas::Orchestrator::Manager do
   let(:schedules) do
@@ -12,7 +13,10 @@ RSpec.describe Bas::Orchestrator::Manager do
       { path: "websites_availability/garbage_collector.rb", time: ["00:00"] },
       { path: "pto_next_week/fetch_next_week_pto_from_notion.rb", time: ["12:40"], day: ["Monday"] },
       { path: "pto/fetch_pto_from_notion.rb", time: ["13:10"] },
-      { path: "example/custom_last_friday.rb", custom_rule: { type: "last_day_of_week_in_month", day_of_week: "Friday", time: ["15:00"] } }
+      { path: "digital_ocean_bill_alert/fetch_billing_from_digital_ocean.rb", custom_rule: { type: "last_day_of_week_in_month", day_of_week: "Friday", time: ["15:00"] } },
+      { path: "pto/fetch_next_week_pto_from_notion.rb", custom_rule: { type: "last_day_of_month", time: ["23:59"] } },
+      { path: "networks_sync/fetch_networks_emailless_from_notion.rb", custom_rule: { type: "last_day_of_week", day_of_week: "Tuesday", time: ["10:00"] } },
+      { path: "digital_ocean_bill_alert/fetch_billing_from_digital_ocean.rb", custom_rule: { type: "last_day_of_year", time: ["23:00"] } }
     ]
   end
 
@@ -86,12 +90,16 @@ RSpec.describe Bas::Orchestrator::Manager do
 
   describe "#execute_custom_rule" do
     let(:custom_script) { schedules.find { |s| s[:custom_rule] && s[:custom_rule][:type] == "last_day_of_week_in_month" } }
+    let(:last_day_of_week_in_month_script) { schedules.find { |s| s[:custom_rule] && s[:custom_rule][:type] == "last_day_of_week_in_month" } }
+    let(:last_day_of_month_script) { schedules.find { |s| s[:custom_rule] && s[:custom_rule][:type] == "last_day_of_month" } }
+    let(:last_day_of_week_script) { schedules.find { |s| s[:custom_rule] && s[:custom_rule][:type] == "last_day_of_week" } }
+    let(:last_day_of_year_script) { schedules.find { |s| s[:custom_rule] && s[:custom_rule][:type] == "last_day_of_year" } }
+
+    before do
+      allow(manager).to receive(:execute).and_return(true)
+    end
 
     context "for 'last_day_of_week_in_month' rule type" do
-      before do
-        allow(manager).to receive(:execute).with(custom_script).and_return(true)
-      end
-
       it "executes script if all conditions are met (time from moment, date logic stubbed true)" do
         current_moment_at_15_00 = Time.local(2023, 1, 1, 15, 0, 0)
 
@@ -103,6 +111,130 @@ RSpec.describe Bas::Orchestrator::Manager do
         expect {
           manager.send(:execute_custom_rule, custom_script, current_moment_at_15_00)
         }.to change { manager.instance_variable_get(:@last_executions)[custom_script[:path]] }.to("15:00")
+      end
+      it "does not execute script if the time does not match" do
+        current_moment_wrong_time = Time.local(2023, 1, 1, 14, 59, 0)
+
+        allow(manager).to receive(:today_is_last_day_of_week_in_month?)
+          .with(current_moment_wrong_time, custom_script.dig(:custom_rule, :day_of_week))
+          .and_return(true) # We still mock the date logic as true for this test
+
+        expect(manager).not_to receive(:execute).with(custom_script)
+        expect {
+          manager.send(:execute_custom_rule, custom_script, current_moment_wrong_time)
+        }.not_to change { manager.instance_variable_get(:@last_executions)[custom_script[:path]] }
+      end
+
+      it "does not execute script if the date logic returns false" do
+        current_moment_at_15_00 = Time.local(2023, 1, 1, 15, 0, 0)
+
+        allow(manager).to receive(:today_is_last_day_of_week_in_month?)
+          .with(current_moment_at_15_00, custom_script.dig(:custom_rule, :day_of_week))
+          .and_return(false)
+
+        expect(manager).not_to receive(:execute).with(custom_script)
+        expect {
+          manager.send(:execute_custom_rule, custom_script, current_moment_at_15_00)
+        }.not_to change { manager.instance_variable_get(:@last_executions)[custom_script[:path]] }
+      end
+    end
+
+    context "for 'last_day_of_month' rule type" do
+      it "executes script if it's the last day of the month and the time matches" do
+        last_day_moment = Time.local(2025, 5, 31, 23, 59, 0) # Last day of May 2025, 23:59
+        allow(manager).to receive(:current_moment).and_return(last_day_moment)
+
+        expect(manager).to receive(:execute).with(last_day_of_month_script)
+        expect {
+          manager.send(:execute_custom_rule, last_day_of_month_script, last_day_moment)
+        }.to change { manager.instance_variable_get(:@last_executions)[last_day_of_month_script[:path]] }.to("23:59")
+      end
+
+      it "does not execute if it's not the last day of the month" do
+        not_last_day_moment = Time.local(2025, 5, 30, 23, 59, 0)
+        allow(manager).to receive(:current_moment).and_return(not_last_day_moment)
+
+        expect(manager).not_to receive(:execute).with(last_day_of_month_script)
+        expect {
+          manager.send(:execute_custom_rule, last_day_of_month_script, not_last_day_moment)
+        }.not_to change { manager.instance_variable_get(:@last_executions)[last_day_of_month_script[:path]] }
+      end
+
+      it "does not execute if the time does not match" do
+        last_day_wrong_time = Time.local(2025, 5, 31, 23, 58, 0)
+        allow(manager).to receive(:current_moment).and_return(last_day_wrong_time)
+
+        expect(manager).not_to receive(:execute).with(last_day_of_month_script)
+        expect {
+          manager.send(:execute_custom_rule, last_day_of_month_script, last_day_wrong_time)
+        }.not_to change { manager.instance_variable_get(:@last_executions)[last_day_of_month_script[:path]] }
+      end
+    end
+
+    context "for 'last_day_of_week' rule type" do
+      it "executes script if it's the last specified day of the week and the time matches" do
+        # Tuesday, May 27, 2025 is the last Tuesday of May 2025
+        last_tuesday_moment = Time.local(2025, 5, 27, 10, 0, 0)
+        allow(manager).to receive(:current_moment).and_return(last_tuesday_moment)
+
+        expect(manager).to receive(:execute).with(last_day_of_week_script)
+        expect {
+          manager.send(:execute_custom_rule, last_day_of_week_script, last_tuesday_moment)
+        }.to change { manager.instance_variable_get(:@last_executions)[last_day_of_week_script[:path]] }.to("10:00")
+      end
+
+      it "does not execute if it's not the specified last day of the week" do
+        # Tuesday, May 20, 2025 is not the last Tuesday of May 2025
+        not_last_tuesday_moment = Time.local(2025, 5, 20, 10, 0, 0)
+        allow(manager).to receive(:current_moment).and_return(not_last_tuesday_moment)
+
+        expect(manager).not_to receive(:execute).with(last_day_of_week_script)
+        expect {
+          manager.send(:execute_custom_rule, last_day_of_week_script, not_last_tuesday_moment)
+        }.not_to change { manager.instance_variable_get(:@last_executions)[last_day_of_week_script[:path]] }
+      end
+
+      it "does not execute if the time does not match" do
+        # Last Tuesday, wrong time
+        last_tuesday_wrong_time = Time.local(2025, 5, 27, 9, 59, 0)
+        allow(manager).to receive(:current_moment).and_return(last_tuesday_wrong_time)
+
+        expect(manager).not_to receive(:execute).with(last_day_of_week_script)
+        expect {
+          manager.send(:execute_custom_rule, last_day_of_week_script, last_tuesday_wrong_time)
+        }.not_to change { manager.instance_variable_get(:@last_executions)[last_day_of_week_script[:path]] }
+      end
+    end
+
+    context "for 'last_day_of_year' rule type" do
+      it "executes script if it's the last day of the year and the time matches" do
+        last_day_year_moment = Time.local(2025, 12, 31, 23, 0, 0)
+        allow(manager).to receive(:current_moment).and_return(last_day_year_moment)
+
+        expect(manager).to receive(:execute).with(last_day_of_year_script)
+        expect {
+          manager.send(:execute_custom_rule, last_day_of_year_script, last_day_year_moment)
+        }.to change { manager.instance_variable_get(:@last_executions)[last_day_of_year_script[:path]] }.to("23:00")
+      end
+
+      it "does not execute if it's not the last day of the year" do
+        not_last_day_year_moment = Time.local(2025, 12, 30, 23, 0, 0)
+        allow(manager).to receive(:current_moment).and_return(not_last_day_year_moment)
+
+        expect(manager).not_to receive(:execute).with(last_day_of_year_script)
+        expect {
+          manager.send(:execute_custom_rule, last_day_of_year_script, not_last_day_year_moment)
+        }.not_to change { manager.instance_variable_get(:@last_executions)[last_day_of_year_script[:path]] }
+      end
+
+      it "does not execute if the time does not match" do
+        last_day_year_wrong_time = Time.local(2025, 12, 31, 22, 59, 0)
+        allow(manager).to receive(:current_moment).and_return(last_day_year_wrong_time)
+
+        expect(manager).not_to receive(:execute).with(last_day_of_year_script)
+        expect {
+          manager.send(:execute_custom_rule, last_day_of_year_script, last_day_year_wrong_time)
+        }.not_to change { manager.instance_variable_get(:@last_executions)[last_day_of_year_script[:path]] }
       end
     end
 
