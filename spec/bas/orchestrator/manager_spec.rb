@@ -91,12 +91,7 @@ RSpec.describe Bas::Orchestrator::Manager do
   end
 
   describe "#execute_custom_rule" do
-    let(:custom_script) do
-      schedules.find do |s|
-        s[:custom_rule] && s[:custom_rule][:type] == "last_day_of_week_in_month"
-      end
-    end
-    let(:last_day_of_week_in_month_script) do
+    let(:last_wday_month_script) do
       schedules.find do |s|
         s[:custom_rule] && s[:custom_rule][:type] == "last_day_of_week_in_month"
       end
@@ -126,38 +121,38 @@ RSpec.describe Bas::Orchestrator::Manager do
         current_moment = Time.local(2023, 1, 1, 15, 0, 0)
 
         allow(manager).to receive(:today_is_last_day_of_week_in_month?)
-          .with(current_moment, custom_script.dig(:custom_rule, :day_of_week))
+          .with(current_moment, last_wday_month_script.dig(:custom_rule, :day_of_week))
           .and_return(true)
 
-        expect(manager).to receive(:execute).with(custom_script)
+        expect(manager).to receive(:execute).with(last_wday_month_script)
         expect do
-          manager.send(:execute_custom_rule, custom_script, current_moment)
-        end.to change { manager.instance_variable_get(:@last_executions)[custom_script[:path]] }.to("15:00")
+          manager.send(:execute_custom_rule, last_wday_month_script, current_moment)
+        end.to change { manager.instance_variable_get(:@last_executions)[last_wday_month_script[:path]] }.to("15:00")
       end
       it "does not execute script if the time does not match" do
         current_moment_wrong_time = Time.local(2023, 1, 1, 14, 59, 0)
 
         allow(manager).to receive(:today_is_last_day_of_week_in_month?)
-          .with(current_moment_wrong_time, custom_script.dig(:custom_rule, :day_of_week))
+          .with(current_moment_wrong_time, last_wday_month_script.dig(:custom_rule, :day_of_week))
           .and_return(true) # We still mock the date logic as true for this test
 
-        expect(manager).not_to receive(:execute).with(custom_script)
+        expect(manager).not_to receive(:execute).with(last_wday_month_script)
         expect do
-          manager.send(:execute_custom_rule, custom_script, current_moment_wrong_time)
-        end.not_to(change { manager.instance_variable_get(:@last_executions)[custom_script[:path]] })
+          manager.send(:execute_custom_rule, last_wday_month_script, current_moment_wrong_time)
+        end.not_to(change { manager.instance_variable_get(:@last_executions)[last_wday_month_script[:path]] })
       end
 
       it "does not execute script if the date logic returns false" do
         current_moment = Time.local(2023, 1, 1, 15, 0, 0)
 
         allow(manager).to receive(:today_is_last_day_of_week_in_month?)
-          .with(current_moment, custom_script.dig(:custom_rule, :day_of_week))
+          .with(current_moment, last_wday_month_script.dig(:custom_rule, :day_of_week))
           .and_return(false)
 
-        expect(manager).not_to receive(:execute).with(custom_script)
+        expect(manager).not_to receive(:execute).with(last_wday_month_script)
         expect do
-          manager.send(:execute_custom_rule, custom_script, current_moment)
-        end.not_to(change { manager.instance_variable_get(:@last_executions)[custom_script[:path]] })
+          manager.send(:execute_custom_rule, last_wday_month_script, current_moment)
+        end.not_to(change { manager.instance_variable_get(:@last_executions)[last_wday_month_script[:path]] })
       end
     end
 
@@ -264,11 +259,8 @@ RSpec.describe Bas::Orchestrator::Manager do
       it "puts an error message and does not execute" do
         unknown_rule_script = { path: "unknown_script.rb", custom_rule: { type: "some_future_rule" } }
         current_moment = Time.now
-        expect(manager).not_to receive(:execute)
 
-        expect do
-          manager.send(:execute_custom_rule, unknown_rule_script, current_moment)
-        end.to output(/Unknown custom rule type: some_future_rule for script 'unknown_script.rb'/).to_stdout_from_any_process # rubocop:disable Layout/LineLength
+        expect(manager).not_to receive(:execute)
 
         expect do
           manager.send(:execute_custom_rule, unknown_rule_script, current_moment)
