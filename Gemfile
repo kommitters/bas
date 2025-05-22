@@ -29,4 +29,5 @@ group :test do
   gem "net-smtp", "~> 0.4.0.1"
   gem "octokit", "~> 8.1.0"
   gem "openssl", "~> 3.2"
+  gem "timecop"
 end
