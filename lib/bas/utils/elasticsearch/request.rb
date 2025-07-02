@@ -52,7 +52,7 @@ module Utils
           when :search
             search(params, client)
           when :update
-            update_document(params, client)
+            update_documents(params, client)
           when :create_mapping
             create_mapping(params, client)
           end
@@ -74,8 +74,8 @@ module Utils
           client.index(index: params[:index], body: params[:body])
         end
 
-        def update_document(params, client)
-          client.update(index: params[:index], id: params[:id], body: params[:body])
+        def update_documents(params, client)
+          client.update_by_query(index: params[:index], body: params[:body], wait_for_completion: true, refresh: true)
         end
 
         def create_mapping(params, client)
