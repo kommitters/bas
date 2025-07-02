@@ -62,7 +62,7 @@ module Utils
             search_params[:q] = params[:query]
           end
 
-          client.search(search_params)
+          client.search(**search_params)
         end
 
         def index_document(params, client)
