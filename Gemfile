@@ -15,8 +15,8 @@ gem "simplecov-lcov", "~> 0.8.0"
 gem "vcr"
 gem "webmock"
 
+gem "elasticsearch", "~> 8.0"
 gem "httparty"
-
 gem "pg", "~> 1.5", ">= 1.5.4"
 
 group :test do
