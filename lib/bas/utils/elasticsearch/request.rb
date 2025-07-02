@@ -8,8 +8,6 @@ module Utils
     # This module is a ElasticsearchDB utility to make requests to a Elasticsearch database.
     #
     module Request
-      ALLOWED_METHODS = %i[search index].freeze
-
       # Implements the request process logic to the ElasticsearchDB index.
       #
       # <br>
@@ -17,11 +15,12 @@ module Utils
       # * <tt>connection</tt> Connection parameters to the database: `host`, `port`, `index`, `user`, `password`.
       # * <b>query</b>:
       #   * <tt>String</tt>: String with the Elasticsearch query to be executed.
-      #   * <tt>Array</tt>: Two element array, where the first element is the Elasticsearch query (string), and the
-      #                     second one an array of elements to be interpolared in the query when using "$1, $2, ...".
+      #   * <tt>Hash</tt>: Hash with the Elasticsearch query to be executed.
+      # * <tt>method</tt>: Method to be executed.
+      #                    Allowed methods are: `:search`, `:index`, `:update`, `:create_mapping`.
       #
       # <br>
-      # <b>returns</b> <tt>HTTParty::Response</tt>
+      # <b>returns</b> <tt>Elasticsearch::Response</tt>
       #
       class << self
         def execute(params)
@@ -31,14 +30,20 @@ module Utils
             user: params[:connection][:user],
             password: params[:connection][:password],
             api_versioning: false,
-            transport_options: { ssl: { ca_file: params[:connection][:ca_file] } }
+            transport_options: build_ssl_options(params[:connection])
           )
 
-          client.cluster.health
           perform_request(params, client)
         end
 
         private
+
+        def build_ssl_options(connection_params)
+          ssl_options = {}
+          ssl_options[:ca_file] = connection_params[:ca_file] if connection_params[:ca_file]
+          ssl_options[:verify] = connection_params[:ssl_verify] if connection_params.key?(:ssl_verify)
+          { ssl: ssl_options }
+        end
 
         def perform_request(params, client)
           case params[:method]

@@ -43,7 +43,7 @@ module Bas
       def set_processed
         return if read_options[:avoid_process].eql?(true) || read_response.id.nil?
 
-        update_stage(read_response.id, "processed") unless @read_response.nil?
+        update_stage(read_response.id, "processed")
       end
 
       private
@@ -92,14 +92,16 @@ module Bas
       def write_body(data)
         if data[:success]
           return {
-            data: data[:success], tag: write_options[:tag], archived: false, inserted_at: Time.now.to_s,
+            data: data[:success], tag: write_options[:tag],
+            archived: false, inserted_at: Time.now.strftime("%Y-%m-%d %H:%M:%S %z"),
             stage: "unprocessed", status: "success", error_message: nil, version: Bas::VERSION
           }
         end
 
         {
-          data: nil, tag: write_options[:tag], archived: false, inserted_at: Time.now.to_s,
-          stage: "unprocessed", status: "failed", error_message: data[:error], version: Bas::VERSION
+          data: nil, tag: write_options[:tag], archived: false,
+          inserted_at: Time.now.strftime("%Y-%m-%d %H:%M:%S %z"), stage: "unprocessed",
+          status: "failed", error_message: data[:error], version: Bas::VERSION
         }
       end
       # rubocop:enable Metrics/MethodLength
