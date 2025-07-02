@@ -67,10 +67,10 @@ RSpec.describe Utils::Elasticsearch::Request do
           connection: connection_params,
           method: :update,
           index: "my-index",
-          id: "1",
-          body: { doc: { content: "Updated content." } }
+          body: { query: { match: { title: "test" } }, doc: { content: "Updated content." } }
         }
-        expect(es_client).to receive(:update).with(index: "my-index", id: "1", body: params[:body])
+        expect(es_client).to receive(:update_by_query)
+          .with(index: "my-index", body: params[:body], wait_for_completion: true, refresh: true)
         described_class.execute(params)
       end
     end
