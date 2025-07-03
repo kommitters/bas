@@ -125,7 +125,7 @@ module Bas
         response = Utils::Elasticsearch::Request.execute(params)
         return unless response["updated"].zero?
 
-        raise StandardError, "Document with id #{id} not found, so it was not updated"
+        raise StandardError, "Document #{id} not found, so it was not updated"
       end
     end
   end
