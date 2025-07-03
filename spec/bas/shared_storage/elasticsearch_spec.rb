@@ -26,6 +26,7 @@ RSpec.describe Bas::SharedStorage::Elasticsearch do
     }
   end
   let(:es_response) { double("Elasticsearch::Response", body: es_response_body) }
+  let(:update_response) { { "updated" => 1 } }
 
   before do
     allow(Utils::Elasticsearch::Request).to receive(:execute).and_return(es_response)
@@ -82,10 +83,26 @@ RSpec.describe Bas::SharedStorage::Elasticsearch do
     it "updates the record stage to 'in process'" do
       shared_storage = described_class.new(read_options:, write_options:)
       shared_storage.read
+      allow(Utils::Elasticsearch::Request).to receive(:execute).and_return(update_response)
       expect(Utils::Elasticsearch::Request).to receive(:execute).with(
-        hash_including(method: :update, id: "1", body: { doc: { stage: "in process" } })
-      )
+        hash_including(
+          method: :update,
+          body: hash_including(
+            query: { ids: { values: ["1"] } },
+            script: hash_including(source: /ctx._source.stage/, params: { new_value: "in process" })
+          )
+        )
+      ).and_return(update_response)
       shared_storage.set_in_process
+    end
+
+    it "raises if no document was updated" do
+      shared_storage = described_class.new(read_options:, write_options:)
+      shared_storage.read
+      allow(Utils::Elasticsearch::Request).to receive(:execute).and_return({ "updated" => 0 })
+      expect do
+        shared_storage.set_in_process
+      end.to raise_error(StandardError, /Document 1 not found/)
     end
   end
 
@@ -99,10 +116,26 @@ RSpec.describe Bas::SharedStorage::Elasticsearch do
     it "updates the record stage to 'processed'" do
       shared_storage = described_class.new(read_options:, write_options:)
       shared_storage.read
+      allow(Utils::Elasticsearch::Request).to receive(:execute).and_return(update_response)
       expect(Utils::Elasticsearch::Request).to receive(:execute).with(
-        hash_including(method: :update, id: "1", body: { doc: { stage: "processed" } })
-      )
+        hash_including(
+          method: :update,
+          body: hash_including(
+            query: { ids: { values: ["1"] } },
+            script: hash_including(source: /ctx._source.stage/, params: { new_value: "processed" })
+          )
+        )
+      ).and_return(update_response)
       shared_storage.set_processed
+    end
+
+    it "raises if no document was updated" do
+      shared_storage = described_class.new(read_options:, write_options:)
+      shared_storage.read
+      allow(Utils::Elasticsearch::Request).to receive(:execute).and_return({ "updated" => 0 })
+      expect do
+        shared_storage.set_processed
+      end.to raise_error(StandardError, /Document 1 not found/)
     end
   end
 end

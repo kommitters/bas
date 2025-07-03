@@ -115,14 +115,17 @@ module Bas
 
       def update_stage(id, stage)
         params = {
-          connection: read_options[:connection],
-          index: read_options[:index],
-          id: id,
-          body: { doc: { stage: stage } },
-          method: :update
+          connection: read_options[:connection], index: read_options[:index], method: :update,
+          body: {
+            query: { ids: { values: [id] } },
+            script: { source: "ctx._source.stage = params.new_value", params: { new_value: stage } }
+          }
         }
 
-        Utils::Elasticsearch::Request.execute(params)
+        response = Utils::Elasticsearch::Request.execute(params)
+        return unless response["updated"].zero?
+
+        raise StandardError, "Document #{id} not found, so it was not updated"
       end
     end
   end
