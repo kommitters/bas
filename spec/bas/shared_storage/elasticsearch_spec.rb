@@ -100,9 +100,9 @@ RSpec.describe Bas::SharedStorage::Elasticsearch do
       shared_storage = described_class.new(read_options:, write_options:)
       shared_storage.read
       allow(Utils::Elasticsearch::Request).to receive(:execute).and_return({ "updated" => 0 })
-      expect {
+      expect do
         shared_storage.set_in_process
-      }.to raise_error(StandardError, /Document 1 not found/)
+      end.to raise_error(StandardError, /Document 1 not found/)
     end
   end
 
@@ -133,9 +133,9 @@ RSpec.describe Bas::SharedStorage::Elasticsearch do
       shared_storage = described_class.new(read_options:, write_options:)
       shared_storage.read
       allow(Utils::Elasticsearch::Request).to receive(:execute).and_return({ "updated" => 0 })
-      expect {
+      expect do
         shared_storage.set_processed
-      }.to raise_error(StandardError, /Document 1 not found/)
+      end.to raise_error(StandardError, /Document 1 not found/)
     end
   end
 end
