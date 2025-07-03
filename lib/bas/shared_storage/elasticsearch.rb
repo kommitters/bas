@@ -117,9 +117,11 @@ module Bas
         params = {
           connection: read_options[:connection],
           index: read_options[:index],
-          id: id,
-          body: { doc: { stage: stage } },
-          method: :update
+          method: :update,
+          body: {
+            query: { term: { _id: id } },
+            script: { source: "ctx._source.stage = params.new_value", params: { new_value: stage } }
+          }
         }
 
         Utils::Elasticsearch::Request.execute(params)
