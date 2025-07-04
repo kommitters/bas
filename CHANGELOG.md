@@ -1,5 +1,10 @@
 # Changelog
 
+# 1.7.2 (04.07.2025)
+- [Improve Elasticsearch mapping creation](https://github.com/kommitters/bas/pull/140)
+- [Fix in Elasticsearch shared storage update_stage method](https://github.com/kommitters/bas/pull/139)
+- [feat: Add Elasticsearch Shared Storage](https://github.com/kommitters/bas/issues/138)
+
 # 1.7.1 (11.02.2025)
 - [Fix absolute_path in order to execute the scripts](https://github.com/kommitters/bas/pull/133)
 
