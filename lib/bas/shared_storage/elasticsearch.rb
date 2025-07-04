@@ -24,10 +24,8 @@ module Bas
 
       def write(data)
         params = {
-          connection: write_options[:connection],
-          index: write_options[:index],
-          body: write_body(data),
-          method: :index
+          connection: write_options[:connection], index: write_options[:index],
+          body: write_body(data), method: :index
         }
 
         create_mapping
@@ -53,10 +51,7 @@ module Bas
         short_text_properties = {
           type: "text",
           fields: {
-            keyword: {
-              type: "keyword",
-              ignore_above: 256
-            }
+            keyword: { type: "keyword", ignore_above: 256 }
           }
         }
 
