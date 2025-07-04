@@ -24,10 +24,8 @@ module Bas
 
       def write(data)
         params = {
-          connection: write_options[:connection],
-          index: write_options[:index],
-          body: write_body(data),
-          method: :index
+          connection: write_options[:connection], index: write_options[:index],
+          body: write_body(data), method: :index
         }
 
         create_mapping
@@ -50,6 +48,13 @@ module Bas
 
       # rubocop:disable Metrics/MethodLength
       def create_mapping
+        short_text_properties = {
+          type: "text",
+          fields: {
+            keyword: { type: "keyword", ignore_above: 256 }
+          }
+        }
+
         params = {
           connection: write_options[:connection],
           index: write_options[:index],
@@ -57,13 +62,13 @@ module Bas
             mappings: {
               properties: {
                 data: { type: "object" },
-                tag: { type: "text" },
+                tag: short_text_properties,
                 archived: { type: "boolean" },
                 inserted_at: { type: "date", format: "yyyy-MM-dd HH:mm:ss Z" },
-                stage: { type: "text" },
-                status: { type: "text" },
+                stage: short_text_properties,
+                status: short_text_properties,
                 error_message: { type: "object" },
-                version: { type: "text" }
+                version: short_text_properties
               }
             }
           },
