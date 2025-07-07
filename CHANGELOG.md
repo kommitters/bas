@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.8.0 (07.07.2025)
+- [Feat: Implement client to interact with Operaton's API-REST](https://github.com/kommitters/bas/pull/142)
+
 # 1.7.2 (04.07.2025)
 - [Improve Elasticsearch mapping creation](https://github.com/kommitters/bas/pull/140)
 - [Fix in Elasticsearch shared storage update_stage method](https://github.com/kommitters/bas/pull/139)
