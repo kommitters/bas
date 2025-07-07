@@ -6,10 +6,22 @@ require "json"
 module Bas
   module Utils
     module Operaton
-      # The ExternalTaskClient class is a wrapper for the Operaton/Camunda External Task API.
-      # It simplifies fetching, locking, completing, and handling failures for external tasks.
+      # Client for interacting with Operaton's External Task API
+      #
+      # This client provides methods to manage external task lifecycle including:
+      # - Fetching and locking tasks
+      # - Completing tasks with variables
+      # - Unlocking tasks
+      # - Reporting task failures
+      #
+      # @example
+      #   client = ExternalTaskClient.new(base_url: "https://api.operaton.com", worker_id: "worker-123")
+      #   tasks = client.fetch_and_lock("my-topic")
       class ExternalTaskClient
         def initialize(base_url:, worker_id:)
+          raise ArgumentError, "base_url cannot be nil or empty" if base_url.nil? || base_url.empty?
+          raise ArgumentError, "worker_id cannot be nil or empty" if worker_id.nil? || worker_id.empty?
+
           @base_url = base_url
           @worker_id = worker_id
 
