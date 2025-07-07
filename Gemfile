@@ -15,7 +15,7 @@ gem "simplecov-lcov", "~> 0.8.0"
 gem "vcr"
 gem "webmock"
 
-gem gem "faraday", "~> 2.9"
+gem "faraday", "~> 2.9"
 
 gem "json", "~> 2.8"
 
