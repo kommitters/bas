@@ -15,6 +15,10 @@ gem "simplecov-lcov", "~> 0.8.0"
 gem "vcr"
 gem "webmock"
 
+gem "faraday", "~> 2.9"
+
+gem "json", "~> 2.8"
+
 gem "elasticsearch", "~> 8.0"
 gem "httparty"
 gem "pg", "~> 1.5", ">= 1.5.4"
