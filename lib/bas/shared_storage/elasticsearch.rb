@@ -90,7 +90,7 @@ module Bas
               ]
             }
           },
-          sort: [{ inserted_at: { order: "asc" } }]
+          sort: [{ inserted_at: { order: "desc" } }]
         }
       end
 
