@@ -17,7 +17,7 @@ gem "webmock"
 
 gem "faraday"
 
-gem 'json', '~> 2.8'
+gem "json", "~> 2.8"
 
 gem "elasticsearch", "~> 8.0"
 gem "httparty"
