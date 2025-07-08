@@ -14,39 +14,24 @@ module Utils
     # - Reporting task failures
     #
     # @example
-    #   client = Utils::Operaton::ExternalTaskClient.execute(base_url: "https://api.operaton.com", worker_id: "worker-123")
+    #   client = Utils::Operaton::ExternalTaskClient.execute(base_url: "https://api.operaton.com",
+    #                                                        worker_id: "worker-123")
     #   tasks = client.fetch_and_lock("my-topic")
-    module ExternalTaskClient
-      class << self
-        def execute(params)
-          validate_params!(params)
+    class ExternalTaskClient
+      def self.execute(params)
+        new(params)
+      end
 
-          client = Object.new
-          client.extend(self)
+      def initialize(params)
+        validate_params!(params)
 
-          setup_instance_variables(client, params)
+        @base_url = params[:base_url]
+        @worker_id = params[:worker_id]
 
-          client
-        end
-
-        private
-
-        def validate_params!(params)
-          raise ArgumentError, "base_url cannot be nil or empty" if params[:base_url].to_s.strip.empty?
-          raise ArgumentError, "worker_id cannot be nil or empty" if params[:worker_id].to_s.strip.empty?
-        end
-
-        def setup_instance_variables(client, params)
-          client.instance_variable_set(:@base_url, params[:base_url])
-          client.instance_variable_set(:@worker_id, params[:worker_id])
-
-          conn = Faraday.new(url: params[:base_url]) do |f|
-            f.request :json
-            f.response :json, content_type: /\bjson$/
-            f.adapter Faraday.default_adapter
-          end
-
-          client.instance_variable_set(:@conn, conn)
+        @conn = Faraday.new(url: @base_url) do |f|
+          f.request :json
+          f.response :json, content_type: /\bjson$/
+          f.adapter Faraday.default_adapter
         end
       end
 
@@ -88,6 +73,11 @@ module Utils
       end
 
       private
+
+      def validate_params!(params)
+        raise ArgumentError, "base_url cannot be nil or empty" if params[:base_url].to_s.strip.empty?
+        raise ArgumentError, "worker_id cannot be nil or empty" if params[:worker_id].to_s.strip.empty?
+      end
 
       def build_topics_payload(topics_str, lock_duration, variables)
         topic_names = topics_str.is_a?(Array) ? topics_str : topics_str.to_s.split(",")
