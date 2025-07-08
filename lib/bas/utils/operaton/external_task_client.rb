@@ -14,7 +14,7 @@ module Utils
     # - Reporting task failures
     #
     # @example
-    #   client = ExternalTaskClient.new(base_url: "https://api.operaton.com", worker_id: "worker-123")
+    #   client = Utils::Operaton::ExternalTaskClient.execute(base_url: "https://api.operaton.com", worker_id: "worker-123")
     #   tasks = client.fetch_and_lock("my-topic")
     module ExternalTaskClient
       class << self
