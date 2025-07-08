@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.8.1 (08.07.2025)
+- [refactor: Refactor client for correct use of shared_storage](https://github.com/kommitters/bas/pull/144)
+
 # 1.8.0 (07.07.2025)
 - [Feat: Implement client to interact with Operaton's API-REST](https://github.com/kommitters/bas/pull/142)
 
