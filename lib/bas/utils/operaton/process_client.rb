@@ -4,24 +4,21 @@ require "faraday"
 require "json"
 require "faraday/multipart"
 require "logger"
+require_relative "base_operaton_client"
 
 module Utils
   module Operaton
     ##
     # Client for deploying BPMN processes and starting process instances in Operaton (Camunda 7 API compatible)
-    class ProcessClient
+    #
+    # @example
+    #   client = Utils::Operaton::ProcessClient.new(base_url: "https://api.operaton.com")
+    #   tasks = client.deploy_process(file_path, deployment_name: deployment_name)
+    #
+    class ProcessClient < BaseClient
       def initialize(base_url:)
-        raise ArgumentError, "base_url is required" if base_url.to_s.strip.empty?
-
-        @base_url = base_url.chomp("/")
         @logger = defined?(Rails) ? Rails.logger : Logger.new($stdout)
-
-        @conn = Faraday.new(url: @base_url) do |f|
-          f.request :multipart
-          f.request :url_encoded
-          f.response :json, content_type: /\bjson$/
-          f.adapter Faraday.default_adapter
-        end
+        super(base_url: base_url)
       end
 
       def deploy_process(file_path, deployment_name:)
@@ -45,11 +42,8 @@ module Utils
           maxResults: 50
         }
 
-        response = @conn.get(full_url("/history/process-instance"), query_params)
-
-        raise "Error verifying existing instance: #{response.status}" unless response.success?
-
-        response.body.any? { |instance| instance["businessKey"] == business_key }
+        response = get("/history/process-instance", query_params)
+        response.any? { |instance| instance["businessKey"] == business_key }
       end
 
       def start_process_instance_by_key(process_key, business_key:, variables: {}, validate_business_key: true)
@@ -70,53 +64,19 @@ module Utils
 
       private
 
+      def build_conn
+        Faraday.new(url: @base_url) do |f|
+          f.request :multipart
+          f.request :url_encoded
+          f.response :json, content_type: /\bjson$/
+          f.adapter Faraday.default_adapter
+        end
+      end
+
       def validate_uniqueness!(process_key, business_key)
         return unless instance_with_business_key_exists?(process_key, business_key)
 
         raise "There is already an instance for processing '#{process_key}' with business key '#{business_key}'"
-      end
-
-      def post(path, body = {}, headers = {})
-        response = @conn.post(full_url(path)) do |req|
-          req.headers.update(headers) if headers.any?
-          req.body = body
-        end
-
-        handle_response(response)
-      end
-
-      def get(path, params = {})
-        response = @conn.get(full_url(path), params)
-        handle_response(response)
-      end
-
-      def full_url(path)
-        "#{@base_url}#{path.start_with?("/") ? path : "/#{path}"}"
-      end
-
-      def handle_response(response)
-        raise "Operaton API Error #{response.status}: #{response.body}" unless response.success?
-
-        response.body
-      end
-
-      def format_variables(vars)
-        vars.transform_values do |value|
-          {
-            value: value,
-            type: ruby_type_to_operaton_type(value)
-          }
-        end
-      end
-
-      def ruby_type_to_operaton_type(value)
-        case value
-        when String then "String"
-        when Integer then "Integer"
-        when Float then "Double"
-        when TrueClass, FalseClass then "Boolean"
-        else "Object"
-        end
       end
     end
   end
