@@ -3,6 +3,7 @@
 require "faraday"
 require "json"
 require "faraday/multipart"
+require "logger"
 
 module Utils
   module Operaton
@@ -13,6 +14,7 @@ module Utils
         raise ArgumentError, "base_url is required" if base_url.to_s.strip.empty?
 
         @base_url = base_url.chomp("/")
+        @logger = defined?(Rails) ? Rails.logger : Logger.new($stdout)
 
         @conn = Faraday.new(url: @base_url) do |f|
           f.request :multipart
@@ -25,8 +27,8 @@ module Utils
       def deploy_process(file_path, deployment_name:)
         raise "File not found: #{file_path}" unless File.exist?(file_path)
 
-        puts "📁 Attempting to read file: #{file_path}"
-        puts "📦 Deployment name: #{deployment_name}"
+        @logger.info "📁 Attempting to read file: #{file_path}"
+        @logger.info "📦 Deployment name: #{deployment_name}"
 
         payload = {
           "deployment-name" => deployment_name,
@@ -79,8 +81,6 @@ module Utils
           req.headers.update(headers) if headers.any?
           req.body = body
         end
-
-        raise "Error deploying: #{response.status} - #{response.body}" unless response.success?
 
         handle_response(response)
       end
