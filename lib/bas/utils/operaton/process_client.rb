@@ -23,6 +23,7 @@ module Utils
 
       def deploy_process(file_path, deployment_name:)
         raise "File not found: #{file_path}" unless File.exist?(file_path)
+        raise "File is not readable: #{file_path}" unless File.readable?(file_path)
 
         @logger.info "📁 Attempting to read file: #{file_path}"
         @logger.info "📦 Deployment name: #{deployment_name}"
@@ -54,12 +55,11 @@ module Utils
           variables: format_variables(variables)
         }
 
-        response = @conn.post(full_url("/process-definition/key/#{process_key}/start")) do |req|
-          req.headers["Content-Type"] = "application/json"
-          req.body = JSON.generate(json_payload)
-        end
-
-        handle_response(response)
+        post(
+          "/process-definition/key/#{process_key}/start",
+          JSON.generate(json_payload),
+          { "Content-Type" => "application/json" }
+        )
       end
 
       private

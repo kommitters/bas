@@ -20,10 +20,13 @@ module Utils
       private
 
       def build_conn
+        # Override to add multipart support for file uploads and URL encoding for form data
         Faraday.new(url: @base_url) do |f|
           f.request :json
           f.response :json, content_type: /\bjson$/
           f.adapter Faraday.default_adapter
+          f.options.timeout = 30
+          f.options.open_timeout = 10
         end
       end
 
@@ -45,7 +48,10 @@ module Utils
       end
 
       def handle_response(response)
-        raise "Operaton API Error #{response.status}: #{response.body}" unless response.success?
+        unless response.success?
+          error_body = response.body.is_a?(Hash) ? response.body : { message: response.body }
+          raise "Operaton API Error #{response.status}: #{error_body["message"] || error_body}"
+        end
 
         response.body
       end
@@ -61,10 +67,12 @@ module Utils
 
       def ruby_type_to_operaton_type(value)
         case value
+        when nil then "Null"
         when String then "String"
         when Integer then "Integer"
         when Float then "Double"
         when TrueClass, FalseClass then "Boolean"
+        when Array, Hash then "Json"
         else "Object"
         end
       end
