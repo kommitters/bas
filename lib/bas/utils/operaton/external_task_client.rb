@@ -5,7 +5,8 @@ require "json"
 
 module Utils
   module Operaton
-    # Client for interacting with Operaton's External Task API
+    ##
+    # Client for interacting with Operaton's External Task API.
     #
     # This client provides methods to manage external task lifecycle including:
     # - Fetching and locking tasks
@@ -14,14 +15,10 @@ module Utils
     # - Reporting task failures
     #
     # @example
-    #   client = Utils::Operaton::ExternalTaskClient.execute(base_url: "https://api.operaton.com",
-    #                                                        worker_id: "worker-123")
+    #   client = Utils::Operaton::ExternalTaskClient.new(base_url: "https://api.operaton.com", worker_id: "worker-123")
     #   tasks = client.fetch_and_lock("my-topic")
+    #
     class ExternalTaskClient
-      def self.execute(params)
-        new(params)
-      end
-
       def initialize(params)
         validate_params!(params)
 
