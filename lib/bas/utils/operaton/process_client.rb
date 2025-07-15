@@ -40,7 +40,8 @@ module Utils
       def instance_with_business_key_exists?(process_key, business_key)
         query_params = {
           processDefinitionKey: process_key,
-          maxResults: 50
+          maxResults: 50,
+          active: true
         }
 
         response = get("/history/process-instance", query_params)
