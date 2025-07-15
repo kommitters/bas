@@ -40,16 +40,15 @@ module Utils
       def instance_with_business_key_exists?(process_key, business_key)
         query_params = {
           processDefinitionKey: process_key,
-          maxResults: 50
+          maxResults: 50,
+          active: true
         }
 
         response = get("/history/process-instance", query_params)
         response.any? { |instance| instance["businessKey"] == business_key }
       end
 
-      def start_process_instance_by_key(process_key, business_key:, variables: {}, validate_business_key: true)
-        validate_uniqueness!(process_key, business_key) if validate_business_key
-
+      def start_process_instance_by_key(process_key, business_key:, variables: {})
         json_payload = {
           businessKey: business_key,
           variables: format_variables(variables)
@@ -71,12 +70,6 @@ module Utils
           f.response :json, content_type: /\bjson$/
           f.adapter Faraday.default_adapter
         end
-      end
-
-      def validate_uniqueness!(process_key, business_key)
-        return unless instance_with_business_key_exists?(process_key, business_key)
-
-        raise "There is already an instance for processing '#{process_key}' with business key '#{business_key}'"
       end
     end
   end

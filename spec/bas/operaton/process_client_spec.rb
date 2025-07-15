@@ -79,29 +79,9 @@ RSpec.describe Utils::Operaton::ProcessClient do
         [200, { "Content-Type" => "application/json" }, '{"id": "inst1"}']
       end
 
-      allow(client).to receive(:instance_with_business_key_exists?).and_return(false)
-
       response = client.start_process_instance_by_key(process_key, business_key: business_key,
                                                                    variables: { amount: 100 })
       expect(response).to eq({ "id" => "inst1" })
-    end
-
-    it "raises an error if business key already exists and validation is on" do
-      allow(client).to receive(:instance_with_business_key_exists?).with(process_key, business_key).and_return(true)
-
-      expect do
-        client.start_process_instance_by_key(process_key, business_key: business_key, validate_business_key: true)
-      end.to raise_error("There is already an instance for processing 'my-process' with business key 'biz-123'")
-    end
-
-    it "does not raise an error if business key exists and validation is off" do
-      stubs.post("#{base_url}/process-definition/key/#{process_key}/start") do
-        [200, { "Content-Type" => "application/json" }, '{"id": "inst2"}']
-      end
-
-      expect(client).not_to receive(:instance_with_business_key_exists?)
-
-      client.start_process_instance_by_key(process_key, business_key: business_key, validate_business_key: false)
     end
   end
 
