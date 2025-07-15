@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "elasticsearch", "~> 8.0"
   spec.add_dependency "httparty", "~> 0.22.0"
   spec.add_dependency "pg", "~> 1.5"
+  spec.add_dependency "faraday-multipart"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
