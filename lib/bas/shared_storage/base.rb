@@ -21,6 +21,11 @@ module Bas
 
       def set_processed; end
 
+      def close_connections
+        # TODO: Leave this method empty after testing
+        puts "Closing connection for #{self.class.name}"
+      end
+
       protected
 
       def read
