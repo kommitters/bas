@@ -4,11 +4,14 @@ require "pg"
 
 module Utils
   module Postgres
-    # This module is a PostgresDB utility to manage the connection to the database.
+    # This module is a PostgresDB utility to establish connections to a Postgres database
+    # and execute raw or parameterized queries.
     #
     class Connection
       def initialize(params)
+        puts "Instantiating connection with params: #{params}"
         @connection = PG::Connection.new(params[:connection])
+        puts "Conntection instantiated"
       end
 
       def query(query)
