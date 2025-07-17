@@ -2,6 +2,7 @@
 
 require "faraday"
 require "json"
+require "base64"
 
 module Utils
   module Operaton
@@ -10,10 +11,12 @@ module Utils
     # shared by all Operaton API clients.
     #
     class BaseClient
-      def initialize(base_url:)
+      def initialize(base_url:, username: nil, password: nil)
         raise ArgumentError, "base_url is required" if base_url.to_s.strip.empty?
 
         @base_url = base_url.chomp("/")
+        @username = username
+        @password = password
         @conn = build_conn
       end
 
@@ -23,6 +26,7 @@ module Utils
         # Override to add multipart support for file uploads and URL encoding for form data
         Faraday.new(url: @base_url) do |f|
           f.request :json
+          f.response :logger
           f.response :json, content_type: /\bjson$/
           f.adapter Faraday.default_adapter
           f.options.timeout = 30
@@ -30,17 +34,36 @@ module Utils
         end
       end
 
+      def basic_auth_required?
+        return false if @username.to_s.empty? || @password.to_s.empty?
+
+        uri = URI.parse(@base_url)
+        host = uri.host
+        !(host.nil? || host.include?("localhost") || host == "127.0.0.1")
+      end
+
       def full_url(path)
         "#{@base_url}#{path.start_with?("/") ? path : "/#{path}"}"
       end
 
+      def add_auth_headers(req)
+        return unless basic_auth_required?
+
+        token = Base64.strict_encode64("#{@username}:#{@password}")
+        req.headers["Authorization"] = "Basic #{token}"
+      end
+
       def get(path, params = {})
-        response = @conn.get(full_url(path), params)
+        response = @conn.get(full_url(path)) do |req|
+          add_auth_headers(req)
+          req.params.update(params)
+        end
         handle_response(response)
       end
 
       def post(path, body = {}, headers = {})
         response = @conn.post(full_url(path)) do |req|
+          add_auth_headers(req)
           req.headers.update(headers) if headers.any?
           req.body = body
         end

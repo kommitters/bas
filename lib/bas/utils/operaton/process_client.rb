@@ -16,9 +16,9 @@ module Utils
     #   tasks = client.deploy_process(file_path, deployment_name: deployment_name)
     #
     class ProcessClient < BaseClient
-      def initialize(base_url:)
+      def initialize(base_url:, username: nil, password: nil)
         @logger = defined?(Rails) ? Rails.logger : Logger.new($stdout)
-        super(base_url: base_url)
+        super(base_url: base_url, username: username, password: password)
       end
 
       def deploy_process(file_path, deployment_name:)
@@ -35,6 +35,10 @@ module Utils
         }
 
         post("/deployment/create", payload)
+      end
+
+      def test_engine
+        get("/engine")
       end
 
       def instance_with_business_key_exists?(process_key, business_key)

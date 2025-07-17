@@ -23,7 +23,11 @@ module Utils
       def initialize(params)
         @worker_id = params[:worker_id]
         validate_params!(params)
-        super(base_url: params[:base_url])
+        super(
+          base_url: params[:base_url],
+          username: params[:username],
+          password: params[:password]
+        )
       end
 
       def fetch_and_lock(topics_str, lock_duration: 10_000, max_tasks: 1, use_priority: true, variables: [])
