@@ -9,9 +9,7 @@ module Utils
     #
     class Connection
       def initialize(params)
-        puts "Instantiating connection with params: #{params}"
-        @connection = PG::Connection.new(params[:connection])
-        puts "Conntection instantiated"
+        @connection = PG::Connection.new(params)
       end
 
       def query(query)
