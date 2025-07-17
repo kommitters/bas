@@ -47,13 +47,16 @@ module Utils
         "#{@base_url}#{path.start_with?("/") ? path : "/#{path}"}"
       end
 
+      def add_auth_headers(req)
+        return unless basic_auth_required?
+
+        token = Base64.strict_encode64("#{@username}:#{@password}")
+        req.headers["Authorization"] = "Basic #{token}"
+      end
+
       def get(path, params = {})
         response = @conn.get(full_url(path)) do |req|
-          if basic_auth_required?
-            token = Base64.strict_encode64("#{@username}:#{@password}")
-            req.headers["Authorization"] = "Basic #{token}"
-          end
-          req.headers["Content-Type"] = "application/json"
+          add_auth_headers(req)
           req.params.update(params)
         end
         handle_response(response)
@@ -61,11 +64,7 @@ module Utils
 
       def post(path, body = {}, headers = {})
         response = @conn.post(full_url(path)) do |req|
-          if basic_auth_required?
-            token = Base64.strict_encode64("#{@username}:#{@password}")
-            req.headers["Authorization"] = "Basic #{token}"
-          end
-          req.headers["Content-Type"] = "application/json"
+          add_auth_headers(req)
           req.headers.update(headers) if headers.any?
           req.body = body
         end
