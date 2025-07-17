@@ -31,7 +31,6 @@ module Utils
           f.adapter Faraday.default_adapter
           f.options.timeout = 30
           f.options.open_timeout = 10
-          f.basic_auth(@username, @password) if @username && @password
         end
       end
 
