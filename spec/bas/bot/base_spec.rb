@@ -5,7 +5,7 @@ require "bas/shared_storage/types/read"
 
 RSpec.describe Bas::Bot::Base do
   before do
-    @options = {}
+    @options = { close_connections_after_process: true }
     @shared_storage_reader = double(:shared_storage_reader, set_in_process: "in-process", set_processed: "processed",
                                                             close_connections: true)
     @shared_storage_writer = double(:shared_storage_writer, close_connections: true)

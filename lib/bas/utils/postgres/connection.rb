@@ -16,8 +16,9 @@ module Utils
         results = if query.is_a? String
                     @connection.exec(query)
                   else
-                    sentence, params = query
+                    validate_query(query)
 
+                    sentence, params = query
                     @connection.exec_params(sentence, params)
                   end
 
@@ -27,6 +28,14 @@ module Utils
       def finish
         @connection&.finish
         @connection = nil
+      end
+
+      private
+
+      def validate_query(query)
+        return if query.is_a?(Array) && query.size == 2 && query[0].is_a?(String) && query[1].is_a?(Array)
+
+        raise ArgumentError, "Parameterized query must be an array of [sentence (String), params (Array)]"
       end
     end
   end

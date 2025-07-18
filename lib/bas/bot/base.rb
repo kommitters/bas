@@ -15,7 +15,8 @@ module Bas
       attr_accessor :read_response, :process_response, :write_response
 
       def initialize(options, shared_storage_reader, shared_storage_writer = nil)
-        @process_options = options || { close_connections_after_process: true }
+        default_options = { close_connections_after_process: true }
+        @process_options = default_options.merge(options || {})
         @shared_storage_reader = shared_storage_reader
         @shared_storage_writer = shared_storage_writer || shared_storage_reader
       end

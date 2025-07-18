@@ -37,7 +37,7 @@ RSpec.describe Utils::Postgres::Connection do
     it "creates a new connection with the provided parameters" do
       expect(PG::Connection).to receive(:new).with(connection_params).and_return(pg_connection)
 
-      described_class.new({ connection: connection_params })
+      described_class.new(connection_params)
     end
 
     it "raises an error when connection parameters are invalid" do
@@ -158,11 +158,26 @@ RSpec.describe Utils::Postgres::Connection do
 
         expect do
           connection.query(123)
-        end.to raise_error(NoMethodError)
+        end.to raise_error(ArgumentError)
       end
 
-      # NOTE: The implementation doesn't validate array structure, so malformed arrays
-      # don't raise errors - they just behave unexpectedly
+      it "raises ArgumentError for parameterized query with wrong array size" do
+        expect do
+          connection.query(["SELECT * FROM users WHERE id = $1"])
+        end.to raise_error(ArgumentError, "Parameterized query must be an array of [sentence (String), params (Array)]")
+      end
+
+      it "raises ArgumentError for parameterized query with non-string sentence" do
+        expect do
+          connection.query([1, [1]])
+        end.to raise_error(ArgumentError, "Parameterized query must be an array of [sentence (String), params (Array)]")
+      end
+
+      it "raises ArgumentError for parameterized query with non-array params" do
+        expect do
+          connection.query(["SELECT * FROM users WHERE id = $1", 1])
+        end.to raise_error(ArgumentError, "Parameterized query must be an array of [sentence (String), params (Array)]")
+      end
     end
   end
 
