@@ -5,9 +5,10 @@ require "bas/shared_storage/types/read"
 
 RSpec.describe Bas::Bot::Base do
   before do
-    @options = {}
-    @shared_storage_reader = double(:shared_storage_reader, set_in_process: "in-process", set_processed: "processed")
-    @shared_storage_writer = double(:shared_storage_writer)
+    @options = { close_connections_after_process: true }
+    @shared_storage_reader = double(:shared_storage_reader, set_in_process: "in-process", set_processed: "processed",
+                                                            close_connections: true)
+    @shared_storage_writer = double(:shared_storage_writer, close_connections: true)
 
     @bot = described_class.new(@options, @shared_storage_reader, @shared_storage_writer)
   end
@@ -71,6 +72,39 @@ RSpec.describe Bas::Bot::Base do
       expect(@bot.read_response).to eql(read_response)
       expect(@bot.process_response).to eql({})
       expect(@bot.write_response).to eql({})
+    end
+
+    it "closes the connections when close_connections_after_process is true" do
+      allow(@shared_storage_reader).to receive(:read).and_return(read_response)
+      allow(@shared_storage_writer).to receive(:write).and_return({})
+      allow(@shared_storage_reader).to receive(:close_connections).and_return(true)
+      allow(@shared_storage_writer).to receive(:close_connections).and_return(true)
+      allow_any_instance_of(described_class).to receive(:process).and_return({ success: "ok" })
+      allow(@shared_storage_reader).to receive(:respond_to?).with(:close_connections).and_return(true)
+      allow(@shared_storage_writer).to receive(:respond_to?).with(:close_connections).and_return(true)
+
+      bot = described_class.new({ close_connections_after_process: true }, @shared_storage_reader,
+                                @shared_storage_writer)
+      bot.execute
+
+      expect(@shared_storage_reader).to have_received(:close_connections)
+      expect(@shared_storage_writer).to have_received(:close_connections)
+    end
+
+    it "does not close the connections when close_connections_after_process is false" do
+      allow(@shared_storage_reader).to receive(:read).and_return(read_response)
+      allow(@shared_storage_writer).to receive(:write).and_return({})
+      allow(@shared_storage_reader).to receive(:close_connections).and_return(true)
+      allow(@shared_storage_writer).to receive(:close_connections).and_return(true)
+      allow_any_instance_of(described_class).to receive(:process).and_return({ success: "ok" })
+
+      options = { close_connections_after_process: false }
+      bot = described_class.new(options, @shared_storage_reader, @shared_storage_writer)
+
+      bot.execute
+
+      expect(@shared_storage_reader).not_to have_received(:close_connections)
+      expect(@shared_storage_writer).not_to have_received(:close_connections)
     end
   end
 

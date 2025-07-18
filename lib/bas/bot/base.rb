@@ -15,7 +15,8 @@ module Bas
       attr_accessor :read_response, :process_response, :write_response
 
       def initialize(options, shared_storage_reader, shared_storage_writer = nil)
-        @process_options = options || {}
+        default_options = { close_connections_after_process: true }
+        @process_options = default_options.merge(options || {})
         @shared_storage_reader = shared_storage_reader
         @shared_storage_writer = shared_storage_writer || shared_storage_reader
       end
@@ -31,6 +32,8 @@ module Bas
         @shared_storage_reader.set_processed
 
         @write_response = write
+
+        close_connections if @process_options[:close_connections_after_process].eql?(true)
       end
 
       protected
@@ -59,6 +62,11 @@ module Bas
         read_data = read_response.data
 
         read_data.nil? || read_data == {} || read_data.any? { |_key, value| [[], "", nil].include?(value) }
+      end
+
+      def close_connections
+        @shared_storage_reader.close_connections if @shared_storage_reader.respond_to?(:close_connections)
+        @shared_storage_writer.close_connections if @shared_storage_writer.respond_to?(:close_connections)
       end
     end
   end

@@ -21,6 +21,8 @@ module Bas
 
       def set_processed; end
 
+      def close_connections; end
+
       protected
 
       def read
