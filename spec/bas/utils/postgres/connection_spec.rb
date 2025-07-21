@@ -21,16 +21,6 @@ RSpec.describe Utils::Postgres::Connection do
     allow(pg_connection).to receive(:exec).and_return(pg_result)
     allow(pg_connection).to receive(:exec_params).and_return(pg_result)
     allow(pg_connection).to receive(:finish)
-
-    # Mock the PG::Result to actually transform keys to symbols when map is called
-    allow(pg_result).to receive(:map) do
-      # Simulate the actual behavior where each result hash gets its keys transformed to symbols
-      raw_data = [
-        { "id" => "1", "name" => "John Doe", "email" => "john@example.com" },
-        { "id" => "2", "name" => "Jane Smith", "email" => "jane@example.com" }
-      ]
-      raw_data.map { |result| result.transform_keys(&:to_sym) }
-    end
   end
 
   describe ".new" do
