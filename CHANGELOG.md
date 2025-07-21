@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.9.2 (21.07.2025)
+- [Refactor PostgreSQL connections](https://github.com/kommitters/bas/pull/153)
+
 # 1.9.1 (15.07.2025)
 - [refactor: Refactor client to meet the needs of the implementation to be performed](https://github.com/kommitters/bas/pull/149)
 
