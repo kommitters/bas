@@ -34,6 +34,8 @@ module Bas
         @write_response = write
 
         close_connections if @process_options[:close_connections_after_process].eql?(true)
+
+        @write_response
       end
 
       protected
