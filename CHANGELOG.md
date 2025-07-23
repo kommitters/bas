@@ -1,5 +1,8 @@
 # Changelog
 
+# 1.9.3 (23.07.2025)
+- [Return write_response after on bot execution](https://github.com/kommitters/bas/pull/155)
+
 # 1.9.2 (21.07.2025)
 - [Refactor PostgreSQL connections](https://github.com/kommitters/bas/pull/153)
 
